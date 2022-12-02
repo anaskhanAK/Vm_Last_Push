@@ -1,7 +1,7 @@
 import React from 'react'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Card, CardBody, Container, Col, UncontrolledTooltip, Row, Badge, Button,Spinner } from 'reactstrap';
+import { Card, CardBody, Container, Col, UncontrolledTooltip, Row, Badge, Button, Spinner } from 'reactstrap';
 
 const VmCard = () => {
 
@@ -30,12 +30,12 @@ const VmCard = () => {
                 <Col lg="3">
                   <div className="avatar-md me-4">
                     <span className="avatar-title rounded bg-light text-danger font-size-16">
-                      <img src='./1..jpg' height="69" width="69" style={{ borderRadius:"4px"}} />
+                      <img src='./1..jpg' height="69" width="69" style={{ borderRadius: "4px" }} />
                     </span>
                   </div>
                 </Col>
                 <Col lg="8">
-                  <div className="flex-grow-1 overflow-hidden" style={{marginTop:'25px'}}>
+                  <div className="flex-grow-1 overflow-hidden" style={{ marginTop: '25px' }}>
 
                     <h5 className="text-truncate font-size-15">
                       This is Virtual Machine 1
@@ -43,8 +43,8 @@ const VmCard = () => {
                   </div>
                 </Col>
                 <Col lg="1">
-                  <div style={{ marginTop:"27px", marginLeft:'15px'}}>
-                  <Spinner type="grow" size="sm" color="success" style={{display: state ? '' : 'none' }}/>
+                  <div style={{ marginTop: "27px", marginLeft: '15px' }}>
+                    <Spinner type="grow" size="sm" color="success" style={{ display: state ? '' : 'none' }} />
                   </div>
                 </Col>
               </div>
@@ -53,7 +53,7 @@ const VmCard = () => {
 
           <div className="px-4 py-3 border-top">
             <Row>
-              <Col lg="11">
+              <Col lg="10">
                 <div className="d-grid gap-2">
                   <Button onClick={toggle} color={state ? 'danger' : 'success'} type="button" className="btn btn-label" >
                     <i className={state ? 'bx bx-power-off label-icon' : 'bx bx-key label-icon'}></i>
@@ -64,10 +64,20 @@ const VmCard = () => {
 
               <Col lg="1">
                 <Link to="/update-vm">
-                <div style={{ marginTop: "8px", display: "flex", justifyContent: "center" }}>
-                  <i className="bx bx-sync bx-sm " />
-                </div>
+                  <div style={{ marginTop: "8px", display: "flex", justifyContent: "center" }}>
+                    <i className="bx bx-edit bx-sm " />
+                  </div>
                 </Link>
+              </Col>
+              <Col lg="1">
+              <div style={{ marginTop: "10px", display: "flex", justifyContent: "center",width:"20px"}}>
+                <input
+                  className="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="defaultCheck1"
+                />
+                </div>
               </Col>
             </Row>
           </div>

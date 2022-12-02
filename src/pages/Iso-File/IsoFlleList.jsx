@@ -25,7 +25,11 @@ const IsoFileList = () => {
                 accessor: d => d.filetype,
             },
             {
-                Header: 'Age',
+                Header: 'File Size',
+                accessor: 'progress',
+            },
+            {
+                Header: 'Download',
                 accessor: 'age',
                 Cell: cellFunction,
                 getProps: () => ({ name: 'table' })

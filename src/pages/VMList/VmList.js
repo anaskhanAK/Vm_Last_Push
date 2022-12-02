@@ -27,6 +27,13 @@ const VmList = () => {
                     >
                         Create VM
                     </button>
+                    <button
+                        className="btn btn-danger w-md float-end"
+                        onClick={() => history.push('/createvm')}
+                        style={{marginRight:"10px"}}
+                    >
+                        Delete Selected VMs
+                    </button>
                 </div>
 
                 <Row>

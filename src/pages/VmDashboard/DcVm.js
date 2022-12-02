@@ -158,13 +158,13 @@ const DcVm = () => {
                                                     <Row>
                                                         <div className="mb-3">
                                                             <Label for="basicpill-phoneno-input3">
-                                                                IOS File
+                                                                ISO File
                                                             </Label>
                                                             <Input
                                                                 type="text"
                                                                 className="form-control"
                                                                 id="basicpill-phoneno-input3"
-                                                                placeholder="Enter IOS"
+                                                                placeholder="Enter ISO File"
                                                             />
                                                         </div>
                                                     </Row>

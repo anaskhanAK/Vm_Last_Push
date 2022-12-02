@@ -94,7 +94,7 @@ const VmDetails = () => {
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-primary  btn-label">
-                                                                <i className="bx bx-sync label-icon"></i> Update VM
+                                                                <i className="bx bx-edit label-icon"></i> Update VM
                                                             </button>
                                                         </Link>
                                                     </Col>
@@ -104,7 +104,7 @@ const VmDetails = () => {
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-danger  btn-label">
-                                                                <i className="bx bx-trash label-icon"></i> Update VM
+                                                                <i className="bx bx-trash label-icon"></i> Delete VM
                                                             </button>
                                                         </Link>
                                                     </Col>
