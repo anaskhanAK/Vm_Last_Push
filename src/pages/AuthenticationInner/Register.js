@@ -1,49 +1,73 @@
-import React from "react";
-
+import React, { useEffect, useState } from "react";
 // Formik Validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
-
-import { Link } from "react-router-dom";
-
-import { Row, Col, CardBody, Card, Container, Form, Label, Input, FormFeedback } from "reactstrap";
+// import * as Yup from "yup";
+// import { useFormik } from "formik";
+import { Link , useHistory} from "react-router-dom";
+import { Row, Col, CardBody, Card, Container, Form, Label, Input, FormFeedback, UncontrolledAlert, Alert } from "reactstrap";
 
 // import images
 import profileImg from "../../assets/images/profile-img.png";
 import logoImg from "../../assets/images/logo.svg";
+import { useMutation } from "@apollo/client";
+import { USER_REGISTER } from "gqlOprations/Mutations";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 const Register = () => {
 
   //meta title
-  document.title="Register | Skote - React Admin & Dashboard Template";
+  document.title = "Register | Skote - React Admin & Dashboard Template";
 
-  //form validation
-  const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
-
-    initialValues: {
-      email: '',
-      username: '',
-      password: '',
-    },
-    validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
-      username: Yup.string().required("Please Enter Your Username"),
-      password: Yup.string().required("Please Enter Your Password"),
-    }),
-    onSubmit: (values) => {
-      console.log(values);
-    }
+  const [formData, setFormData] = useState({
+    id: null,
+    firstName: "",
+    lastName: "",
+    Email: "",
+    Password: "",
+    Deleted: false
   });
+
+  const [userRegister, { data, loading, error }] = useMutation(USER_REGISTER);
+
+  const history = useHistory();
+
+  toastr.options = {
+    positionClass: "toast-top-center",
+    closeButton: true,
+  }
+
+  if (loading) { console.log("loading...") };
+  if (data) {
+    console.log(data);
+    toastr.success("Register Successfully");
+    history.push("/login");
+
+  };
+  if (error) {
+    console.log(error.message);
+  }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleRegister = (e) => {
+    e.preventDefault();
+    console.log(formData)
+
+    userRegister({
+      variables: {
+        input: formData
+      }
+    });
+  };
+
   return (
     <React.Fragment>
-      <div className="home-btn d-none d-sm-block">
-        <Link to="/" className="text-dark">
-          <i className="bx bx-home h2" />
-        </Link>
-      </div>
-      <div className="account-pages my-5 pt-sm-5">
+      <div className="account-pages my-4 pt-sm-5">
         <Container>
           <Row className="justify-content-center">
             <Col md={8} lg={8} xl={5}>
@@ -52,8 +76,8 @@ const Register = () => {
                   <Row>
                     <Col className="col-7">
                       <div className="text-primary p-4">
-                        <h5 className="text-primary">Free Register</h5>
-                        <p>Get your free Skote account now.</p>
+                        <h5 className="text-primary">Registration Form</h5>
+                        <p>Welcome !</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -62,151 +86,83 @@ const Register = () => {
                   </Row>
                 </div>
                 <CardBody className="pt-0">
-                  <div>
-                    <Link to="/">
-                      <div className="avatar-md profile-user-wid mb-4">
-                        <span className="avatar-title rounded-circle bg-light">
-                          <img
-                            src={logoImg}
-                            alt=""
-                            className="rounded-circle"
-                            height="34"
-                          />
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
                   <div className="p-2">
-                    <Form className="form-horizontal"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
-                      }}
-                    >
+                    <Form className="form-horizontal" onSubmit={handleRegister}>
+                      <div className="mb-3">
+                        <Label className="form-label">First Name</Label>
+                        <Input
+                          name="firstName"
+                          type="text"
+                          placeholder="Enter First Name"
+                          onChange={handleChange}
+                          value={formData.firstName}
+                        />
+                      </div>
+
+                      <div className="mb-3">
+                        <Label className="form-label">Last Name</Label>
+                        <Input
+                          name="lastName"
+                          type="text"
+                          placeholder="Enter Last Name"
+                          onChange={handleChange}
+                          value={formData.lastName}
+                        />
+                      </div>
+
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
                         <Input
                           id="email"
-                          name="email"
+                          name="Email"
                           className="form-control"
                           placeholder="Enter email"
                           type="email"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
-                          invalid={
-                            validation.touched.email && validation.errors.email ? true : false
-                          }
+                          onChange={handleChange}
+                          value={formData.Email}
                         />
-                        {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
-                        ) : null}
-                      </div>
-
-                      <div className="mb-3">
-                        <Label className="form-label">Username</Label>
-                        <Input
-                          name="username"
-                          type="text"
-                          placeholder="Enter username"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.username || ""}
-                          invalid={
-                            validation.touched.username && validation.errors.username ? true : false
-                          }
-                        />
-                        {validation.touched.username && validation.errors.username ? (
-                          <FormFeedback type="invalid">{validation.errors.username}</FormFeedback>
-                        ) : null}
                       </div>
                       <div className="mb-3">
                         <Label className="form-label">Password</Label>
                         <Input
-                          name="password"
+                          name="Password"
                           type="password"
                           placeholder="Enter Password"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.password || ""}
-                          invalid={
-                            validation.touched.password && validation.errors.password ? true : false
-                          }
+                          onChange={handleChange}
+                          value={formData.Password}
                         />
-                        {validation.touched.password && validation.errors.password ? (
-                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
-                        ) : null}
                       </div>
-
                       <div className="mt-4 d-grid">
                         <button
                           className="btn btn-primary btn-block "
                           type="submit"
                         >
-                          Register
+                          {loading && loading ? (
+                            <i className="bx bx-loader-alt bx-spin bx-sx"></i>
+                          ) : "Register"}
                         </button>
                       </div>
 
-                      <div className="mt-4 text-center">
-                        <h5 className="font-size-14 mb-3">Sign up using</h5>
-
-                        <ul className="list-inline">
-                          <li className="list-inline-item">
-                            <Link
-                              to="#"
-                              className="social-list-item bg-primary text-white border-primary"
-                            >
-                              <i className="mdi mdi-facebook" />
-                            </Link>
-                          </li>{" "}
-                          <li className="list-inline-item">
-                            <Link
-                              to="#"
-                              className="social-list-item bg-info text-white border-info"
-                            >
-                              <i className="mdi mdi-twitter" />
-                            </Link>
-                          </li>{" "}
-                          <li className="list-inline-item">
-                            <Link
-                              to="#"
-                              className="social-list-item bg-danger text-white border-danger"
-                            >
-                              <i className="mdi mdi-google" />
-                            </Link>
-                          </li>
-                        </ul>
-                      </div>
+                      {error && error ? (
+                        <Alert color="danger" style={{marginTop:"20px"}}>User Already Exist</Alert>
+                      ) : null}
 
                       <div className="mt-4 text-center">
-                        <p className="mb-0">
-                          By registering you agree to the Skote{" "}
-                          <Link to="#" className="text-primary">
-                            Terms of Use
-                          </Link>
+                        <p>
+                          Already have an account ?{" "}
+                          <Link
+                            to="/login"
+                            className="fw-medium text-primary"
+                          >
+                            {" "}
+                            Login
+                          </Link>{" "}
                         </p>
                       </div>
                     </Form>
                   </div>
                 </CardBody>
               </Card>
-              <div className="mt-5 text-center">
-                <p>
-                  Already have an account ?{" "}
-                  <Link
-                    to="/pages-login"
-                    className="fw-medium text-primary"
-                  >
-                    {" "}
-                    Login
-                  </Link>{" "}
-                </p>
-                <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
-                </p>
-              </div>
             </Col>
           </Row>
         </Container>

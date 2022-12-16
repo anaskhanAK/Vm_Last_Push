@@ -56,7 +56,7 @@ const DashVmCard = () => {
                             <Col lg="1">
                                 <Link to="/update-vm">
                                     <div style={{ marginTop: "2px", display: "flex", justifyContent: "center", marginLeft: "20px" }}>
-                                        <i className="bx bx-sync bx-sm " />
+                                        <i className="bx bx-edit bx-sm " />
                                     </div>
                                 </Link>
                             </Col>

@@ -70,8 +70,8 @@ const Register = props => {
                   <Row>
                     <Col className="col-7">
                       <div className="text-primary p-4">
-                        <h5 className="text-primary">Free Register</h5>
-                        <p>Get your free Skote account now.</p>
+                        <h5 className="text-primary">Registration Form</h5>
+                        <p>Welcome !</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">

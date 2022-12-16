@@ -96,7 +96,7 @@ const Login2 = () => {
                           </div>
 
                           <div className="mb-3">
-                            <Label className="form-label">Password</Label>
+                            <Label className="form-label">Passwor</Label>
                             <Input
                               name="password"
                               value={validation.values.password || ""}

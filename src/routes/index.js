@@ -46,10 +46,13 @@ import { Redirect } from "react-router-dom";
 // import InvoiceDetail from "../pages/Invoices/invoices-detail";
 
 // Authentication related pages
-import Login from "../pages/Authentication/Login";
+// import Login from "../pages/Authentication/Login";
 import Logout from "../pages/Authentication/Logout";
-import Register from "../pages/Authentication/Register";
+// import Register from "../pages/Authentication/Register";
 import ForgetPwd from "../pages/Authentication/ForgetPassword";
+
+import Register from "../pages/AuthenticationInner/Register";
+import Login from "../pages/AuthenticationInner/Login"
 
 //  // Inner Authentication
 // import Login1 from "../pages/AuthenticationInner/Login";
@@ -340,7 +343,6 @@ const publicRoutes = [
   { path: "/login", component: Login },
   { path: "/forgot-password", component: ForgetPwd },
   { path: "/register", component: Register },
-
   // { path: "/pages-maintenance", component: PagesMaintenance },
   // { path: "/pages-comingsoon", component: PagesComingsoon },
   // { path: "/pages-404", component: Pages404 },
