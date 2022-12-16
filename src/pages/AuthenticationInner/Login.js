@@ -1,48 +1,68 @@
 import React, { useState } from "react";
 
 // Redux
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
-import { Row, Col, CardBody, Card, Container, Form, Input, Label, FormFeedback } from "reactstrap";
-
-// Formik validation
-import * as Yup from "yup";
-import { useFormik } from "formik";
+import { Row, Col, CardBody, Card, Container, Form, Input, Label, FormFeedback, Alert } from "reactstrap";
 
 // import images
 import profile from "../../assets/images/profile-img.png";
 import logo from "../../assets/images/logo.svg";
 import lightlogo from "../../assets/images/logo-light.svg";
 
+import { useMutation } from "@apollo/client";
+import { USER_LOGIN } from "gqlOprations/Mutations";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
+
 const Login = () => {
 
   //meta title
   document.title = "Login | Skote - React Admin & Dashboard Template";
 
-  const [userEmail, setUserEmail] = useState("");
-  const [userPassword, setUserPassword] = useState("");
-
-
-  // Form validation 
-  const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
-    enableReinitialize: true,
-
-    initialValues: {
-      email: '',
-      password: '',
-    },
-    validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
-      password: Yup.string().required("Please Enter Your Password"),
-    }),
-    onSubmit: (values) => {
-      console.log("values", values);
-      setUserEmail(values.email);
-      setUserPassword(values.password)
-      console.log(userEmail + "  " + userPassword);
-    }
+  const [formData, setFormData] = useState({
+    Email: "",
+    Password: "",
   });
+
+  const [userLogin, { data, loading, error }] = useMutation(USER_LOGIN);
+
+  const history = useHistory();
+
+  toastr.options = {
+    positionClass: "toast-top-center",
+    closeButton: true,
+  }
+
+  if (loading) { console.log("loading...") };
+  if (data) {
+    console.log(data);
+    console.log(data.login.token)
+    toastr.success("Login Successful");
+    history.push("/");
+
+  };
+  if (error) {
+    console.log(error.message);
+  }
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleLogin = (e) => {
+    e.preventDefault();
+    console.log(formData)
+
+    userLogin({
+      variables: {
+        input: formData
+      }
+    });
+  };
   return (
     <React.Fragment>
       <div className="account-pages my-4 pt-sm-5">
@@ -65,48 +85,28 @@ const Login = () => {
                 </div>
                 <CardBody className="pt-0">
                   <div className="p-2">
-                    <Form className="form-horizontal"
-                      onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
-                      }}
-                    >
+                    <Form className="form-horizontal" onSubmit={handleLogin}>
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
                         <Input
-                          name="email"
+                          name="Email"
                           className="form-control"
                           placeholder="Enter email"
                           type="email"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
-                          invalid={
-                            validation.touched.email && validation.errors.email ? true : false
-                          }
+                          onChange={handleChange}
+                          value={formData.Email}
                         />
-                        {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
-                        ) : null}
                       </div>
 
                       <div className="mb-3">
                         <Label className="form-label">Password</Label>
                         <Input
-                          name="password"
-                          value={validation.values.password || ""}
+                          name="Password"
                           type="password"
                           placeholder="Enter Password"
-                          onChange={validation.handleChange}
-                          onBlur={validation.handleBlur}
-                          invalid={
-                            validation.touched.password && validation.errors.password ? true : false
-                          }
+                          onChange={handleChange}
+                          value={formData.Password}
                         />
-                        {validation.touched.password && validation.errors.password ? (
-                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
-                        ) : null}
                       </div>
 
                       <div className="form-check">
@@ -131,6 +131,10 @@ const Login = () => {
                           Log In
                         </button>
                       </div>
+
+                      {error && error ? (
+                        <Alert color="danger" style={{marginTop:"20px"}}>{error.message}</Alert>
+                      ) : null}
 
                       <div className="mt-4 text-center">
                         <p>

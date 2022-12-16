@@ -12,3 +12,14 @@ mutation CreateUser($input: UserInput) {
     }
   }
   `
+
+export const USER_LOGIN = gql `
+mutation Mutation($input: forLogin) {
+  login(input: $input) {
+    id
+    Email
+    token
+    userType
+  }
+}
+`
