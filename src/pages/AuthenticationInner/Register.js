@@ -36,16 +36,6 @@ const Register = () => {
     closeButton: true,
   }
 
-  if (loading) { console.log("loading...") };
-  if (data) {
-    console.log(data);
-    toastr.success("Register Successfully");
-    history.push("/login");
-
-  };
-  if (error) {
-    console.log(error.message);
-  }
 
   const handleChange = (e) => {
     setFormData({
@@ -63,6 +53,17 @@ const Register = () => {
         input: formData
       }
     });
+
+    if (loading) { console.log("loading...") };
+    if (data) {
+      console.log(data);
+      toastr.success("Register Successfully");
+      history.push("/login");
+  
+    };
+    if (error) {
+      console.log(error.message);
+    }
   };
 
   return (

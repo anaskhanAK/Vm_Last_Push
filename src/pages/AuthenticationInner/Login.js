@@ -7,8 +7,6 @@ import { Row, Col, CardBody, Card, Container, Form, Input, Label, FormFeedback, 
 
 // import images
 import profile from "../../assets/images/profile-img.png";
-import logo from "../../assets/images/logo.svg";
-import lightlogo from "../../assets/images/logo-light.svg";
 
 import { useMutation } from "@apollo/client";
 import { USER_LOGIN } from "gqlOprations/Mutations";
@@ -34,18 +32,6 @@ const Login = () => {
     closeButton: true,
   }
 
-  if (loading) { console.log("loading...") };
-  if (data) {
-    console.log(data);
-    console.log(data.login.token)
-    toastr.success("Login Successful");
-    history.push("/");
-
-  };
-  if (error) {
-    console.log(error.message);
-  }
-
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -58,10 +44,26 @@ const Login = () => {
     console.log(formData)
 
     userLogin({
-      variables: {
-        input: formData
+      variables:{
+        input:formData
       }
     });
+
+    if (loading) { console.log("loading...") };
+    if (data) {
+      console.log(data);
+      console.log(data.Login.token);
+      console.log(data.Login.id);
+      toastr.success("Login Successful");
+      document.cookie = "MvUserToken" + "=" + data.Login.token;
+      document.cookie = "MvUserId" + "=" + data.Login.id;
+      document.cookie = "MvUserType" + "=" + data.Login.userType;
+      history.push("/dashboard");
+  
+    };
+    if (error) {
+      console.log(error.message);
+    }
   };
   return (
     <React.Fragment>
@@ -105,7 +107,7 @@ const Login = () => {
                           type="password"
                           placeholder="Enter Password"
                           onChange={handleChange}
-                          value={formData.Password}
+                          // value={formData.Password}
                         />
                       </div>
 
@@ -150,7 +152,7 @@ const Login = () => {
                       </div>
 
                       <div className="mt-4 text-center">
-                        <Link to="/pages-forgot-pwd" className="text-muted">
+                        <Link to="/forgot-pwd" className="text-muted">
                           <i className="mdi mdi-lock me-1" /> Forgot your
                           password?
                         </Link>

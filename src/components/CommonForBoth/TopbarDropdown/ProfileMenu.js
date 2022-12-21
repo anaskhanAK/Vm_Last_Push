@@ -67,7 +67,7 @@ const ProfileMenu = props => {
 
         {/* <div className="dropdown-divider" /> */}
 
-          <DropdownItem tag="a" href="/profile">
+          <DropdownItem tag="a" href="/userprofile">
             {" "}
             <i className="bx bx-user font-size-16 align-middle me-1" />
             {props.t("Profile")}{" "}
