@@ -25,6 +25,7 @@ const UpdateDetails = (props) => {
     const [formData, setFormData] = useState({
         token: mvToken
     });
+    
 
     let showImg = "http://167.99.36.48:3003/User_Image/1669615730102.jpeg"
 
