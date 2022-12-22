@@ -68,6 +68,8 @@ import ForgetPwd1 from "../pages/AuthenticationInner/ForgetPassword";
 import ConfirmMail from "../pages/AuthenticationInner/page-confirm-mail";
 // import ConfirmMail2 from "../pages/AuthenticationInner/page-confirm-mail-2";
 import EmailVerification from "../pages/AuthenticationInner/auth-email-verification";
+import ResetPassword from "pages/AuthenticationInner/ResetPassword";
+// import ForgetPassword2 from "pages/AuthenticationInner/ForgetOtp";
 // import EmailVerification2 from "../pages/AuthenticationInner/auth-email-verification-2";
 // import TwostepVerification from "../pages/AuthenticationInner/auth-two-step-verification";
 // import TwostepVerification2 from "../pages/AuthenticationInner/auth-two-step-verification-2";
@@ -364,6 +366,8 @@ const publicRoutes = [
   // { path: "/page-recoverpw", component: Recoverpw },
   // { path: "/page-recoverpw-2", component: Recoverpw2 },
   { path: "/forgot-pwd", component: ForgetPwd1 },
+  { path: "/forgetpassword", component: ResetPassword },
+  // { path: "/forgetpassword", component: ForgetPassword2 },
   // { path: "/auth-recoverpw-2", component: ForgetPwd2 },
   // { path: "/auth-lock-screen", component: LockScreen },
   // { path: "/auth-lock-screen-2", component: LockScreen2 },

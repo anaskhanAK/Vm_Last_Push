@@ -1,13 +1,10 @@
 import React, { useEffect, useState } from "react";
 // Formik Validation
-// import * as Yup from "yup";
-// import { useFormik } from "formik";
-import { Link , useHistory} from "react-router-dom";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { Link, useHistory } from "react-router-dom";
 import { Row, Col, CardBody, Card, Container, Form, Label, Input, FormFeedback, UncontrolledAlert, Alert } from "reactstrap";
-
-// import images
 import profileImg from "../../assets/images/profile-img.png";
-import logoImg from "../../assets/images/logo.svg";
 import { useMutation } from "@apollo/client";
 import { USER_REGISTER } from "gqlOprations/Mutations";
 import toastr from "toastr";
@@ -18,17 +15,6 @@ const Register = () => {
   //meta title
   document.title = "Register | Skote - React Admin & Dashboard Template";
 
-  const [formData, setFormData] = useState({
-    id: null,
-    firstName: "",
-    lastName: "",
-    Email: "",
-    Password: "",
-    Deleted: false
-  });
-
-  const [userRegister, { data, loading, error }] = useMutation(USER_REGISTER);
-
   const history = useHistory();
 
   toastr.options = {
@@ -36,35 +22,43 @@ const Register = () => {
     closeButton: true,
   }
 
+  const [userRegister, { data, loading, error }] = useMutation(USER_REGISTER);
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  if(data){
+    toastr.success("Register Successful Please Login Your Account");
+    history.push("/login");
+  }
 
-  const handleRegister = (e) => {
-    e.preventDefault();
-    console.log(formData)
 
-    userRegister({
-      variables: {
-        input: formData
-      }
-    });
+  const validation = useFormik({
+    enableReinitialize: true,
 
-    if (loading) { console.log("loading...") };
-    if (data) {
-      console.log(data);
-      toastr.success("Register Successfully");
-      history.push("/login");
-  
-    };
-    if (error) {
-      console.log(error.message);
+    initialValues: {
+      id:null,
+      firstName: '',
+      lastName: '',
+      Email: '',
+      Password: '',
+      Deleted:false,
+    },
+
+    validationSchema: Yup.object({
+      firstName: Yup.string().required("Please Enter Your First Name"),
+      lastName: Yup.string().required("Please Enter Your Last Name"),
+      Email: Yup.string().required("Please Enter Your Last Name"),
+      Password: Yup.string().required("Please Enter Your Password"),
+    }),
+
+    onSubmit: (values) => {
+      console.log(values);
+
+      userRegister({
+        variables:{
+          input:values
+        }
+      })
     }
-  };
+  });
 
   return (
     <React.Fragment>
@@ -88,16 +82,29 @@ const Register = () => {
                 </div>
                 <CardBody className="pt-0">
                   <div className="p-2">
-                    <Form className="form-horizontal" onSubmit={handleRegister}>
+                    <Form className="form-horizontal"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        validation.handleSubmit();
+                        return false;
+                      }}
+                    >
                       <div className="mb-3">
                         <Label className="form-label">First Name</Label>
                         <Input
                           name="firstName"
                           type="text"
                           placeholder="Enter First Name"
-                          onChange={handleChange}
-                          value={formData.firstName}
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.firstName || ""}
+                          invalid={
+                            validation.touched.firstName && validation.errors.firstName ? true : false
+                          }
                         />
+                        {validation.touched.firstName && validation.errors.firstName ? (
+                          <FormFeedback type="invalid">{validation.errors.firstName}</FormFeedback>
+                        ) : null}
                       </div>
 
                       <div className="mb-3">
@@ -106,9 +113,16 @@ const Register = () => {
                           name="lastName"
                           type="text"
                           placeholder="Enter Last Name"
-                          onChange={handleChange}
-                          value={formData.lastName}
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.lastName || ""}
+                          invalid={
+                            validation.touched.lastName && validation.errors.lastName ? true : false
+                          }
                         />
+                        {validation.touched.lastName && validation.errors.lastName ? (
+                          <FormFeedback type="invalid">{validation.errors.lastName}</FormFeedback>
+                        ) : null}
                       </div>
 
                       <div className="mb-3">
@@ -119,19 +133,34 @@ const Register = () => {
                           className="form-control"
                           placeholder="Enter email"
                           type="email"
-                          onChange={handleChange}
-                          value={formData.Email}
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.Email || ""}
+                          invalid={
+                            validation.touched.Email && validation.errors.Email ? true : false
+                          }
                         />
+                        {validation.touched.Email && validation.errors.Email ? (
+                          <FormFeedback type="invalid">{validation.errors.Email}</FormFeedback>
+                        ) : null}
                       </div>
+
                       <div className="mb-3">
                         <Label className="form-label">Password</Label>
                         <Input
                           name="Password"
                           type="password"
                           placeholder="Enter Password"
-                          onChange={handleChange}
-                          value={formData.Password}
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.Password || ""}
+                          invalid={
+                            validation.touched.Password && validation.errors.Password ? true : false
+                          }
                         />
+                        {validation.touched.Password && validation.errors.Password ? (
+                          <FormFeedback type="invalid">{validation.errors.Password}</FormFeedback>
+                        ) : null}
                       </div>
                       <div className="mt-4 d-grid">
                         <button
@@ -145,7 +174,7 @@ const Register = () => {
                       </div>
 
                       {error && error ? (
-                        <Alert color="danger" style={{marginTop:"20px"}}>User Already Exist</Alert>
+                        <Alert color="danger" style={{ marginTop: "20px" }}>User Already Exist</Alert>
                       ) : null}
 
                       <div className="mt-4 text-center">

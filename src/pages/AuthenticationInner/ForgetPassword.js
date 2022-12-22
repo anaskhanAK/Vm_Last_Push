@@ -1,29 +1,46 @@
 import React from "react";
-import { Row, Col, CardBody, Card, Container, Button, Form, Label, Input, FormFeedback } from "reactstrap";
-
-import { Link } from "react-router-dom";
-
-// Formik Validation
+import { Row, Col, CardBody, Card, Container, Button, Form, Label, Input, FormFeedback, Alert } from "reactstrap";
+import { Link, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-
-// import images
+import { EMAIL_VERIFICATION } from "gqlOprations/Mutations";
 import profile from "../../assets/images/profile-img.png";
 import logo from "../../assets/images/logo.svg";
+import { useMutation } from "@apollo/client";
 
 const ForgetPasswordPage = () => {
+
+  const [emailVerification, { data, loading, error }] = useMutation(EMAIL_VERIFICATION);
+
+  if (loading) {
+    console.log("loading...")
+  }
+  if (data) {
+    console.log(data)
+    // history.push("/checkmail")
+  }
+  if (error) {
+    console.log(error)
+  }
+
+  const history = useHistory();
   const validation = useFormik({
-    // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      email: '',
+      Email: '',
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      Email: Yup.string().required("Please Enter Your Email"),
     }),
     onSubmit: (values) => {
       console.log(values);
+
+      emailVerification({
+        variables: {
+          input: values
+        }
+      });
     }
   });
   return (
@@ -42,8 +59,8 @@ const ForgetPasswordPage = () => {
                   <Row>
                     <Col className="col-7">
                       <div className="text-primary p-4">
-                        <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Sign in to continue to Skote.</p>
+                        <h5 className="text-primary">Forgot Password</h5>
+                        <p>Enter Email To Recover Your Password</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -52,20 +69,6 @@ const ForgetPasswordPage = () => {
                   </Row>
                 </div>
                 <CardBody className="pt-0">
-                  <div>
-                    <Link to="/">
-                      <div className="avatar-md profile-user-wid mb-4">
-                        <span className="avatar-title rounded-circle bg-light">
-                          <img
-                            src={logo}
-                            alt=""
-                            className="rounded-circle"
-                            height="34"
-                          />
-                        </span>
-                      </div>
-                    </Link>
-                  </div>
                   <div className="p-2">
                     <Form
                       className="form-horizontal"
@@ -78,19 +81,19 @@ const ForgetPasswordPage = () => {
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
                         <Input
-                          name="email"
+                          name="Email"
                           className="form-control"
                           placeholder="Enter email"
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
+                          value={validation.values.Email || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email ? true : false
+                            validation.touched.Email && validation.errors.Email ? true : false
                           }
                         />
-                        {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid">{validation.errors.email}</FormFeedback>
+                        {validation.touched.Email && validation.errors.Email ? (
+                          <FormFeedback type="invalid">{validation.errors.Email}</FormFeedback>
                         ) : null}
                       </div>
                       <Row className="mb-3">
@@ -99,29 +102,31 @@ const ForgetPasswordPage = () => {
                             className="btn btn-primary w-md "
                             type="submit"
                           >
-                            Reset
+                            Next
                           </button>
                         </Col>
                       </Row>
                     </Form>
                   </div>
+
+                  {error && error ? (
+                    <Alert color="danger" style={{ marginTop: "20px" }}>Please Enter Valid Email</Alert>
+                  ) : null}
+
+                  <div className="mt-4 text-center">
+                    <p>
+                      Go back to{" "}
+                      <Link
+                        to="/login"
+                        className="fw-medium text-primary"
+                      >
+                        {" "}
+                        Login{" "}
+                      </Link>{" "}
+                    </p>
+                  </div>
                 </CardBody>
               </Card>
-              <div className="mt-5 text-center">
-                <p>
-                  Go back to{" "}
-                  <Link
-                    to="pages-login"
-                    className="font-weight-medium text-primary"
-                  >
-                    Login
-                  </Link>{" "}
-                </p>
-                <p>
-                  © {new Date().getFullYear()} Skote. Crafted with{" "}
-                  <i className="mdi mdi-heart text-danger" /> by Themesbrand
-                </p>
-              </div>
             </Col>
           </Row>
         </Container>

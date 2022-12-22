@@ -1,14 +1,11 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Card, CardBody, Col, Form, Input, Label, Row } from "reactstrap"
-import { from, useMutation } from "@apollo/client"
+import { from, useMutation, useQuery } from "@apollo/client"
 import { USER_PROFILE_UPDATE } from "gqlOprations/Mutations"
+import { GET_USER_BY_ID_B } from "gqlOprations/Queries";
 // import getUserApi from "./getUserApi"
 
-const UpdateDetails = (props) => {
-
-    console.log(props.UData)
-    
-    const [img, setImg] = useState("");
+const UpdateDetails = () => {
 
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
@@ -22,14 +19,37 @@ const UpdateDetails = (props) => {
     }
 
     const mvToken = getCookies("MvUserToken");
+    const mvid = getCookies("MvUserID");
+
+    const [ProfileData, setProfileData] = useState({
+        uImage: "",
+        uFName: "",
+        ulName: "",
+        uEmail: ""
+    });
+
+    const { data: dataB, loading: loadingB, error: errorB } = useQuery(GET_USER_BY_ID_B, {
+        variables: {
+            input: {
+                id: mvid,
+                token: mvToken
+            }
+        }
+    });
+
+    if (dataB) {
+
+    }
+
+
+    const [img, setImg] = useState();
+
     const [formData, setFormData] = useState({
         token: mvToken
     });
-    
 
-    let showImg = "http://167.99.36.48:3003/User_Image/1669615730102.jpeg"
+    const [userProfileUpdate, { data: dataA, loading: loadingA, error: errorA }] = useMutation(USER_PROFILE_UPDATE);
 
-    const [userProfileUpdate, { data, loading, error }] = useMutation(USER_PROFILE_UPDATE);
 
     const handleChange = (e) => {
         setFormData({
@@ -40,7 +60,7 @@ const UpdateDetails = (props) => {
 
     const handleUpdate = (e) => {
         e.preventDefault();
-        console.log(formData);
+        // console.log(formData);
 
         userProfileUpdate({
             variables: {
@@ -48,21 +68,21 @@ const UpdateDetails = (props) => {
             }
         })
 
-        if (loading) {
-            console.log("loading...")
+        if (loadingA) {
+            // console.log("loading...")
         }
-    
-        if (data) {
-            console.log(data)
-            console.log(formData)
+
+        if (dataA) {
+            // console.log(dataA)
+            // console.log(formData)
         }
-    
-        if (error) {
-            console.log(error.message)
+
+        if (errorA) {
+            // console.log(error.message)
         }
     };
 
-    const handleImageUp = (e) =>{
+    const handleImageUp = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
 
@@ -71,11 +91,11 @@ const UpdateDetails = (props) => {
             const eImage = reader.result.toString();
             setFormData(prevState => ({
                 ...prevState,
-                userImage:eImage
+                userImage: eImage
             })
-                )            
+            )
 
-            
+
         };
         reader.readAsDataURL(file)
     }
@@ -97,9 +117,10 @@ const UpdateDetails = (props) => {
                                                     <img className="rounded-circle"
                                                         id="UserImage"
                                                         src={img}
+                                                        // src={"http://167.99.36.48:3003/"+dataB.getUserByID.User_Image.split("app/")[1]}
                                                         width="270px"
                                                         height="270px"
-                                                        // style={{ borderRadius: "5px" }}
+                                                    // style={{ borderRadius: "5px" }}
                                                     ></img>
                                                 </div>
                                             </div>
@@ -113,8 +134,8 @@ const UpdateDetails = (props) => {
                                                         accept="image/*"
                                                         name="userImage"
                                                         onChange={handleImageUp}
-                                                        // ref={imageUploader}
-                                                        // value={formData.UserImage ||""}
+                                                    // ref={imageUploader}
+                                                    // value={formData.UserImage ||""}
                                                     />
                                                 </Col>
                                             </Row>
@@ -170,20 +191,6 @@ const UpdateDetails = (props) => {
                                                         />
                                                     </div>
                                                 </Col>
-                                                <Col md={6} >
-                                                    {/* <div className="mb-3">
-                                                                <Label htmlFor="formrow-email-Input">Password</Label>
-                                                                <Input
-                                                                    type="password"
-                                                                    className="form-control"
-                                                                    id="update-password-input"
-                                                                    name="Password"
-                                                                    placeholder="Enter Password"
-                                                                    onChange={handleChange}
-                                                                    value={formData.Password}
-                                                                />
-                                                            </div> */}
-                                                </Col>
                                             </Row>
 
                                             <Row>
@@ -192,7 +199,8 @@ const UpdateDetails = (props) => {
                                                         id="update-submit"
                                                         type="submit"
                                                         className="btn btn-primary  btn-label">
-                                                        <i className="bx bx-sync label-icon"></i> Update Now
+                                                        {loadingA && loadingA ? (<i className="bx bx-sync label-icon bx-spin"></i>) :
+                                                            (<i className="bx bx-sync label-icon"></i>)} Update Now
                                                     </button>
                                                 </Col>
                                             </Row>

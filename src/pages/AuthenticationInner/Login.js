@@ -1,13 +1,9 @@
 import React, { useState } from "react";
-
-// Redux
 import { Link, useHistory } from "react-router-dom";
-
 import { Row, Col, CardBody, Card, Container, Form, Input, Label, FormFeedback, Alert } from "reactstrap";
-
-// import images
+import * as Yup from "yup";
+import { useFormik } from "formik";
 import profile from "../../assets/images/profile-img.png";
-
 import { useMutation } from "@apollo/client";
 import { USER_LOGIN } from "gqlOprations/Mutations";
 import toastr from "toastr";
@@ -15,15 +11,7 @@ import "toastr/build/toastr.min.css";
 
 const Login = () => {
 
-  //meta title
   document.title = "Login | Skote - React Admin & Dashboard Template";
-
-  const [formData, setFormData] = useState({
-    Email: "",
-    Password: "",
-  });
-
-  const [userLogin, { data, loading, error }] = useMutation(USER_LOGIN);
 
   const history = useHistory();
 
@@ -32,39 +20,46 @@ const Login = () => {
     closeButton: true,
   }
 
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
-  };
+  const [userLogin, { data, loading, error }] = useMutation(USER_LOGIN);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log(formData)
+  if (data) {
+    console.log(data);
+    document.cookie = "MvUserToken" + "=" + data.Login.token;
+    document.cookie = "MvUserId" + "=" + data.Login.id;
+    document.cookie = "MvUserType" + "=" + data.Login.userType;
+    toastr.success("Login Successful");
+    history.push("/dashboard");
+  }
 
-    userLogin({
-      variables:{
-        input:formData
-      }
-    });
+  if (loading) {
+    console.log("loading...")
+  }
 
-    if (loading) { console.log("loading...") };
-    if (data) {
-      console.log(data);
-      console.log(data.Login.token);
-      console.log(data.Login.id);
-      toastr.success("Login Successful");
-      document.cookie = "MvUserToken" + "=" + data.Login.token;
-      document.cookie = "MvUserId" + "=" + data.Login.id;
-      document.cookie = "MvUserType" + "=" + data.Login.userType;
-      history.push("/dashboard");
-  
-    };
-    if (error) {
-      console.log(error.message);
+  if (error) {
+    console.log(error.message)
+  }
+
+  const validation = useFormik({
+    enableReinitialize: true,
+
+    initialValues: {
+      Email: '',
+      Password: '',
+    },
+    validationSchema: Yup.object({
+      Email: Yup.string().required("Please Enter Your Email"),
+      Password: Yup.string().required("Please Enter Your Password"),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+
+      userLogin({
+        variables: {
+          input: values
+        }
+      });
     }
-  };
+  });
   return (
     <React.Fragment>
       <div className="account-pages my-4 pt-sm-5">
@@ -87,7 +82,13 @@ const Login = () => {
                 </div>
                 <CardBody className="pt-0">
                   <div className="p-2">
-                    <Form className="form-horizontal" onSubmit={handleLogin}>
+                    <Form className="form-horizontal"
+                      onSubmit={(e) => {
+                        e.preventDefault();
+                        validation.handleSubmit();
+                        return false;
+                      }}
+                    >
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
                         <Input
@@ -95,9 +96,16 @@ const Login = () => {
                           className="form-control"
                           placeholder="Enter email"
                           type="email"
-                          onChange={handleChange}
-                          value={formData.Email}
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.Email || ""}
+                          invalid={
+                            validation.touched.Email && validation.errors.Email ? true : false
+                          }
                         />
+                        {validation.touched.Email && validation.errors.Email ? (
+                          <FormFeedback type="invalid">{validation.errors.Email}</FormFeedback>
+                        ) : null}
                       </div>
 
                       <div className="mb-3">
@@ -106,9 +114,16 @@ const Login = () => {
                           name="Password"
                           type="password"
                           placeholder="Enter Password"
-                          onChange={handleChange}
-                          // value={formData.Password}
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.Password || ""}
+                          invalid={
+                            validation.touched.Password && validation.errors.Password ? true : false
+                          }
                         />
+                        {validation.touched.Password && validation.errors.Password ? (
+                          <FormFeedback type="invalid">{validation.errors.Password}</FormFeedback>
+                        ) : null}
                       </div>
 
                       <div className="form-check">
@@ -130,12 +145,14 @@ const Login = () => {
                           className="btn btn-primary btn-block "
                           type="submit"
                         >
-                          Log In
+                          {loading && loading ? (
+                            <i className="bx bx-loader-alt bx-spin bx-sx"></i>
+                          ) : "Login"}
                         </button>
                       </div>
 
                       {error && error ? (
-                        <Alert color="danger" style={{marginTop:"20px"}}>{error.message}</Alert>
+                        <Alert color="danger" style={{ marginTop: "20px" }}>{error.message}</Alert>
                       ) : null}
 
                       <div className="mt-4 text-center">

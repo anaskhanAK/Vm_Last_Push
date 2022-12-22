@@ -4,19 +4,18 @@ import Breadcrumbs from "../../components/Common/Breadcrumb"
 import { Link } from "react-router-dom"
 import { useMutation, useQuery } from "@apollo/client"
 import { GET_USER_BY_ID } from "gqlOprations/Queries"
-import { element } from "prop-types"
-import { result, set } from "lodash"
-// import StBtn from './StBtn'
-import UpdateDetails from "./UpdateDetails"
-
 
 
 const UserProfile = () => {
 
     document.title = "Profile";
 
-    let naamm = "Annas";
-    <UpdateDetails UData={naamm}/>
+    // const [ProfileData,setProfileData] = useState({
+    //     uImage:"",
+    //     uFName:"",
+    //     ulName:"",
+    //     uEmail:""
+    // });
 
     const getCookies = (cname) => {
         const e = document.cookie.split("; ")
@@ -44,10 +43,9 @@ const UserProfile = () => {
         console.log("loading...")
     };
 
-    if (data) {
-        console.log(data.getUserByID.User_Image)
-        const img1 = data.getUserByID.User_Image.split("app/")
-        const setImg = "http://167.99.36.48:3003/" + img1[1] ;
+    if(data){
+        console.log(data)
+        
     }
 
     if (error) {
@@ -67,11 +65,8 @@ const UserProfile = () => {
                                         <Card >
                                             <CardBody>
                                                 <h4 className="card-title mb-4">User Image</h4>
-                                                {}
                                                 <CardImg className="img-fluid rounded-circle"
-                                                    src={data && data ?(
-                                                        "http://167.99.36.48:3003/"+data.getUserByID.User_Image.split("app/")[1]
-                                                    ): null}
+                                                    src={data && data ? ("http://167.99.36.48:3003/"+data.getUserByID.User_Image.split("app/")[1]):null}
                                                     style={{ height: "330px", width: "330px", marginLeft: "20px" }} />
                                             </CardBody>
                                         </Card>
