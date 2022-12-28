@@ -9,6 +9,10 @@ import RamSlider from "pages/CreateVm/RamSlider";
 import StoregeSlider from "pages/CreateVm/StoregeSlider";
 import { io } from "socket.io-client";
 import SocketIOFileUploadServer from "socketio-file-upload";
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
+import { GET_IOS_BY_ID } from "gqlOprations/Queries";
+import IsoModel from "pages/CreateVm/IsoModel";
+import { CREATE_ISO } from "gqlOprations/Mutations";
 
 
 const DcVm = () => {
@@ -18,9 +22,42 @@ const DcVm = () => {
     const [activeTabVartical, setoggleTabVertical] = useState(1)
     const [filename, setFilename] = useState('')
     const [uploadPercentage, setUploadPercentage] = useState(0)
+    const [isoList, setIsoList] = useState([])
+    const [selectedOption, setSelectedOption] = useState()
+
 
     const uploadedImage = useRef(null);
     const imageUploader = useRef(null);
+
+    const getCookies = (cname) => {
+        const cArray = document.cookie.split("; ")
+        let result = null
+        cArray.forEach(element => {
+            if (element.indexOf(cname) == 0) {
+                result = element.substring(cname.length + 1)
+            }
+        })
+        return result;
+    }
+
+    const mvToken = getCookies("MvUserToken");
+    const mvid = getCookies("MvUserId");
+    // console.log(mvid)
+
+
+    const [getIsoList, { loading: loadingA, data: dataA, error: errorA }] = useLazyQuery(GET_IOS_BY_ID, {
+        variables: {
+            input: {
+                token: mvToken
+            }
+        }
+    });
+
+    const [createIso, { loading: loadingB, data: dataB, error: errorB }] = useMutation(CREATE_ISO);
+
+    if (loadingB) { console.log("loadingb...") }
+    if (dataB) console.log(dataB)
+    if (errorB) { console.log(errorB.message) }
 
     const handleImageUpload = e => {
         const [file] = e.target.files;
@@ -54,6 +91,20 @@ const DcVm = () => {
 
         uploader.addEventListener("complete", function (event) {
             console.log(event.file.name, 'Upload Complete');
+            console.log(event.file, "111this is file ");
+            createIso({
+                variables: {
+                    input: {
+                        Name: event.file.name,
+                        Size: event.file.size,
+                        Type: event.file.type,
+                        userId: mvid
+                    }
+                }
+            })
+
+            window.location.reload(false);
+
         })
         uploader.addEventListener("choose", function (event) {
             console.log(event.file, "Choose");
@@ -83,10 +134,20 @@ const DcVm = () => {
 
         document.getElementById("file-upload-btn").addEventListener("click", uploader.prompt, false);
 
-        
+
 
     }, [])
 
+    useEffect(() => {
+        if (loadingA) console.log("loading...")
+        if (dataA) {
+            setIsoList(p => (dataA.getIOSById))
+            console.log(dataA)
+        }
+        if (errorA) console.log(errorA)
+    }, [dataA])
+
+    useEffect(() => { getIsoList() }, [])
 
     return (
         <React.Fragment>
@@ -205,17 +266,26 @@ const DcVm = () => {
                                                                 ISO File
                                                             </Label>
                                                             <div>
-                                                                   
+
                                                                 <div>
                                                                     <div className="d-flex">
-                                                                        <input
+                                                                        {/* <input
                                                                             className="form-control"
                                                                             type="text"
                                                                             onChange={(e) => { }}
                                                                             placeholder="choose file"
                                                                             value={filename}
-                                                                            style={{marginRight:"5px"}}
-                                                                        />
+                                                                            style={{ marginRight: "5px" }}
+                                                                            // list="isoNames"
+                                                                            // name ="isoNames"
+                                                                        /> */}
+                                                                        <select defaultValue="0" className="form-select" style={{ marginRight: "5px" }}>
+                                                                            <option value="0">Choose...</option>
+                                                                            {isoList.map(e => {
+                                                                                return <option key={e.id} value={e.Name}> {e.Name} </option>
+                                                                            })}
+
+                                                                        </select>
                                                                         <button
                                                                             style={{ margin: "0px" }}
                                                                             id="file-upload-btn"
@@ -225,12 +295,12 @@ const DcVm = () => {
                                                                             Upload
                                                                         </button>
                                                                     </div>
-                                                                <Progress 
-                                                                className="progress-sm" 
-                                                                color="primary" 
-                                                                value={uploadPercentage}
-                                                                style={{marginTop:"3px"}}
-                                                                />
+                                                                    <Progress
+                                                                        className="progress-sm"
+                                                                        color="primary"
+                                                                        value={uploadPercentage}
+                                                                        style={{ marginTop: "3px" }}
+                                                                    />
                                                                 </div>
                                                             </div>
                                                         </div>

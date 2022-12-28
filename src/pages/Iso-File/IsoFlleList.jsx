@@ -24,7 +24,7 @@ const IsoFileList = () => {
 
     const mvToken = getCookies("MvUserToken");
     const mvid = getCookies("MvUserID");
-    console.log(mvToken)
+    // console.log(mvToken)
 
     const [getIos, { loading, data, error }] = useLazyQuery(GET_IOS_BY_ID, {
         variables: {

@@ -12,7 +12,7 @@ mutation Mutation($input: userInput) {
     token
   }
 }
-  `
+`
 
 export const USER_LOGIN = gql `
 mutation Mutation($input: for_login) {
@@ -48,5 +48,18 @@ mutation Mutation($input: Authentication) {
 export const EMAIL_VERIFICATION = gql `
 mutation ForgetPassword($input: forget_password) {
   forgetPassword(input: $input)
+}
+`
+
+export const CREATE_ISO = gql `
+mutation Mutation($input: for_IOS) {
+  createIOS(input: $input) {
+    Name
+    Size
+    Type
+    createdAt
+    id
+    userId
+  }
 }
 `
