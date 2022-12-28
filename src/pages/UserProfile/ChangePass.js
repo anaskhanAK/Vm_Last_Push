@@ -2,9 +2,11 @@ import { useMutation } from "@apollo/client";
 import { CHANGE_USER_PASSWORD } from "gqlOprations/Mutations";
 import { set } from "lodash";
 import React, { useState, useRef } from "react"
-import { Card, CardBody, Col, Form, Input, Label, Row } from "reactstrap"
+import { Card, CardBody, Col, Form, Input, Label, Row, FormFeedback } from "reactstrap"
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 
 
 const ChangePass = () => {
@@ -21,69 +23,122 @@ const ChangePass = () => {
     }
 
     const mvToken = getCookies("MvUserToken");
-    console.log(mvToken);
-
-    const [queryData,setQueryData] = useState({})
-    const [formData, setFormData] = useState({});
-    const [changePassword, { data, loading, error }] = useMutation(CHANGE_USER_PASSWORD);
+    // console.log(mvToken);
 
     toastr.options = {
         positionClass: "toast-top-center",
         closeButton: true,
-      }
+    }
 
-    const handleChange = (e) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        });
-    };
+    const [changePassword, { data, loading, error }] = useMutation(CHANGE_USER_PASSWORD);
 
+    if (loading) {
+        console.log("loading...")
+    }
 
-    const handleUpdate = (e) => {
-        e.preventDefault();
-        console.log(formData);
+    if (data) {
+        console.log(data)
+    }
 
-        if(formData.Password == formData.ConfirmPassword){
-            setQueryData({
-                ...queryData,
-                ["Password"]:formData.Password,
-                ["token"]:mvToken
-            });
-            console.log(queryData)
+    if (error) {
+        console.log(error.message)
+    }
 
-            changePassword({
-                variables: {
-                    input: queryData
-                }
-            })
+    const validation = useFormik({
+        enableReinitialize: true,
 
-            if (loading) {
-                console.log("loading...")
+        initialValues: {
+            Password: '',
+            CPassword: ''
+        },
+        validationSchema: Yup.object({
+            Password: Yup.string().required("Please Enter New Password"),
+            CPassword: Yup.string().required("Please Confirm New Password"),
+        }),
+        onSubmit: (values) => {
+            // console.log(values);
+            if (values.CPassword == values.Password) {
+                changePassword({
+                    variables: {
+                        input: {
+                            token: mvToken,
+                            Password: values.Password
+                        }
+                    }
+                })
+
             }
-        
-            if (data) {
-                console.log(data)
-                toastr.success("Password Reset");
-            }
-        
-            if (error) {
-                console.log(error.message)
-                toastr.error(error.message);
-            }
+            toastr.success("Password Reset");
         }
+    });
 
-        else{
-            console.log("miss match")
-            toastr.error("Wrong Password");
-        }
+    // const [queryData,setQueryData] = useState({})
+    // const [formData, setFormData] = useState({});
+    // const [changePassword, { data, loading, error }] = useMutation(CHANGE_USER_PASSWORD);
 
-    };
+    // toastr.options = {
+    //     positionClass: "toast-top-center",
+    //     closeButton: true,
+    //   }
+
+    // const handleChange = (e) => {
+    //     setFormData({
+    //         ...formData,
+    //         [e.target.name]: e.target.value
+    //     });
+    // };
+
+
+    // const handleUpdate = (e) => {
+    //     e.preventDefault();
+    //     console.log(formData);
+
+    //     if(formData.Password == formData.ConfirmPassword){
+    //         setQueryData({
+    //             ...queryData,
+    //             ["Password"]:formData.Password,
+    //             ["token"]:mvToken
+    //         });
+    //         // console.log(queryData)
+
+    //         changePassword({
+    //             variables: {
+    //                 input: queryData
+    //             }
+    //         })
+
+    //         if (loading) {
+    //             // console.log("loading...")
+    //         }
+
+    //         if (data) {
+    //             // console.log(data)
+    //             toastr.success("Password Reset");
+    //         }
+
+    //         if (error) {
+    //             // console.log(error.message)
+    //             toastr.error(error.message);
+    //         }
+    //     }
+
+    //     else{
+    //         console.log("miss match")
+    //         toastr.error("Wrong Password");
+    //     }
+
+    // };
 
 
     return (
         <React.Fragment>
-            <Form onSubmit={handleUpdate}>
+            <Form
+                onSubmit={(e) => {
+                    e.preventDefault();
+                    validation.handleSubmit();
+                    return false;
+                }}
+            >
                 <Row>
                     <Col lg="12">
                         <Card>
@@ -102,9 +157,16 @@ const ChangePass = () => {
                                                             id="pass1-Input"
                                                             placeholder="Enter New Password"
                                                             name="Password"
-                                                            onChange={handleChange}
-                                                            value={formData.Password ||""}
+                                                            onChange={validation.handleChange}
+                                                            onBlur={validation.handleBlur}
+                                                            value={validation.values.Password || ""}
+                                                            invalid={
+                                                                validation.touched.Password && validation.errors.Password ? true : false
+                                                            }
                                                         />
+                                                        {validation.touched.Password && validation.errors.Password ? (
+                                                            <FormFeedback type="invalid">{validation.errors.Password}</FormFeedback>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col>
@@ -115,17 +177,25 @@ const ChangePass = () => {
                                                             className="form-control"
                                                             id="formrow-email-Input"
                                                             placeholder="Confirm Password"
-                                                            name="ConfirmPassword"
-                                                            onChange={handleChange}
-                                                            value={formData.ConfirmPassword ||""}
+                                                            name="CPassword"
+                                                            onChange={validation.handleChange}
+                                                            onBlur={validation.handleBlur}
+                                                            value={validation.values.CPassword || ""}
+                                                            invalid={
+                                                                validation.touched.CPassword && validation.errors.CPassword ? true : false
+                                                            }
                                                         />
+                                                        {validation.touched.CPassword && validation.errors.CPassword ? (
+                                                            <FormFeedback type="invalid">{validation.errors.CPassword}</FormFeedback>
+                                                        ) : null}
                                                     </div>
                                                 </Col>
                                                 <Col style={{ marginTop: "25px" }}>
                                                     <button
                                                         type="submit"
                                                         className="btn btn-primary  btn-label">
-                                                        <i className="bx bx-sync label-icon"></i> Change Now
+                                                        {loading && loading ? (<i className="bx bx-sync label-icon bx-spin"></i>) :
+                                                            (<i className="bx bx-sync label-icon"></i>)} Change Now
                                                     </button>
                                                 </Col>
                                             </Row>

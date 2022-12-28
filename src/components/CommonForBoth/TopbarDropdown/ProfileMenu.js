@@ -15,6 +15,8 @@ import { withRouter, Link } from "react-router-dom";
 
 // users
 import user1 from "../../../assets/images/users/avatar-1.jpg";
+import { GET_USER_BY_ID } from "gqlOprations/Queries";
+import { useMutation, useQuery } from "@apollo/client"
 
 const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
@@ -37,6 +39,28 @@ const ProfileMenu = props => {
     }
   }, [props.success]);
 
+  const getCookies = (cname) => {
+    const e = document.cookie.split("; ")
+    let result = null
+    e.forEach(element => {
+      if (element.indexOf(cname) == 0) {
+        result = element.substring(cname.length + 1)
+      }
+    })
+    return result;
+  }
+  const mvid = getCookies("MvUserId");
+  const mvtoken = getCookies("MvUserToken");
+
+  const { loading, data, error } = useQuery(GET_USER_BY_ID, {
+    variables: {
+      input: {
+        id: mvid,
+        token: mvtoken
+      }
+    }
+  });
+
   return (
     <React.Fragment>
       <Dropdown
@@ -51,11 +75,11 @@ const ProfileMenu = props => {
         >
           <img
             className="rounded-circle header-profile-user"
-            src={user1}
+            src={data && data ? ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]) : null}
             alt="Header Avatar"
           />
-          <span className="d-none d-xl-inline-block ms-2 me-1">{username}</span>
-          <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
+          {/* <span className="d-none d-xl-inline-block ms-2 me-1">{data && data ? (data.getUserByID.Email):null}</span>
+          <i className="mdi mdi-chevron-down d-none d-xl-inline-block" /> */}
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">
           {/* <div style={{display:"flex", justifyContent:"center"}}>
@@ -65,7 +89,7 @@ const ProfileMenu = props => {
           <p> Admin </p>
           </div> */}
 
-        {/* <div className="dropdown-divider" /> */}
+          {/* <div className="dropdown-divider" /> */}
 
           <DropdownItem tag="a" href="/userprofile">
             {" "}
@@ -87,7 +111,7 @@ const ProfileMenu = props => {
             <i className="bx bx-question-mark font-size-16 align-middle me-1" />
             {props.t("Heed Help")}
           </DropdownItem>
-          
+
           <div className="dropdown-divider" />
           <Link to="/logout" className="dropdown-item">
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger" />

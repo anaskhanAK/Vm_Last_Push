@@ -2,11 +2,11 @@ import React, { useState, useRef, useEffect } from "react"
 import { Card, CardBody, Col, Form, Input, Label, Row } from "reactstrap"
 import { from, useMutation, useQuery } from "@apollo/client"
 import { USER_PROFILE_UPDATE } from "gqlOprations/Mutations"
-import { GET_USER_BY_ID_B } from "gqlOprations/Queries";
+import { GET_USER_BY_ID } from "gqlOprations/Queries";
 // import getUserApi from "./getUserApi"
 
 const UpdateDetails = () => {
-
+    
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
         let result = null
@@ -20,6 +20,7 @@ const UpdateDetails = () => {
 
     const mvToken = getCookies("MvUserToken");
     const mvid = getCookies("MvUserID");
+    
 
     const [ProfileData, setProfileData] = useState({
         uImage: "",
@@ -28,7 +29,7 @@ const UpdateDetails = () => {
         uEmail: ""
     });
 
-    const { data: dataB, loading: loadingB, error: errorB } = useQuery(GET_USER_BY_ID_B, {
+    const { data: dataB, loading: loadingB, error: errorB } = useQuery(GET_USER_BY_ID, {
         variables: {
             input: {
                 id: mvid,
@@ -38,8 +39,10 @@ const UpdateDetails = () => {
     });
 
     if (dataB) {
-
+        console.log(dataB);
     }
+
+    
 
 
     const [img, setImg] = useState();
@@ -73,7 +76,7 @@ const UpdateDetails = () => {
         }
 
         if (dataA) {
-            // console.log(dataA)
+            console.log(dataA)
             // console.log(formData)
         }
 
@@ -116,11 +119,10 @@ const UpdateDetails = () => {
                                                 <div style={{ height: "250px" }}>
                                                     <img className="rounded-circle"
                                                         id="UserImage"
-                                                        src={img}
+                                                        src={img||"./updateimage.png"}
                                                         // src={"http://167.99.36.48:3003/"+dataB.getUserByID.User_Image.split("app/")[1]}
                                                         width="270px"
                                                         height="270px"
-                                                    // style={{ borderRadius: "5px" }}
                                                     ></img>
                                                 </div>
                                             </div>
@@ -134,8 +136,6 @@ const UpdateDetails = () => {
                                                         accept="image/*"
                                                         name="userImage"
                                                         onChange={handleImageUp}
-                                                    // ref={imageUploader}
-                                                    // value={formData.UserImage ||""}
                                                     />
                                                 </Col>
                                             </Row>

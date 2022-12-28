@@ -7,8 +7,17 @@ import { EMAIL_VERIFICATION } from "gqlOprations/Mutations";
 import profile from "../../assets/images/profile-img.png";
 import logo from "../../assets/images/logo.svg";
 import { useMutation } from "@apollo/client";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 const ForgetPasswordPage = () => {
+
+  document.title = "Email Verification"
+
+  toastr.options = {
+    positionClass: "toast-top-center",
+    closeButton: true,
+  }
 
   const [emailVerification, { data, loading, error }] = useMutation(EMAIL_VERIFICATION);
 
@@ -17,7 +26,6 @@ const ForgetPasswordPage = () => {
   }
   if (data) {
     console.log(data)
-    // history.push("/checkmail")
   }
   if (error) {
     console.log(error)
@@ -59,8 +67,8 @@ const ForgetPasswordPage = () => {
                   <Row>
                     <Col className="col-7">
                       <div className="text-primary p-4">
-                        <h5 className="text-primary">Forgot Password</h5>
-                        <p>Enter Email To Recover Your Password</p>
+                        <h5 className="text-primary">Email Verification</h5>
+                        <p>Enter Your Valid Mail</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -101,8 +109,9 @@ const ForgetPasswordPage = () => {
                           <button
                             className="btn btn-primary w-md "
                             type="submit"
+                            id="vMailBtn"
                           >
-                            Next
+                            Verify
                           </button>
                         </Col>
                       </Row>
@@ -111,6 +120,10 @@ const ForgetPasswordPage = () => {
 
                   {error && error ? (
                     <Alert color="danger" style={{ marginTop: "20px" }}>Please Enter Valid Email</Alert>
+                  ) : null}
+
+                  {data && data ? (
+                    <Alert color="success" style={{ marginTop: "20px" }}>check Your Mail</Alert>
                   ) : null}
 
                   <div className="mt-4 text-center">

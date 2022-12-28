@@ -1,16 +1,14 @@
-import React, { useState, useRef } from "react"
-
-import { Card, CardBody, Col, Container, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, CardTitle, Table } from "reactstrap"
-
-import classnames from "classnames"
-import { Link } from "react-router-dom"
-
-
-import Slider from "react-rangeslider"
-import "react-rangeslider/lib/index.css"
-import UploadImg from "pages/CreateVm/UploadImg"
-import RamSlider from "pages/CreateVm/RamSlider"
-import StoregeSlider from "pages/CreateVm/StoregeSlider"
+import React, { useState, useEffect, useRef } from "react";
+import { Card, CardBody, Col, Container, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, Progress, CardTitle, Table } from "reactstrap";
+import classnames from "classnames";
+import { Link } from "react-router-dom";
+import Slider from "react-rangeslider";
+import "react-rangeslider/lib/index.css";
+import UploadImg from "pages/CreateVm/UploadImg";
+import RamSlider from "pages/CreateVm/RamSlider";
+import StoregeSlider from "pages/CreateVm/StoregeSlider";
+import { io } from "socket.io-client";
+import SocketIOFileUploadServer from "socketio-file-upload";
 
 
 const DcVm = () => {
@@ -18,6 +16,8 @@ const DcVm = () => {
     const [passedSteps, setPassedSteps] = useState([1])
     const [passedStepsVertical, setPassedStepsVertical] = useState([1])
     const [activeTabVartical, setoggleTabVertical] = useState(1)
+    const [filename, setFilename] = useState('')
+    const [uploadPercentage, setUploadPercentage] = useState(0)
 
     const uploadedImage = useRef(null);
     const imageUploader = useRef(null);
@@ -46,8 +46,51 @@ const DcVm = () => {
         }
     }
 
+    const uplaodURL = 'http://placed.ro:2000';
+
+    useEffect(() => {
+        var socket = io.connect(uplaodURL)
+        var uploader = new SocketIOFileUploadServer(socket)
+
+        uploader.addEventListener("complete", function (event) {
+            console.log(event.file.name, 'Upload Complete');
+        })
+        uploader.addEventListener("choose", function (event) {
+            console.log(event.file, "Choose");
+        })
+        uploader.addEventListener("start", function (event) {
+            console.log(event.file.name, "Start");
+            setFilename(p => (event.file.name))
+            const videoFile = event.file
+        })
+        uploader.addEventListener("progress", function (event) {
+            setUploadPercentage(p => (event.bytesLoaded / event.file.size * 100))
+            console.log(event.bytesLoaded / event.file.size * 100, 'Upload progress');
+        })
+        uploader.addEventListener("load", function (event) {
+            console.log(event.file.name, "load");
+        })
+        uploader.addEventListener("error", function (event) {
+            console.error(event.message)
+        })
+        uploader.useBuffer = true
+        uploader.chunkSize = ((1 * 1000) * (0.2 * 1000))
+        //uploader.maxFileSize = 90000
+        // uploader.useText = true
+        // uploader.serializedOctets = true
+
+        uploader.listenOnInput(document.getElementById("file-upload-btn"));
+
+        document.getElementById("file-upload-btn").addEventListener("click", uploader.prompt, false);
+
+        
+
+    }, [])
+
+
     return (
         <React.Fragment>
+            {/* <Form> */}
             <Col lg="12">
                 <Card>
                     <CardBody>
@@ -150,8 +193,9 @@ const DcVm = () => {
                                                             <Input
                                                                 type="text"
                                                                 className="form-control"
-                                                                id="basicpill-phoneno-input3"
+                                                                id="vm-name"
                                                                 placeholder="Enter VM Name"
+
                                                             />
                                                         </div>
                                                     </Row>
@@ -160,12 +204,35 @@ const DcVm = () => {
                                                             <Label for="basicpill-phoneno-input3">
                                                                 ISO File
                                                             </Label>
-                                                            <Input
-                                                                type="text"
-                                                                className="form-control"
-                                                                id="basicpill-phoneno-input3"
-                                                                placeholder="Enter ISO File"
-                                                            />
+                                                            <div>
+                                                                   
+                                                                <div>
+                                                                    <div className="d-flex">
+                                                                        <input
+                                                                            className="form-control"
+                                                                            type="text"
+                                                                            onChange={(e) => { }}
+                                                                            placeholder="choose file"
+                                                                            value={filename}
+                                                                            style={{marginRight:"5px"}}
+                                                                        />
+                                                                        <button
+                                                                            style={{ margin: "0px" }}
+                                                                            id="file-upload-btn"
+                                                                            className="btn btn-primary"
+                                                                            onClick={(e) => e.preventDefault()}
+                                                                        >
+                                                                            Upload
+                                                                        </button>
+                                                                    </div>
+                                                                <Progress 
+                                                                className="progress-sm" 
+                                                                color="primary" 
+                                                                value={uploadPercentage}
+                                                                style={{marginTop:"3px"}}
+                                                                />
+                                                                </div>
+                                                            </div>
                                                         </div>
                                                     </Row>
                                                     <Row>
@@ -216,14 +283,6 @@ const DcVm = () => {
                                                             <br></br>
                                                             <br></br>
                                                             <br></br>
-                                                            {/* <button
-                                                                onClick={handleImageUpload}
-                                                                // onChange={handleImageUpload}
-                                                                type="file"
-                                                                className="btn btn-primary  w-sm"
-                                                            >
-                                                                <i className="mdi mdi-upload d-block font-size-16"></i>{" "}
-                                                            </button> */}
                                                             <Input className="form-control" type="file" id="formFile" accept="image/*" onChange={handleImageUpload} ref={imageUploader} />
                                                         </div>
                                                     </Col>
@@ -319,24 +378,6 @@ const DcVm = () => {
                                             </Form>
                                         </div>
                                     </TabPane>
-                                    <TabPane tabId={4}>
-                                        <div className="row justify-content-center">
-                                            <Col lg="6">
-                                                <div className="text-center" style={{ height: "265px" }}>
-                                                    <div className="mb-4">
-                                                        <i className="mdi mdi-check-circle-outline text-success display-4" />
-                                                    </div>
-                                                    <div>
-                                                        <h5>Confirm Detail</h5>
-                                                        <p className="text-muted">
-                                                            If several languages coalesce, the grammar
-                                                            of the resulting
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                            </Col>
-                                        </div>
-                                    </TabPane>
                                 </TabContent>
                             </div>
                             <div className="actions clearfix">
@@ -357,26 +398,37 @@ const DcVm = () => {
                                             Previous
                                         </Link>
                                     </li>
-                                    <li
-                                        className={
-                                            activeTabVartical === 4 ? "next disabled" : "next"
-                                        }
-                                    >
-                                        <Link
-                                            to="#"
-                                            onClick={() => {
-                                                toggleTabVertical(activeTabVartical + 1)
-                                            }}
+                                    {activeTabVartical < 3 && activeTabVartical < 3 ? (
+                                        <li
+                                            className={
+                                                activeTabVartical === 4 ? "next disabled" : "next"
+                                            }
                                         >
-                                            Next
-                                        </Link>
-                                    </li>
+                                            <Link
+                                                to="#"
+                                                onClick={() => {
+                                                    toggleTabVertical(activeTabVartical + 1)
+                                                }}
+                                            >
+                                                Next
+                                            </Link>
+                                        </li>
+                                    ) :
+                                        <button
+                                            style={{ margin: "0px" }}
+                                            id="update-submit"
+                                            type="submit"
+                                            className="btn btn-primary">
+                                            Submit
+                                        </button>
+                                    }
                                 </ul>
                             </div>
                         </div>
                     </CardBody>
                 </Card>
             </Col>
+            {/* </Form> */}
         </React.Fragment>
     )
 };

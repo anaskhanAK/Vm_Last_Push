@@ -9,6 +9,8 @@ import { useMutation } from "@apollo/client";
 
 const ResetPassword = () => {
 
+    document.title = "Reset Password"
+
     function getQueryVariable(variable) {
         var query = window.location.search.substring(1);
         var vars = query.split("&");
@@ -77,8 +79,8 @@ const ResetPassword = () => {
                                     <Row>
                                         <Col className="col-7">
                                             <div className="text-primary p-4">
-                                                <h5 className="text-primary">Email Verification</h5>
-                                                <p>Check Yor Email And Enter Otp</p>
+                                                <h5 className="text-primary">Reset Password</h5>
+                                                <p></p>
                                             </div>
                                         </Col>
                                         <Col className="col-5 align-self-end">
@@ -142,7 +144,7 @@ const ResetPassword = () => {
                                                         className="btn btn-primary w-md "
                                                         type="submit"
                                                     >
-                                                        Confirm Otp
+                                                        Change
                                                     </button>
                                                 </Col>
                                             </Row>
@@ -154,7 +156,7 @@ const ResetPassword = () => {
                                     ) : null}
 
                                     {data && data ? (
-                                        <Alert color="danger" style={{ marginTop: "20px" }}>{data}</Alert>
+                                        <Alert color="danger" style={{ marginTop: "20px" }}>{data.resetPassword+": Back To Login"}</Alert>
                                     ) : null}
 
                                     <div className="mt-4 text-center">
