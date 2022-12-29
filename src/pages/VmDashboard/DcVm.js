@@ -22,9 +22,13 @@ const DcVm = () => {
     const [activeTabVartical, setoggleTabVertical] = useState(1)
     const [filename, setFilename] = useState('')
     const [uploadPercentage, setUploadPercentage] = useState(0)
-    const [isoList, setIsoList] = useState([])
-    const [selectedOption, setSelectedOption] = useState()
+    const [isoList, setIsoList] = useState([]);
+    const [vmData, setVmData] = useState({});
 
+    const getData = (data) => {
+        console.log("this is value", data)
+    };
+    console.log(getData)
 
     const uploadedImage = useRef(null);
     const imageUploader = useRef(null);
@@ -43,6 +47,16 @@ const DcVm = () => {
     const mvToken = getCookies("MvUserToken");
     const mvid = getCookies("MvUserId");
     // console.log(mvid)
+
+    const handleDataChange = (e) => {
+        setVmData({
+            ...vmData,
+            [e.target.name]: e.target.value
+        });
+
+        console.log(vmData)
+    };
+
 
 
     const [getIsoList, { loading: loadingA, data: dataA, error: errorA }] = useLazyQuery(GET_IOS_BY_ID, {
@@ -102,8 +116,6 @@ const DcVm = () => {
                     }
                 }
             })
-
-            window.location.reload(false);
 
         })
         uploader.addEventListener("choose", function (event) {
@@ -174,7 +186,7 @@ const DcVm = () => {
                                             }}
                                             disabled={!(passedStepsVertical || []).includes(1)}
                                         >
-                                            <span className="number">1.</span> CreateVm
+                                            <span className="number">1</span> CreateVm
                                         </NavLink>
                                     </NavItem>
                                     <NavItem
@@ -191,7 +203,7 @@ const DcVm = () => {
                                             }}
                                             disabled={!(passedStepsVertical || []).includes(2)}
                                         >
-                                            <span className="number">2.</span>{" "}
+                                            <span className="number">2</span>{" "}
                                             <span>Upload VM Image</span>
                                         </NavLink>
                                     </NavItem>
@@ -212,27 +224,7 @@ const DcVm = () => {
                                             }}
                                             disabled={!(passedStepsVertical || []).includes(3)}
                                         >
-                                            <span className="number">3.</span> Advance Options
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem
-                                        className={classnames({
-                                            current: activeTabVartical === 4,
-                                        })}
-                                    >
-                                        <NavLink
-                                            className={
-                                                (classnames({
-                                                    active: activeTabVartical === 4,
-                                                }),
-                                                    "done")
-                                            }
-                                            onClick={() => {
-                                                toggleTabVertical(4)
-                                            }}
-                                            disabled={!(passedStepsVertical || []).includes(4)}
-                                        >
-                                            <span className="number">4.</span> Confirm Detail
+                                            <span className="number">3</span> Advance Options
                                         </NavLink>
                                     </NavItem>
                                 </ul>
@@ -256,6 +248,9 @@ const DcVm = () => {
                                                                 className="form-control"
                                                                 id="vm-name"
                                                                 placeholder="Enter VM Name"
+                                                                name="virtualMachineName"
+                                                                onChange={handleDataChange}
+                                                                value={vmData.virtualMachineName || ""}
 
                                                             />
                                                         </div>
@@ -269,20 +264,21 @@ const DcVm = () => {
 
                                                                 <div>
                                                                     <div className="d-flex">
-                                                                        {/* <input
-                                                                            className="form-control"
-                                                                            type="text"
-                                                                            onChange={(e) => { }}
-                                                                            placeholder="choose file"
-                                                                            value={filename}
+                                                                        <select defaultValue="0"
+                                                                            className="form-select"
                                                                             style={{ marginRight: "5px" }}
-                                                                            // list="isoNames"
-                                                                            // name ="isoNames"
-                                                                        /> */}
-                                                                        <select defaultValue="0" className="form-select" style={{ marginRight: "5px" }}>
+                                                                            name="isoList"
+                                                                            onChange={handleDataChange}
+                                                                            value={vmData.isoList}
+                                                                        >
                                                                             <option value="0">Choose...</option>
                                                                             {isoList.map(e => {
-                                                                                return <option key={e.id} value={e.Name}> {e.Name} </option>
+                                                                                return <option
+                                                                                    key={e.id}
+                                                                                    value={e.Name}
+                                                                                >
+                                                                                    {e.Name}
+                                                                                </option>
                                                                             })}
 
                                                                         </select>
@@ -310,7 +306,12 @@ const DcVm = () => {
                                                             <Label for="basicpill-phoneno-input3">
                                                                 Operating System:
                                                             </Label>
-                                                            <select className="form-control">
+                                                            <select 
+                                                            className="form-control"
+                                                            name="OperatingSystem"
+                                                            onChange={handleDataChange}
+                                                            value={vmData.OperatingSystem}
+                                                            >
                                                                 <option> Windows </option>
                                                                 <option> Linux </option>
                                                                 <option> IOS </option>
@@ -321,22 +322,30 @@ const DcVm = () => {
                                                 </Col>
                                                 <Col lg="6">
                                                     <Row>
-                                                        <StoregeSlider />
+                                                        <StoregeSlider sValue={getData} />
                                                     </Row>
-                                                    <br></br>
 
                                                     <Row>
                                                         <RamSlider />
                                                     </Row>
-                                                    <Row>
-                                                        <div style={{ height: "10px" }}></div>
-                                                    </Row>
                                                 </Col>
+                                            </Row>
+                                            <Row>
+                                                <div className="mb-3">
+                                                    <Label htmlFor="formmessage">Description :</Label>
+                                                    <Input
+                                                        type="textarea"
+                                                        id="formmessage"
+                                                        className="form-control"
+                                                        rows="1"
+                                                        placeholder="Enter your Message"
+                                                    />
+                                                </div>
                                             </Row>
                                         </Form>
                                     </TabPane>
                                     <TabPane tabId={2}>
-                                        <div>
+                                        <div style={{ marginBottom: "63px" }}>
                                             <Form>
                                                 <div className="row justify-content-center">
                                                     <Col lg="6">
@@ -361,7 +370,7 @@ const DcVm = () => {
                                         </div>
                                     </TabPane>
                                     <TabPane tabId={3}>
-                                        <div>
+                                        <div style={{ marginBottom: "57px" }}>
                                             <Form>
                                                 <Row>
                                                     <Col lg="6">
@@ -442,7 +451,6 @@ const DcVm = () => {
                                                                 <Label> Create </Label>
                                                             </div>
                                                         </Row>
-                                                        <div style={{ height: "10px" }}></div>
                                                     </Col>
                                                 </Row>
                                             </Form>
@@ -484,13 +492,20 @@ const DcVm = () => {
                                             </Link>
                                         </li>
                                     ) :
-                                        <button
-                                            style={{ margin: "0px" }}
-                                            id="update-submit"
-                                            type="submit"
-                                            className="btn btn-primary">
-                                            Submit
-                                        </button>
+                                        <li>
+                                            <Link
+                                                type="submit"
+                                            >
+                                                Submit
+                                            </Link>
+                                            {/* <button
+                                            style={{margin}}
+                                                id="update-submit"
+                                                type="submit"
+                                                className="btn btn-primary">
+                                                Submit
+                                            </button> */}
+                                        </li>
                                     }
                                 </ul>
                             </div>

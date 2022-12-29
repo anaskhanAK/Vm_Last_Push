@@ -34,15 +34,6 @@ const IsoFileList = () => {
         }
     });
 
-
-    // const { loading, data, error } = useQuery(GET_IOS_BY_ID, {
-    //     variables: {
-    //         input: {
-    //             token: mvToken
-    //         }
-    //     }
-    // });
-
     const cellFunction = ({ value, column: { getProps } }) => {
         return <i
             className="mdi mdi-cloud-download label-icon"

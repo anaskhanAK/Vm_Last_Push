@@ -41,7 +41,6 @@ const UpdateDetails = () => {
     if (dataB) {
         console.log(dataB);
     }
-
     
 
 

@@ -4,10 +4,11 @@ import { Row, Col, Card, CardBody, CardTitle, Container } from "reactstrap"
 import Slider from "react-rangeslider"
 import "react-rangeslider/lib/index.css"
 
-const StoregeSlider = () => {
+const StoregeSlider = (props) => {
 
   const formatkg = value => " " + value;
-  const [prefix, setprefix] = useState(50)
+  const [prefix, setprefix] = useState(50);
+
 
 
   return (
@@ -20,10 +21,11 @@ const StoregeSlider = () => {
           format={formatkg}
           value={prefix}
           onChange={value => {
-            setprefix(value)
+            setprefix(value);
+            props.sValue(prefix)
           }}
         />
-        <span className="float-right  mt-4">{prefix} MB </span>
+        <span className="float-right mt-4">{prefix} MB </span>
       </div>
     </>
   )

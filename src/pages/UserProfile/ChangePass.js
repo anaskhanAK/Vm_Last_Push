@@ -71,65 +71,7 @@ const ChangePass = () => {
             toastr.success("Password Reset");
         }
     });
-
-    // const [queryData,setQueryData] = useState({})
-    // const [formData, setFormData] = useState({});
-    // const [changePassword, { data, loading, error }] = useMutation(CHANGE_USER_PASSWORD);
-
-    // toastr.options = {
-    //     positionClass: "toast-top-center",
-    //     closeButton: true,
-    //   }
-
-    // const handleChange = (e) => {
-    //     setFormData({
-    //         ...formData,
-    //         [e.target.name]: e.target.value
-    //     });
-    // };
-
-
-    // const handleUpdate = (e) => {
-    //     e.preventDefault();
-    //     console.log(formData);
-
-    //     if(formData.Password == formData.ConfirmPassword){
-    //         setQueryData({
-    //             ...queryData,
-    //             ["Password"]:formData.Password,
-    //             ["token"]:mvToken
-    //         });
-    //         // console.log(queryData)
-
-    //         changePassword({
-    //             variables: {
-    //                 input: queryData
-    //             }
-    //         })
-
-    //         if (loading) {
-    //             // console.log("loading...")
-    //         }
-
-    //         if (data) {
-    //             // console.log(data)
-    //             toastr.success("Password Reset");
-    //         }
-
-    //         if (error) {
-    //             // console.log(error.message)
-    //             toastr.error(error.message);
-    //         }
-    //     }
-
-    //     else{
-    //         console.log("miss match")
-    //         toastr.error("Wrong Password");
-    //     }
-
-    // };
-
-
+    
     return (
         <React.Fragment>
             <Form

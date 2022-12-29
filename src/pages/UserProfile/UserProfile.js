@@ -23,6 +23,7 @@ const UserProfile = () => {
     const mvid = getCookies("MvUserId");
     const mvtoken = getCookies("MvUserToken");
     console.log(mvid)
+    console.log(mvtoken)
 
     const { loading, data, error } = useQuery(GET_USER_BY_ID, {
         variables: {

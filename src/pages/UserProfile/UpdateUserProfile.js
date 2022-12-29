@@ -10,40 +10,6 @@ const UpdateUserProfile = () => {
 
     document.title = "Update User Profile";
 
-    // const getCookies = (cname) => {
-    //     const e = document.cookie.split("; ")
-    //     let result = null
-    //     e.forEach(element => {
-    //         if (element.indexOf(cname) == 0) {
-    //             result = element.substring(cname.length + 1)
-    //         }
-    //     })
-    //     return result;
-    // }
-    // const mvid = getCookies("MvUserId");
-    // const mvtoken = getCookies("MvUserToken");
-
-    // const { loading, data, error } = useQuery(GET_USER_BY_ID, {
-    //     variables: {
-    //         input: {
-    //             id: mvid,
-    //             token: mvtoken
-    //         }
-    //     }
-    // });
-
-    // if (loading) {
-    //     console.log("Hy Im main loading...")
-    // };
-
-    // if(data){
-    //     console.log(data)
-        
-    // }
-
-    // if (error) {
-    //     console.log(error)
-    // }
 
     return (
         <React.Fragment>

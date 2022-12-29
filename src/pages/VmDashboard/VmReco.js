@@ -66,7 +66,7 @@ const VmReco = props => {
           </CardHeader>
 
           <CardBody>
-            <SimpleBar style={{ maxHeight: "295px" }}>
+            <SimpleBar style={{ maxHeight: "300px" }}>
               <div>
                 <TabContent activeTab={activeTab}>
                   <TabPane className="show" tabId="1">

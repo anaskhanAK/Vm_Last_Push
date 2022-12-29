@@ -29,7 +29,7 @@ const VmNotification = props => {
         <React.Fragment>
             <Col lg="12">
                 <Card>
-                    <div style={{ height: "406px" }}>
+                    <div style={{ height: "469px" }}>
                         <CardHeader className="bg-transparent border-bottom">
                             <div className="d-flex flex-wrap">
                                 <div className="me-2">
@@ -39,7 +39,7 @@ const VmNotification = props => {
                         </CardHeader>
 
                         <CardBody>
-                            <SimpleBar style={{ maxHeight: "320px" }}>
+                            <SimpleBar style={{ maxHeight: "380px" }}>
                                 <div>
                                     <ul className="list-group list-group-flush">
                                         <li className="list-group-item py-3">
@@ -63,26 +63,6 @@ const VmNotification = props => {
                                                     </div>
                                                 </div>
 
-                                                {/* <UncontrolledDropdown className="ms-2">
-                                                    <DropdownToggle
-                                                        className="text-muted font-size-14"
-                                                        color="white"
-                                                        type="button"
-                                                    >
-                                                        <i className="mdi mdi-dots-horizontal"></i>
-                                                    </DropdownToggle>
-                                                    <DropdownMenu className="dropdown-menu-end">
-                                                        <Link className="dropdown-item" to="#">
-                                                            Action
-                                                        </Link>
-                                                        <Link className="dropdown-item" to="#">
-                                                            Another action
-                                                        </Link>
-                                                        <Link className="dropdown-item" to="#">
-                                                            Something else
-                                                        </Link>
-                                                    </DropdownMenu>
-                                                </UncontrolledDropdown> */}
                                             </div>
                                         </li>
 
