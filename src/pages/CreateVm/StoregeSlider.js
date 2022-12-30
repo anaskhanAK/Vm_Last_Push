@@ -7,7 +7,7 @@ import "react-rangeslider/lib/index.css"
 const StoregeSlider = (props) => {
 
   const formatkg = value => " " + value;
-  const [prefix, setprefix] = useState(50);
+  const [prefix, setprefix] = useState(0);
 
 
 

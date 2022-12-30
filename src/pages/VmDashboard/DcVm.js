@@ -10,9 +10,9 @@ import StoregeSlider from "pages/CreateVm/StoregeSlider";
 import { io } from "socket.io-client";
 import SocketIOFileUploadServer from "socketio-file-upload";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { GET_IOS_BY_ID } from "gqlOprations/Queries";
+import { GET_CONFIG, GET_IOS_BY_ID } from "gqlOprations/Queries";
 import IsoModel from "pages/CreateVm/IsoModel";
-import { CREATE_ISO } from "gqlOprations/Mutations";
+import { CREATE_ISO, CREATE_VM } from "gqlOprations/Mutations";
 
 
 const DcVm = () => {
@@ -24,14 +24,33 @@ const DcVm = () => {
     const [uploadPercentage, setUploadPercentage] = useState(0)
     const [isoList, setIsoList] = useState([]);
     const [vmData, setVmData] = useState({});
+    const [img, setImg] = useState();
+    const [configData, setConfigData] = useState({});
 
-    const getData = (data) => {
-        console.log("this is value", data)
+    const getStorageVal = (storage) => {
+        console.log("this is Storage Value : ", storage);
+        event.preventDefault();
+        setConfigData({
+            ...configData,
+            getConfigFile: {
+                ...configData.getConfigFile,
+                Storage: storage
+            }
+        })
+        console.log(configData)
     };
-    console.log(getData)
 
-    const uploadedImage = useRef(null);
-    const imageUploader = useRef(null);
+    const getRamVal = (ram) => {
+        console.log("this is Ram Value : ", ram);
+        setConfigData({
+            ...configData,
+            getConfigFile: {
+                ...configData.getConfigFile,
+                Memory: ram
+            }
+        })
+        console.log(configData)
+    }
 
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
@@ -46,7 +65,6 @@ const DcVm = () => {
 
     const mvToken = getCookies("MvUserToken");
     const mvid = getCookies("MvUserId");
-    // console.log(mvid)
 
     const handleDataChange = (e) => {
         setVmData({
@@ -54,11 +72,12 @@ const DcVm = () => {
             [e.target.name]: e.target.value
         });
 
-        console.log(vmData)
+        // console.log(vmData)
     };
 
-
-
+    const [getConfig, { loading: loadingD, data: dataD, error: errorD }] = useLazyQuery(GET_CONFIG);
+    const [createIso, { loading: loadingB, data: dataB, error: errorB }] = useMutation(CREATE_ISO);
+    const [createVm, { loading: loadingC, data: dataC, error: errorC }] = useMutation(CREATE_VM);
     const [getIsoList, { loading: loadingA, data: dataA, error: errorA }] = useLazyQuery(GET_IOS_BY_ID, {
         variables: {
             input: {
@@ -67,24 +86,33 @@ const DcVm = () => {
         }
     });
 
-    const [createIso, { loading: loadingB, data: dataB, error: errorB }] = useMutation(CREATE_ISO);
-
     if (loadingB) { console.log("loadingb...") }
     if (dataB) console.log(dataB)
     if (errorB) { console.log(errorB.message) }
 
-    const handleImageUpload = e => {
-        const [file] = e.target.files;
-        if (file) {
-            const reader = new FileReader();
-            const { current } = uploadedImage;
-            current.file = file;
-            reader.onload = e => {
-                current.src = e.target.result;
-            };
-            reader.readAsDataURL(file);
-        }
-    };
+    if (dataC) { console.log(dataC) }
+    if (loadingC) { console.log("loadingC...") }
+    if (errorC) { console.log(errorC.message) }
+
+
+    const handleVmSubmit = (e) => {
+        e.preventDefault(),
+            console.log(vmData)
+            const config = JSON.stringify(configData);
+            console.log(config);
+        createVm({
+            variables: {
+                input: {
+                    "Status": false,
+                    "Config": config,
+                    "token": mvToken,
+                    "Title": vmData.virtualMachineName,
+                    "virtualMachineName": vmData.virtualMachineName,
+                    "Description": vmData.Description
+                }
+            }
+        })
+    }
 
     function toggleTabVertical(tab) {
         if (activeTabVartical !== tab) {
@@ -95,6 +123,24 @@ const DcVm = () => {
                 setPassedStepsVertical(modifiedSteps)
             }
         }
+    }
+
+    const handleImageUp = (e) => {
+        const file = e.target.files[0];
+        const reader = new FileReader();
+
+        reader.onloadend = () => {
+            setImg(reader.result.toString());
+            const eImage = reader.result.toString();
+            setVmData(prevState => ({
+                ...prevState,
+                vmImage: eImage
+            })
+            )
+
+
+        };
+        reader.readAsDataURL(file)
     }
 
     const uplaodURL = 'http://placed.ro:2000';
@@ -154,88 +200,98 @@ const DcVm = () => {
         if (loadingA) console.log("loading...")
         if (dataA) {
             setIsoList(p => (dataA.getIOSById))
-            console.log(dataA)
+            // console.log(dataA)
         }
         if (errorA) console.log(errorA)
     }, [dataA])
 
+    useEffect(() => {
+        if (loadingD) console.log("loadingD...")
+        if (dataD) {
+            // console.log(dataD);
+            setConfigData(p => (dataD));
+            console.log(configData)
+        }
+        if (errorD) console.log(errorD)
+    }, [dataD])
+
     useEffect(() => { getIsoList() }, [])
+    useEffect(() => { getConfig() }, [])
 
     return (
         <React.Fragment>
-            {/* <Form> */}
-            <Col lg="12">
-                <Card>
-                    <CardBody>
-                        <h4 className="card-title mb-4">Create VM</h4>
-                        <div className="vertical-wizard wizard clearfix vertical">
-                            <div className="steps clearfix">
-                                <p>  </p>
-                                <ul>
-                                    <NavItem
-                                        className={classnames({
-                                            current: activeTabVartical === 1,
-                                        })}
-                                    >
-                                        <NavLink
+            <Form onSubmit={handleVmSubmit}>
+                <Col lg="12">
+                    <Card>
+                        <CardBody>
+                            <h4 className="card-title mb-4">Create VM</h4>
+                            <div className="vertical-wizard wizard clearfix vertical">
+                                <div className="steps clearfix">
+                                    <p>  </p>
+                                    <ul>
+                                        <NavItem
                                             className={classnames({
-                                                active: activeTabVartical === 1,
+                                                current: activeTabVartical === 1,
                                             })}
-                                            onClick={() => {
-                                                toggleTabVertical(1)
-                                            }}
-                                            disabled={!(passedStepsVertical || []).includes(1)}
                                         >
-                                            <span className="number">1</span> CreateVm
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem
-                                        className={classnames({
-                                            current: activeTabVartical === 2,
-                                        })}
-                                    >
-                                        <NavLink
+                                            <NavLink
+                                                className={classnames({
+                                                    active: activeTabVartical === 1,
+                                                })}
+                                                onClick={() => {
+                                                    toggleTabVertical(1)
+                                                }}
+                                                disabled={!(passedStepsVertical || []).includes(1)}
+                                            >
+                                                <span className="number">1</span> CreateVm
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem
                                             className={classnames({
-                                                active: activeTabVartical === 2,
+                                                current: activeTabVartical === 2,
                                             })}
-                                            onClick={() => {
-                                                toggleTabVertical(2)
-                                            }}
-                                            disabled={!(passedStepsVertical || []).includes(2)}
                                         >
-                                            <span className="number">2</span>{" "}
-                                            <span>Upload VM Image</span>
-                                        </NavLink>
-                                    </NavItem>
-                                    <NavItem
-                                        className={classnames({
-                                            current: activeTabVartical === 3,
-                                        })}
+                                            <NavLink
+                                                className={classnames({
+                                                    active: activeTabVartical === 2,
+                                                })}
+                                                onClick={() => {
+                                                    toggleTabVertical(2)
+                                                }}
+                                                disabled={!(passedStepsVertical || []).includes(2)}
+                                            >
+                                                <span className="number">2</span>{" "}
+                                                <span>Upload VM Image</span>
+                                            </NavLink>
+                                        </NavItem>
+                                        <NavItem
+                                            className={classnames({
+                                                current: activeTabVartical === 3,
+                                            })}
+                                        >
+                                            <NavLink
+                                                className={
+                                                    (classnames({
+                                                        active: activeTabVartical === 3,
+                                                    }),
+                                                        "done")
+                                                }
+                                                onClick={() => {
+                                                    toggleTabVertical(3)
+                                                }}
+                                                disabled={!(passedStepsVertical || []).includes(3)}
+                                            >
+                                                <span className="number">3</span> Advance Options
+                                            </NavLink>
+                                        </NavItem>
+                                    </ul>
+                                </div>
+                                <div className="content clearfix">
+                                    <TabContent
+                                        activeTab={activeTabVartical}
+                                        className="body"
                                     >
-                                        <NavLink
-                                            className={
-                                                (classnames({
-                                                    active: activeTabVartical === 3,
-                                                }),
-                                                    "done")
-                                            }
-                                            onClick={() => {
-                                                toggleTabVertical(3)
-                                            }}
-                                            disabled={!(passedStepsVertical || []).includes(3)}
-                                        >
-                                            <span className="number">3</span> Advance Options
-                                        </NavLink>
-                                    </NavItem>
-                                </ul>
-                            </div>
-                            <div className="content clearfix">
-                                <TabContent
-                                    activeTab={activeTabVartical}
-                                    className="body"
-                                >
-                                    <TabPane tabId={1}>
-                                        <Form>
+                                        <TabPane tabId={1}>
                                             <Row>
                                                 <Col lg="6">
                                                     <Row>
@@ -251,7 +307,6 @@ const DcVm = () => {
                                                                 name="virtualMachineName"
                                                                 onChange={handleDataChange}
                                                                 value={vmData.virtualMachineName || ""}
-
                                                             />
                                                         </div>
                                                     </Row>
@@ -267,9 +322,9 @@ const DcVm = () => {
                                                                         <select defaultValue="0"
                                                                             className="form-select"
                                                                             style={{ marginRight: "5px" }}
-                                                                            name="isoList"
-                                                                            onChange={handleDataChange}
-                                                                            value={vmData.isoList}
+                                                                        // name="isoList"
+                                                                        // onChange={handleDataChange}
+                                                                        // value={vmData.isoList}
                                                                         >
                                                                             <option value="0">Choose...</option>
                                                                             {isoList.map(e => {
@@ -306,11 +361,11 @@ const DcVm = () => {
                                                             <Label for="basicpill-phoneno-input3">
                                                                 Operating System:
                                                             </Label>
-                                                            <select 
-                                                            className="form-control"
-                                                            name="OperatingSystem"
-                                                            onChange={handleDataChange}
-                                                            value={vmData.OperatingSystem}
+                                                            <select
+                                                                className="form-control"
+                                                            // name="OperatingSystem"
+                                                            // onChange={handleDataChange}
+                                                            // value={vmData.OperatingSystem}
                                                             >
                                                                 <option> Windows </option>
                                                                 <option> Linux </option>
@@ -322,11 +377,11 @@ const DcVm = () => {
                                                 </Col>
                                                 <Col lg="6">
                                                     <Row>
-                                                        <StoregeSlider sValue={getData} />
+                                                        <StoregeSlider sValue={getStorageVal} />
                                                     </Row>
 
                                                     <Row>
-                                                        <RamSlider />
+                                                        <RamSlider rValue={getRamVal} />
                                                     </Row>
                                                 </Col>
                                             </Row>
@@ -339,19 +394,25 @@ const DcVm = () => {
                                                         className="form-control"
                                                         rows="1"
                                                         placeholder="Enter your Message"
+                                                        name="Description"
+                                                        onChange={handleDataChange}
+                                                        value={vmData.Description || ""}
                                                     />
                                                 </div>
                                             </Row>
-                                        </Form>
-                                    </TabPane>
-                                    <TabPane tabId={2}>
-                                        <div style={{ marginBottom: "63px" }}>
-                                            <Form>
+                                        </TabPane>
+                                        <TabPane tabId={2}>
+                                            <div style={{ marginBottom: "63px" }}>
                                                 <div className="row justify-content-center">
                                                     <Col lg="6">
                                                         <div className="text-center">
                                                             <div style={{ height: "250px" }}>
-                                                                <img ref={uploadedImage} width="270px" height="250px" style={{ borderRadius: "5px" }}></img>
+                                                                <img
+                                                                    src={img || "./updateimage.png"}
+                                                                    width="270px"
+                                                                    height="250px"
+                                                                    style={{ borderRadius: "5px" }}
+                                                                ></img>
                                                             </div>
                                                         </div>
                                                     </Col>
@@ -362,16 +423,23 @@ const DcVm = () => {
                                                             <br></br>
                                                             <br></br>
                                                             <br></br>
-                                                            <Input className="form-control" type="file" id="formFile" accept="image/*" onChange={handleImageUpload} ref={imageUploader} />
+                                                            <Input
+                                                                className="form-control"
+                                                                type="file"
+                                                                id="formFile"
+                                                                accept="image/*"
+                                                                name="vmImage"
+                                                                onChange={handleImageUp}
+                                                            // onChange={handleImageUpload}
+                                                            // ref={imageUploader}
+                                                            />
                                                         </div>
                                                     </Col>
                                                 </div>
-                                            </Form>
-                                        </div>
-                                    </TabPane>
-                                    <TabPane tabId={3}>
-                                        <div style={{ marginBottom: "57px" }}>
-                                            <Form>
+                                            </div>
+                                        </TabPane>
+                                        <TabPane tabId={3}>
+                                            <div style={{ marginBottom: "57px" }}>
                                                 <Row>
                                                     <Col lg="6">
                                                         <Row>
@@ -453,67 +521,66 @@ const DcVm = () => {
                                                         </Row>
                                                     </Col>
                                                 </Row>
-                                            </Form>
-                                        </div>
-                                    </TabPane>
-                                </TabContent>
-                            </div>
-                            <div className="actions clearfix">
-                                <ul>
-                                    <li
-                                        className={
-                                            activeTabVartical === 1
-                                                ? "previous disabled"
-                                                : "previous"
-                                        }
-                                    >
-                                        <Link
-                                            to="#"
-                                            onClick={() => {
-                                                toggleTabVertical(activeTabVartical - 1)
-                                            }}
-                                        >
-                                            Previous
-                                        </Link>
-                                    </li>
-                                    {activeTabVartical < 3 && activeTabVartical < 3 ? (
+                                            </div>
+                                        </TabPane>
+                                    </TabContent>
+                                </div>
+                                <div className="actions clearfix">
+                                    <ul>
                                         <li
                                             className={
-                                                activeTabVartical === 4 ? "next disabled" : "next"
+                                                activeTabVartical === 1
+                                                    ? "previous disabled"
+                                                    : "previous"
                                             }
                                         >
                                             <Link
                                                 to="#"
                                                 onClick={() => {
-                                                    toggleTabVertical(activeTabVartical + 1)
+                                                    toggleTabVertical(activeTabVartical - 1)
                                                 }}
                                             >
-                                                Next
+                                                Previous
                                             </Link>
                                         </li>
-                                    ) :
-                                        <li>
-                                            <Link
+                                        {activeTabVartical < 3 && activeTabVartical < 3 ? (
+                                            <li
+                                                className={
+                                                    activeTabVartical === 4 ? "next disabled" : "next"
+                                                }
+                                            >
+                                                <Link
+                                                    to="#"
+                                                    onClick={() => {
+                                                        toggleTabVertical(activeTabVartical + 1)
+                                                    }}
+                                                >
+                                                    Next
+                                                </Link>
+                                            </li>
+                                        ) :
+                                            <li>
+                                                {/* <Link
                                                 type="submit"
                                             >
                                                 Submit
-                                            </Link>
-                                            {/* <button
-                                            style={{margin}}
-                                                id="update-submit"
-                                                type="submit"
-                                                className="btn btn-primary">
-                                                Submit
-                                            </button> */}
-                                        </li>
-                                    }
-                                </ul>
+                                            </Link> */}
+                                                <button
+                                                    style={{ margin: 0 }}
+                                                    id="update-submit"
+                                                    type="submit"
+                                                    className="btn btn-primary">
+                                                    Submit
+                                                </button>
+                                            </li>
+                                        }
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                    </CardBody>
-                </Card>
-            </Col>
-            {/* </Form> */}
+                        </CardBody>
+                    </Card>
+                </Col>
+            </Form>
         </React.Fragment>
     )
 };

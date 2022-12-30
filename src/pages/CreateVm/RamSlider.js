@@ -4,10 +4,11 @@ import { Row, Col, Card, CardBody, CardTitle, Container } from "reactstrap"
 import Slider from "react-rangeslider"
 import "react-rangeslider/lib/index.css"
 
-const RamSlider = () => {
+const RamSlider = (props) => {
 
   const formatkg = value => value;
-  const [prefix, setprefix] = useState(50)
+  const [prefix, setprefix] = useState(0)
+  console.log("im from ramSlider ",prefix)
 
 
   return (
@@ -20,7 +21,8 @@ const RamSlider = () => {
           format={formatkg}
           value={prefix}
           onChange={value => {
-            setprefix(value)
+            setprefix(value);
+            props.rValue(prefix)
           }}
         />
         <span className="float-right  mt-4">{prefix} MB</span>

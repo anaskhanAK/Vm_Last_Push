@@ -63,3 +63,17 @@ mutation Mutation($input: for_IOS) {
   }
 }
 `
+
+export const CREATE_VM = gql `
+mutation Mutation($input: For_VirtualMachine) {
+  createVM(input: $input) {
+    Config
+    Description
+    GU_ID
+    Status
+    Title
+    VM_Image
+    VirtualMachine_Name
+    id
+  }
+}`

@@ -24,3 +24,10 @@ query GetUserByID($input: for_id_token) {
     }
   }
   `
+
+  export const GET_CONFIG = gql `
+  query Query {
+    getConfigFile
+  }
+  `
+
