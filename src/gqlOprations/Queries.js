@@ -31,3 +31,18 @@ query GetUserByID($input: for_id_token) {
   }
   `
 
+  export const GET_USER_VMS = gql `
+  query GetUserAllVM($input: for_search__user) {
+    getUserAllVM(input: $input) {
+      Config
+      VM_Image
+      Title
+      Status
+      GU_ID
+      Description
+      VirtualMachine_Name
+      id
+    }
+  }
+  `
+

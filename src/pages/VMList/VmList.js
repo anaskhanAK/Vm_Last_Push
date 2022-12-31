@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useHistory } from "react-router-dom";
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import { Card, CardBody, Container, Col, Row } from 'reactstrap';
 import VmCard from './VmCard';
-
 
 
 const VmList = () => {
@@ -38,14 +37,14 @@ const VmList = () => {
 
                 <Row>
                     <VmCard />
+                    {/* <VmCard />
                     <VmCard />
                     <VmCard />
                     <VmCard />
                     <VmCard />
                     <VmCard />
                     <VmCard />
-                    <VmCard />
-                    <VmCard />
+                    <VmCard /> */}
                 </Row>
             </div>
         </React.Fragment>

@@ -8,7 +8,7 @@ const StoregeSlider = (props) => {
 
   const formatkg = value => " " + value;
   const [prefix, setprefix] = useState(0);
-
+  // console.log(value)
 
 
   return (
@@ -22,7 +22,7 @@ const StoregeSlider = (props) => {
           value={prefix}
           onChange={value => {
             setprefix(value);
-            props.sValue(prefix)
+            props.sValue(value)
           }}
         />
         <span className="float-right mt-4">{prefix} MB </span>

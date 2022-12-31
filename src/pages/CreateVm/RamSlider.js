@@ -8,7 +8,6 @@ const RamSlider = (props) => {
 
   const formatkg = value => value;
   const [prefix, setprefix] = useState(0)
-  console.log("im from ramSlider ",prefix)
 
 
   return (
@@ -22,7 +21,7 @@ const RamSlider = (props) => {
           value={prefix}
           onChange={value => {
             setprefix(value);
-            props.rValue(prefix)
+            props.rValue(value)
           }}
         />
         <span className="float-right  mt-4">{prefix} MB</span>

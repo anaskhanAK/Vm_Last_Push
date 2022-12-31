@@ -26,10 +26,30 @@ const DcVm = () => {
     const [vmData, setVmData] = useState({});
     const [img, setImg] = useState();
     const [configData, setConfigData] = useState({});
+    const [dropdownVal, setDropDownVal] = useState({});
+
+    const handleDropDown = (e) => {
+        e.preventDefault(),
+        setDropDownVal({
+            ...dropdownVal,
+            [e.target.name]: e.target.value
+        })
+
+        console.log(dropdownVal)
+        
+        // setConfigData({
+        //     ...configData,
+        //     getConfigFile:{
+        //         ...configData.getConfigFile,
+        //         Operating_System: dropdownVal.osp
+        //     }
+        // })
+        // console.log(configData)
+        // console.log(dropdownVal.osp)
+    }
 
     const getStorageVal = (storage) => {
         console.log("this is Storage Value : ", storage);
-        event.preventDefault();
         setConfigData({
             ...configData,
             getConfigFile: {
@@ -37,9 +57,7 @@ const DcVm = () => {
                 Storage: storage
             }
         })
-        console.log(configData)
     };
-
     const getRamVal = (ram) => {
         console.log("this is Ram Value : ", ram);
         setConfigData({
@@ -49,7 +67,6 @@ const DcVm = () => {
                 Memory: ram
             }
         })
-        console.log(configData)
     }
 
     const getCookies = (cname) => {
@@ -98,8 +115,8 @@ const DcVm = () => {
     const handleVmSubmit = (e) => {
         e.preventDefault(),
             console.log(vmData)
-            const config = JSON.stringify(configData);
-            console.log(config);
+        const config = JSON.stringify(configData);
+        console.log(config);
         createVm({
             variables: {
                 input: {
@@ -208,9 +225,9 @@ const DcVm = () => {
     useEffect(() => {
         if (loadingD) console.log("loadingD...")
         if (dataD) {
-            // console.log(dataD);
+            console.log(dataD);
             setConfigData(p => (dataD));
-            console.log(configData)
+            // console.log(configData)
         }
         if (errorD) console.log(errorD)
     }, [dataD])
@@ -322,9 +339,6 @@ const DcVm = () => {
                                                                         <select defaultValue="0"
                                                                             className="form-select"
                                                                             style={{ marginRight: "5px" }}
-                                                                        // name="isoList"
-                                                                        // onChange={handleDataChange}
-                                                                        // value={vmData.isoList}
                                                                         >
                                                                             <option value="0">Choose...</option>
                                                                             {isoList.map(e => {
@@ -363,9 +377,9 @@ const DcVm = () => {
                                                             </Label>
                                                             <select
                                                                 className="form-control"
-                                                            // name="OperatingSystem"
-                                                            // onChange={handleDataChange}
-                                                            // value={vmData.OperatingSystem}
+                                                                name="ops"
+                                                                onChange={handleDropDown}
+                                                                value={dropdownVal.osp}
                                                             >
                                                                 <option> Windows </option>
                                                                 <option> Linux </option>
@@ -447,7 +461,12 @@ const DcVm = () => {
                                                                 <Label for="basicpill-phoneno-input3">
                                                                     CPU's:
                                                                 </Label>
-                                                                <select className="form-control">
+                                                                <select
+                                                                    className="form-control"
+                                                                    name="cpus"
+                                                                    onChange={handleDropDown}
+                                                                    value={dropdownVal.cpus}
+                                                                >
                                                                     <option> 0 </option>
                                                                     <option> 1 </option>
                                                                     <option> 2 </option>
