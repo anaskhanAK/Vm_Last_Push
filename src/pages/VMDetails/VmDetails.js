@@ -1,12 +1,52 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Button, Container, CardImg, CardText, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, CardTitle, Table } from "reactstrap"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import StBtn from './StBtn'
+import { useLazyQuery } from '@apollo/client'
+import { GET_SPECIFIC_VM } from 'gqlOprations/Queries'
+import Vm from "../../assets/images/1..jpg";
 
 
 const VmDetails = () => {
     document.title = "VM Details";
+
+    const { vmId } = useParams();
+    const [svmData, setSvmData] = useState();
+
+    const getCookies = (cname) => {
+        const cArray = document.cookie.split("; ")
+        let result = null
+        cArray.forEach(element => {
+            if (element.indexOf(cname) == 0) {
+                result = element.substring(cname.length + 1)
+            }
+        })
+        return result;
+    }
+
+    const mvToken = getCookies("MvUserToken");
+
+    const [getSpecificVm, { loading, data, error }] = useLazyQuery(GET_SPECIFIC_VM, {
+        variables: {
+            input: {
+                token: mvToken,
+                id: vmId
+            }
+        }
+    });
+
+    useEffect(() => {
+        if (loading) console.log("loadingD...")
+        if (data) {
+            console.log(data);
+            setSvmData(p => (data));
+        }
+        if (error) console.log(error)
+    }, [data])
+
+    useEffect(() => { getSpecificVm() }, [])
+
     return (
         <React.Fragment>
             <div className="page-content">
@@ -20,18 +60,12 @@ const VmDetails = () => {
                                         <Card >
                                             <CardBody>
                                                 <h4 className="card-title mb-4">VM Image</h4>
-                                                <CardImg className="img-fluid" src="./1..jpg" alt="Skote" />
+                                                <CardImg className="img-fluid" src={Vm} alt='Vm Image' style={{height:"300px"}}/>
                                             </CardBody>
                                             <CardBody>
                                                 <Row>
                                                     <Col>
                                                         <StBtn />
-                                                        {/* <div className="d-grid gap-2">
-                                                            <Button type="button" className="btn-lg btn-success">
-                                                                <i className="mdi mdi-play d-block font-size-40"></i>{" "}
-                                                                START
-                                                            </Button>
-                                                        </div> */}
                                                     </Col>
                                                 </Row>
                                             </CardBody>
@@ -47,7 +81,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Name:</CardTitle>
                                                                 <CardText>
-                                                                    Virtual Machine 1
+                                                                    {svmData && svmData ? (svmData.getSpecificVM.VirtualMachine_Name) : null}
                                                                 </CardText>
                                                             </CardBody>
                                                         </Card>
@@ -57,7 +91,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Operating system:</CardTitle>
                                                                 <CardText>
-                                                                    Windows
+                                                                    {svmData && svmData ? (JSON.parse(svmData.getSpecificVM.Config).getConfigFile.Operating_System) : null}
                                                                 </CardText>
                                                             </CardBody>
                                                         </Card>
@@ -79,10 +113,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Description:</CardTitle>
                                                                 <CardText>
-                                                                    This is another card with title and supporting text below.
-                                                                    This card has some additional content to make it slightly
-                                                                    taller overall.
-                                                                </CardText>
+                                                                    {svmData && svmData ? (svmData.getSpecificVM.Description) : null}                                                                </CardText>
                                                             </CardBody>
                                                         </Card>
                                                     </Col>

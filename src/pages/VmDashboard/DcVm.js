@@ -26,7 +26,9 @@ const DcVm = () => {
     const [vmData, setVmData] = useState({});
     const [img, setImg] = useState();
     const [configData, setConfigData] = useState({});
-    const [dropdownVal, setDropDownVal] = useState({});
+    const [dropdownVal, setDropDownVal] = useState({
+        cpus:2
+    });
 
     const handleDropDown = (e) => {
         e.preventDefault(),
@@ -34,18 +36,19 @@ const DcVm = () => {
             ...dropdownVal,
             [e.target.name]: e.target.value
         })
+        setConfigData({
+            ...configData,
+            getConfigFile:{
+                ...configData.getConfigFile,
+                Operating_System: dropdownVal.Operating_System,
+                processor:{
+                    ...configData.getConfigFile.processor,
+                    Processors: dropdownVal.cpus
+                }
+            }
+        })
 
-        console.log(dropdownVal)
-        
-        // setConfigData({
-        //     ...configData,
-        //     getConfigFile:{
-        //         ...configData.getConfigFile,
-        //         Operating_System: dropdownVal.osp
-        //     }
-        // })
-        // console.log(configData)
-        // console.log(dropdownVal.osp)
+        console.log(configData)
     }
 
     const getStorageVal = (storage) => {
@@ -377,9 +380,9 @@ const DcVm = () => {
                                                             </Label>
                                                             <select
                                                                 className="form-control"
-                                                                name="ops"
-                                                                onChange={handleDropDown}
-                                                                value={dropdownVal.osp}
+                                                                name="Operating_System"
+                                                                onChange={(e) => handleDropDown(e)}
+                                                                value={dropdownVal.Operating_System}
                                                             >
                                                                 <option> Windows </option>
                                                                 <option> Linux </option>
@@ -464,7 +467,7 @@ const DcVm = () => {
                                                                 <select
                                                                     className="form-control"
                                                                     name="cpus"
-                                                                    onChange={handleDropDown}
+                                                                    onChange={(e) => handleDropDown(e)}
                                                                     value={dropdownVal.cpus}
                                                                 >
                                                                     <option> 0 </option>

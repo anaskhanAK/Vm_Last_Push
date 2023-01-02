@@ -28,6 +28,10 @@ const UpdateDetails = () => {
         ulName: "",
         uEmail: ""
     });
+    const [img, setImg] = useState();
+    const [formData, setFormData] = useState({
+        token: mvToken
+    });
 
     const { data: dataB, loading: loadingB, error: errorB } = useQuery(GET_USER_BY_ID, {
         variables: {
@@ -42,13 +46,6 @@ const UpdateDetails = () => {
         console.log(dataB);
     }
     
-
-
-    const [img, setImg] = useState();
-
-    const [formData, setFormData] = useState({
-        token: mvToken
-    });
 
     const [userProfileUpdate, { data: dataA, loading: loadingA, error: errorA }] = useMutation(USER_PROFILE_UPDATE);
 

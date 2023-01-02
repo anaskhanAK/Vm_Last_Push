@@ -1,16 +1,6 @@
 import React, { useState } from "react"
 import { Link } from "react-router-dom"
-import {
-    Card,
-    CardBody,
-    CardHeader,
-    Col,
-    TabContent,
-    TabPane,
-    DropdownMenu,
-    DropdownToggle,
-    UncontrolledDropdown,
-} from "reactstrap"
+import {Card, CardBody,CardHeader,Col,TabContent,TabPane,DropdownMenu,DropdownToggle,UncontrolledDropdown,} from "reactstrap"
 import classnames from "classnames"
 import img1 from "../../assets/images/small/img-6.jpg"
 import img2 from "../../assets/images/small/img-2.jpg"

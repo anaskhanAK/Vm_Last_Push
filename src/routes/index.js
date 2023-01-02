@@ -331,7 +331,7 @@ const authProtectedRoutes = [
   {path: "/vmlist", component: VmList },
   {path: "/user-list", component: UserList },
   {path: "/create-user", component: CreateUser },
-  {path: "/vmdetails", component: VmDetails },
+  {path: "/vmdetails/:vmId", component: VmDetails },
   {path: "/isofilelist", component: IsoFileList},
   {path: "/update-vm", component: UpdateVm},
   {path: "/dashboard", component: VmDashboard},
@@ -342,7 +342,7 @@ const authProtectedRoutes = [
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
-  { path: "/", exact: true, component: () => <Redirect to="/dashboard" /> },
+  { path: "/", exact: true, component: () => <Redirect to="/login" /> },
 ];
 
 const publicRoutes = [

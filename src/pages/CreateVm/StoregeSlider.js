@@ -8,7 +8,6 @@ const StoregeSlider = (props) => {
 
   const formatkg = value => " " + value;
   const [prefix, setprefix] = useState(0);
-  // console.log(value)
 
 
   return (

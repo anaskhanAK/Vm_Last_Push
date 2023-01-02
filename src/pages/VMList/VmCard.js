@@ -5,6 +5,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardBody, Container, Col, UncontrolledTooltip, Row, Badge, Button, Spinner } from 'reactstrap';
+import Vm from "../../assets/images/1..jpg";
 
 const VmCard = () => {
 
@@ -58,7 +59,7 @@ const VmCard = () => {
       {vmsList.map(e => {
         return <Col xl="4" sm="6" key={e.id} value={e.VirtualMachine_Name}>
           <Card>
-            <Link to="/vmdetails ">
+            <Link to={`/vmdetails/${e.id}`}>
               <CardBody>
 
                 <div className="d-flex">
@@ -66,7 +67,7 @@ const VmCard = () => {
                   <Col lg="3">
                     <div className="avatar-md me-4">
                       <span className="avatar-title rounded bg-light text-danger font-size-16">
-                        <img src='./1..jpg' height="69" width="69" style={{ borderRadius: "4px" }} />
+                        <img src={Vm} height="69" width="69" style={{ borderRadius: "4px" }} />
                       </span>
                     </div>
                   </Col>

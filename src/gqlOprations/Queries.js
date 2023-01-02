@@ -46,3 +46,18 @@ query GetUserByID($input: for_id_token) {
   }
   `
 
+  export const GET_SPECIFIC_VM = gql `
+  query Query($input: for_id_token) {
+    getSpecificVM(input: $input) {
+      Config
+      Description
+      GU_ID
+      Status
+      Title
+      VM_Image
+      VirtualMachine_Name
+      id
+    }
+  }
+  `
+
