@@ -68,113 +68,13 @@ const IsoFileList = () => {
     );
 
 
-    const datab = [
-
-        {
-            "filename": "",
-            "filetype": "selection-gsykp",
-            "age": 22,
-            "visits": 20,
-            "progress": 39,
-            "status": "single"
-        },
-        //     // {
-        //     //     "filename": "heart-nff6w",
-        //     //     "filetype": "information-nyp92",
-        //     //     "age": 16,
-        //     //     "visits": 98,
-        //     //     "progress": 40,
-        //     //     "status": "complicated"
-        //     // },
-        //     // {
-        //     //     "filename": "minute-yri12",
-        //     //     "filetype": "fairies-iutct",
-        //     //     "age": 7,
-        //     //     "visits": 77,
-        //     //     "progress": 39,
-        //     //     "status": "single"
-        //     // },
-        //     // {
-        //     //     "filename": "degree-jx4h0",
-        //     //     "filetype": "man-u2y40",
-        //     //     "age": 27,
-        //     //     "visits": 54,
-        //     //     "progress": 92,
-        //     //     "status": "relationship"
-        //     // },
-        //     // {
-        //     //     "filename": "horn-od926",
-        //     //     "filetype": "selection-gsykp",
-        //     //     "age": 22,
-        //     //     "visits": 20,
-        //     //     "progress": 39,
-        //     //     "status": "single"
-        //     // },
-        //     // {
-        //     //     "filename": "heart-nff6w",
-        //     //     "filetype": "information-nyp92",
-        //     //     "age": 16,
-        //     //     "visits": 98,
-        //     //     "progress": 40,
-        //     //     "status": "complicated"
-        //     // },
-        //     // {
-        //     //     "filename": "minute-yri12",
-        //     //     "filetype": "fairies-iutct",
-        //     //     "age": 7,
-        //     //     "visits": 77,
-        //     //     "progress": 39,
-        //     //     "status": "single"
-        //     // },
-        //     // {
-        //     //     "filename": "degree-jx4h0",
-        //     //     "filetype": "man-u2y40",
-        //     //     "age": 27,
-        //     //     "visits": 54,
-        //     //     "progress": 92,
-        //     //     "status": "relationship"
-        //     // },
-        //     // {
-        //     //     "filename": "horn-od926",
-        //     //     "filetype": "selection-gsykp",
-        //     //     "age": 22,
-        //     //     "visits": 20,
-        //     //     "progress": 39,
-        //     //     "status": "single"
-        //     // },
-        //     // {
-        //     //     "filename": "heart-nff6w",
-        //     //     "filetype": "information-nyp92",
-        //     //     "age": 16,
-        //     //     "visits": 98,
-        //     //     "progress": 40,
-        //     //     "status": "complicated"
-        //     // },
-        //     // {
-        //     //     "filename": "minute-yri12",
-        //     //     "filetype": "fairies-iutct",
-        //     //     "age": 7,
-        //     //     "visits": 77,
-        //     //     "progress": 39,
-        //     //     "status": "single"
-        //     // },
-        //     // {
-        //     //     "filename": "degree-jx4h0",
-        //     //     "filetype": "man-u2y40",
-        //     //     "age": 27,
-        //     //     "visits": 54,
-        //     //     "progress": 92,
-        //     //     "status": "relationship"
-        //     // }
-    ];
-
 
 
     document.title = "Iso File List";
 
     useEffect(() => {
         if (loading) console.log("loading...")
-        if (data) setIsoData(p => (data.getIOSById))
+        if (data) setIsoData(p => (data.getIOSById)), console.log(data)
         if (error) console.log(error)
     }, [data])
 

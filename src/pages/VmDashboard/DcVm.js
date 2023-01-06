@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Col, Container, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, Progress, CardTitle, Table } from "reactstrap";
 import classnames from "classnames";
 import { Link } from "react-router-dom";
-import Slider from "react-rangeslider";
 import "react-rangeslider/lib/index.css";
 import UploadImg from "pages/CreateVm/UploadImg";
 import RamSlider from "pages/CreateVm/RamSlider";
@@ -17,31 +16,31 @@ import { CREATE_ISO, CREATE_VM } from "gqlOprations/Mutations";
 
 const DcVm = () => {
 
-    const [passedSteps, setPassedSteps] = useState([1])
-    const [passedStepsVertical, setPassedStepsVertical] = useState([1])
-    const [activeTabVartical, setoggleTabVertical] = useState(1)
-    const [filename, setFilename] = useState('')
-    const [uploadPercentage, setUploadPercentage] = useState(0)
+    const [passedSteps, setPassedSteps] = useState([1]);
+    const [passedStepsVertical, setPassedStepsVertical] = useState([1]);
+    const [activeTabVartical, setoggleTabVertical] = useState(1);
+    const [filename, setFilename] = useState('');
+    const [uploadPercentage, setUploadPercentage] = useState(0);
     const [isoList, setIsoList] = useState([]);
     const [vmData, setVmData] = useState({});
     const [img, setImg] = useState();
     const [configData, setConfigData] = useState({});
     const [dropdownVal, setDropDownVal] = useState({
-        cpus:2
+        cpus: 2
     });
 
     const handleDropDown = (e) => {
         e.preventDefault(),
-        setDropDownVal({
-            ...dropdownVal,
-            [e.target.name]: e.target.value
-        })
+            setDropDownVal({
+                ...dropdownVal,
+                [e.target.name]: e.target.value
+            })
         setConfigData({
             ...configData,
-            getConfigFile:{
+            getConfigFile: {
                 ...configData.getConfigFile,
                 Operating_System: dropdownVal.Operating_System,
-                processor:{
+                processor: {
                     ...configData.getConfigFile.processor,
                     Processors: dropdownVal.cpus
                 }
@@ -128,7 +127,8 @@ const DcVm = () => {
                     "token": mvToken,
                     "Title": vmData.virtualMachineName,
                     "virtualMachineName": vmData.virtualMachineName,
-                    "Description": vmData.Description
+                    "Description": vmData.Description,
+                    "vmImage": vmData.vmImage
                 }
             }
         })
@@ -144,6 +144,8 @@ const DcVm = () => {
             }
         }
     }
+
+
 
     const handleImageUp = (e) => {
         const file = e.target.files[0];
@@ -162,6 +164,7 @@ const DcVm = () => {
         };
         reader.readAsDataURL(file)
     }
+
 
     const uplaodURL = 'http://placed.ro:2000';
 
@@ -447,8 +450,6 @@ const DcVm = () => {
                                                                 accept="image/*"
                                                                 name="vmImage"
                                                                 onChange={handleImageUp}
-                                                            // onChange={handleImageUpload}
-                                                            // ref={imageUploader}
                                                             />
                                                         </div>
                                                     </Col>

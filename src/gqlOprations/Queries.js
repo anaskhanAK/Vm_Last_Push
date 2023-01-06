@@ -51,6 +51,33 @@ query GetUserByID($input: for_id_token) {
     getSpecificVM(input: $input) {
       Config
       Description
+      Status
+      Title
+      VirtualMachine_Name
+      id
+      VM_Image
+    }
+  }
+  `
+
+  export const GET_ALL_USERS = gql `
+  query Query($input: for_search) {
+    getUserList(input: $input) {
+      Email
+      First_Name
+      Last_Name
+      User_Image
+      User_Type
+      id
+    }
+  }
+  `
+
+  export const GET_ALL_VMS = gql `
+  query Query($input: for_search_all) {
+    getAllVM(input: $input) {
+      Config
+      Description
       GU_ID
       Status
       Title

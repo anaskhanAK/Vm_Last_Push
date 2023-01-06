@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react'
 import { Card, CardBody, Col, Button, Container, CardImg, CardText, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, CardTitle, Table } from "reactstrap"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
-import { Link, useParams } from "react-router-dom"
+import { Link, useHistory, useParams } from "react-router-dom"
 import StBtn from './StBtn'
-import { useLazyQuery } from '@apollo/client'
+import { useLazyQuery, useMutation } from '@apollo/client'
 import { GET_SPECIFIC_VM } from 'gqlOprations/Queries'
 import Vm from "../../assets/images/1..jpg";
+import { DELETE_VM } from 'gqlOprations/Mutations'
 
 
 const VmDetails = () => {
     document.title = "VM Details";
-
+    const history = useHistory();
     const { vmId } = useParams();
     const [svmData, setSvmData] = useState();
 
@@ -36,11 +37,33 @@ const VmDetails = () => {
         }
     });
 
+    const [deleteVm, { loading: loadingA, data: dataA, error: errorA }] = useMutation(DELETE_VM)
+
+    const handleDeleteVm = () => {
+
+        deleteVm({
+            variables: {
+                input: {
+                    token: mvToken,
+                    id: [vmId]
+                }
+            }
+        });
+
+        if (loadingA) console.log(loadingA);
+        if (dataA) {
+            console.log(dataA);
+            history.push("/vmlist")
+        };
+        if (errorA) console.log(errorA.message)
+
+    };
+
     useEffect(() => {
-        if (loading) console.log("loadingD...")
+        if (loading) console.log("loading...")
         if (data) {
             console.log(data);
-            setSvmData(p => (data));
+            setSvmData(p => (data)), console.log(data)
         }
         if (error) console.log(error)
     }, [data])
@@ -60,7 +83,7 @@ const VmDetails = () => {
                                         <Card >
                                             <CardBody>
                                                 <h4 className="card-title mb-4">VM Image</h4>
-                                                <CardImg className="img-fluid" src={Vm} alt='Vm Image' style={{height:"300px"}}/>
+                                                <CardImg className="img-fluid" src={svmData && svmData ? ("http://167.99.36.48:3003/" + svmData.getSpecificVM.VM_Image.split("app/")[1]) : ""} alt='Vm Image' style={{ height: "300px" }} />
                                             </CardBody>
                                             <CardBody>
                                                 <Row>
@@ -81,7 +104,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Name:</CardTitle>
                                                                 <CardText>
-                                                                    {svmData && svmData ? (svmData.getSpecificVM.VirtualMachine_Name) : null}
+                                                                    {svmData && svmData ? (svmData.getSpecificVM.VirtualMachine_Name) : ""}
                                                                 </CardText>
                                                             </CardBody>
                                                         </Card>
@@ -91,7 +114,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Operating system:</CardTitle>
                                                                 <CardText>
-                                                                    {svmData && svmData ? (JSON.parse(svmData.getSpecificVM.Config).getConfigFile.Operating_System) : null}
+                                                                    {svmData && svmData ? (JSON.parse(svmData.getSpecificVM.Config).getConfigFile.Operating_System) : ""}
                                                                 </CardText>
                                                             </CardBody>
                                                         </Card>
@@ -113,7 +136,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Description:</CardTitle>
                                                                 <CardText>
-                                                                    {svmData && svmData ? (svmData.getSpecificVM.Description) : null}                                                                </CardText>
+                                                                    {svmData && svmData ? (svmData.getSpecificVM.Description) : ""}                                                                </CardText>
                                                             </CardBody>
                                                         </Card>
                                                     </Col>
@@ -121,7 +144,7 @@ const VmDetails = () => {
 
                                                 <Row>
                                                     <Col>
-                                                        <Link to="/update-vm" >
+                                                        <Link to={`/update-vm/${vmId}`} >
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-primary  btn-label">
@@ -131,13 +154,15 @@ const VmDetails = () => {
                                                     </Col>
 
                                                     <Col>
-                                                        <Link to="/#" >
-                                                            <button
-                                                                type="button"
-                                                                className="btn btn-danger  btn-label">
-                                                                <i className="bx bx-trash label-icon"></i> Delete VM
-                                                            </button>
-                                                        </Link>
+
+                                                        <button
+                                                            type="button"
+                                                            className="btn btn-danger  btn-label"
+                                                            onClick={handleDeleteVm}
+                                                        >
+                                                            <i className="bx bx-trash label-icon"></i> Delete VM
+                                                        </button>
+
                                                     </Col>
                                                 </Row>
                                             </CardBody>

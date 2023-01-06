@@ -76,4 +76,26 @@ mutation Mutation($input: For_VirtualMachine) {
     VirtualMachine_Name
     id
   }
-}`
+}
+`
+
+export const UPDATE_VM = gql `
+mutation Mutation($input: VM) {
+  upadteVM(input: $input) {
+    Config
+    Description
+    GU_ID
+    Status
+    Title
+    VirtualMachine_Name
+    VM_Image
+    id
+  }
+}
+`
+
+export const DELETE_VM =gql `
+mutation Mutation($input: for_ids_token) {
+  deleteVM(input: $input)
+}
+`

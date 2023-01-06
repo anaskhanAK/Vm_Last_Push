@@ -26,7 +26,7 @@ const Login = () => {
     console.log(data);
     document.cookie = "MvUserToken" + "=" + data.Login.token;
     document.cookie = "MvUserId" + "=" + data.Login.id;
-    document.cookie = "MvUserType" + "=" + data.Login.userType;
+    document.cookie = "MvUserType" + "=" + data.Login.User_Type;
     toastr.success("Login Successful");
     history.push("/dashboard");
   }

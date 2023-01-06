@@ -52,11 +52,11 @@ const Register = () => {
     onSubmit: (values) => {
       console.log(values);
 
-      userRegister({
-        variables:{
-          input:values
-        }
-      })
+      // userRegister({
+      //   variables:{
+      //     input:values
+      //   }
+      // })
     }
   });
 

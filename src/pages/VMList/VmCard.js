@@ -1,4 +1,4 @@
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import { GET_USER_VMS } from 'gqlOprations/Queries';
 import React from 'react'
 import { useEffect } from 'react';
@@ -13,7 +13,7 @@ const VmCard = () => {
 
   const [state, setState] = useState(false);
   const toggle = () => {
-    setState(!state);
+    // setState(!state);
     console.log(state)
   }
 
@@ -38,25 +38,21 @@ const VmCard = () => {
       }
     }
   });
-  // if(data) console.log(data);
-  // if(loading) console.log("loading...")
-  // if(error) console.log(error.message)
+
 
   useEffect(() => {
-    if (loading) console.log("loading...")
-    if (data) {
-      // console.log(data);
-      setVmsList(p => (data.getUserAllVM));
-      // console.log(vmsList)
-    }
-    if (error) console.log(error)
-  }, [data])
-
-  useEffect(() => { getUserVms() }, [])
+    getUserVms()
+    if(loading) console.log("loading...")
+    if(data) {
+      console.log(data);
+      setVmsList(p => (data.getUserAllVM))
+    };
+    if(error) console.log(error.message)
+  },[data])
 
   return (
     <React.Fragment>
-      {vmsList.map(e => {
+      {vmsList && vmsList ? (vmsList.map(e => {
         return <Col xl="4" sm="6" key={e.id} value={e.VirtualMachine_Name}>
           <Card>
             <Link to={`/vmdetails/${e.id}`}>
@@ -67,7 +63,7 @@ const VmCard = () => {
                   <Col lg="3">
                     <div className="avatar-md me-4">
                       <span className="avatar-title rounded bg-light text-danger font-size-16">
-                        <img src={Vm} height="69" width="69" style={{ borderRadius: "4px" }} />
+                        <img src={"http://167.99.36.48:3003/" + e.VM_Image.split("app/")[1]} height="69" width="69" style={{ borderRadius: "4px" }} />
                       </span>
                     </div>
                   </Col>
@@ -100,7 +96,7 @@ const VmCard = () => {
                 </Col>
 
                 <Col lg="1">
-                  <Link to="/update-vm">
+                  <Link to={`/update-vm/${e.id}`}>
                     <div style={{ marginTop: "8px", display: "flex", justifyContent: "center" }}>
                       <i className="bx bx-edit bx-sm " />
                     </div>
@@ -120,7 +116,7 @@ const VmCard = () => {
             </div>
           </Card>
         </Col>
-      })}
+      })):getUserVms()}
 
     </React.Fragment>
 

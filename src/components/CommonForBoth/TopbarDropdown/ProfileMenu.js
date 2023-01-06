@@ -5,13 +5,14 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
+  Button
 } from "reactstrap";
 
 //i18n
 import { withTranslation } from "react-i18next";
 // Redux
 import { connect } from "react-redux";
-import { withRouter, Link } from "react-router-dom";
+import { withRouter, Link, useHistory } from "react-router-dom";
 
 // users
 import user1 from "../../../assets/images/users/avatar-1.jpg";
@@ -23,6 +24,8 @@ const ProfileMenu = props => {
   const [menu, setMenu] = useState(false);
 
   const [username, setusername] = useState("Admin");
+
+  const history = useHistory();
 
   useEffect(() => {
     if (localStorage.getItem("authUser")) {
@@ -60,6 +63,13 @@ const ProfileMenu = props => {
       }
     }
   });
+
+  const handleLogOut = () => {
+    document.cookie = "MvUserType=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "MvUserToken=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    document.cookie = "MvUserId=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    history.push("/login")
+  };
 
   return (
     <React.Fragment>
@@ -113,11 +123,11 @@ const ProfileMenu = props => {
           </DropdownItem>
 
           <div className="dropdown-divider" />
-          <Link to="/logout" className="dropdown-item">
+          <Button style={{display:"inline", border:"0px", backgroundColor:"transparent" , marginLeft:"15px"}} onClick={handleLogOut} >
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger" />
-            <span>{props.t("Logout")}</span>
-          </Link>
-        </DropdownMenu>
+            <span style={{color:"white"}}> LogOut </span>
+          </Button>        
+          </DropdownMenu>
       </Dropdown>
     </React.Fragment>
   );

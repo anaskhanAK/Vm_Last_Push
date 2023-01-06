@@ -3,10 +3,53 @@ import { useHistory } from "react-router-dom";
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import TableContainer from 'components/Common/TableContainer'
 import { useMemo } from 'react';
+import { useLayoutEffect } from 'react';
+import { useLazyQuery } from '@apollo/client';
+import { GET_ALL_USERS } from 'gqlOprations/Queries';
+import { useEffect } from 'react';
+import { useState } from 'react';
+
 
 const UserList = () => {
 
     const history = useHistory();
+    const [usersList, setUsersList] = useState([])
+
+    const getCookies = (cname) => {
+        const cArray = document.cookie.split("; ")
+        let result = null
+        cArray.forEach(element => {
+            if (element.indexOf(cname) == 0) {
+                result = element.substring(cname.length + 1)
+            }
+        })
+        return result;
+    }
+
+    const mvUserType = getCookies("MvUserType");
+    const mvToken = getCookies("MvUserToken");
+
+    const [getAllUsers, {loading, data, error}] = useLazyQuery(GET_ALL_USERS,{
+        variables:{
+            input:{
+                token: mvToken
+            }
+        }
+    })
+
+    useLayoutEffect(() => {
+        if(mvUserType !== "admin"){
+            history.push("/dashboard")
+        }
+    }, [])
+
+    useEffect(() => {
+        if (loading) console.log("loading...")
+        if (data) setUsersList(p => (data.getUserList)), console.log(data)
+        if (error) console.log(error)
+    }, [data])
+
+    useEffect(() => { getAllUsers() }, [])
 
     const cellFunction = ({ value, column: { getProps } }) => {
         return <>
@@ -17,7 +60,7 @@ const UserList = () => {
             />
             <i
                 className="bx bx-edit label-icon"
-                style={{ fontSize: '17px', color: 'white', cursor: 'pointer', marginLeft:"10px"}}
+                style={{ fontSize: '17px', color: 'white', cursor: 'pointer', marginLeft: "10px" }}
                 onClick={() => { console.log('clicked') }}
             />
         </>
@@ -27,13 +70,13 @@ const UserList = () => {
         () => [
             {
                 Header: 'User Name',
-                accessor: 'username',
+                accessor: "First_Name",
             },
             {
                 Header: 'Email',
-                id: 'filetype',
+                // id: 'filetype',
                 // accessor: d => d.filetype,
-                accessor:'email'
+                accessor: 'Email'
             },
             {
                 Header: 'Actions',
@@ -45,128 +88,6 @@ const UserList = () => {
         []
     );
 
-    const data = [
-        {
-            "username":"anaskhan",
-            "filename": "horn-od926",
-            "filetype": "selection-gsykp",
-            "age": 22,
-            "visits": 20,
-            "progress": 39,
-            "status": "single",
-            "email":"anaskhankin1999@mail.com"
-        },
-        {
-            "username":"Liam",
-            "filename": "heart-nff6w",
-            "filetype": "information-nyp92",
-            "age": 16,
-            "visits": 98,
-            "progress": 40,
-            "status": "complicated",
-            "email":"Liam1234@mail.com"
-        },
-        {
-            "username":"Noah",
-            "filename": "minute-yri12",
-            "filetype": "fairies-iutct",
-            "age": 7,
-            "visits": 77,
-            "progress": 39,
-            "status": "single",
-            "email":"Noah2212@mail.com"
-        },
-        {
-            "username":"Oliver",
-            "filename": "degree-jx4h0",
-            "filetype": "man-u2y40",
-            "age": 27,
-            "visits": 54,
-            "progress": 92,
-            "status": "relationship",
-            "email":"Oliver4569@mail.com"
-        },
-        {
-            "username":"Elijah",
-            "filename": "horn-od926",
-            "filetype": "selection-gsykp",
-            "age": 22,
-            "visits": 20,
-            "progress": 39,
-            "status": "single",
-            "email":"Elijah66558@mail.com"
-        },
-        {
-            "username":"James",
-            "filename": "heart-nff6w",
-            "filetype": "information-nyp92",
-            "age": 16,
-            "visits": 98,
-            "progress": 40,
-            "status": "complicated",
-            "email":"James893893@mail.com"
-        },
-        {
-            "username":"William",
-            "filename": "minute-yri12",
-            "filetype": "fairies-iutct",
-            "age": 7,
-            "visits": 77,
-            "progress": 39,
-            "status": "single",
-            "email":"William38239@mail.com"
-        },
-        {
-            "username":"Lucas",
-            "filename": "degree-jx4h0",
-            "filetype": "man-u2y40",
-            "age": 27,
-            "visits": 54,
-            "progress": 92,
-            "status": "relationship",
-            "email":"Lucas2222@mail.com"
-        },
-        {
-            "username":"Benjamin",
-            "filename": "horn-od926",
-            "filetype": "selection-gsykp",
-            "age": 22,
-            "visits": 20,
-            "progress": 39,
-            "status": "single",
-            "email":"Benjamin7767@mail.com"
-        },
-        {
-            "username":"Theodore",
-            "filename": "heart-nff6w",
-            "filetype": "information-nyp92",
-            "age": 16,
-            "visits": 98,
-            "progress": 40,
-            "status": "complicated",
-            "email":"Theodore4335@mail.com"
-        },
-        {
-            "username":"johnny",
-            "filename": "minute-yri12",
-            "filetype": "fairies-iutct",
-            "age": 7,
-            "visits": 77,
-            "progress": 39,
-            "status": "single",
-            "email":"johnny5677@mail.com"
-        },
-        {
-            "username":"Henry",
-            "filename": "degree-jx4h0",
-            "filetype": "man-u2y40",
-            "age": 27,
-            "visits": 54,
-            "progress": 92,
-            "status": "relationship",
-            "email":"Henry3738@mail.com"
-        }
-    ];
 
     document.title = "Iso File List";
 
@@ -187,7 +108,7 @@ const UserList = () => {
 
                 <TableContainer
                     columns={columns}
-                    data={data}
+                    data={usersList}
                     isGlobalFilter={true}
                     // isAddOptions={true}
                     customPageSize={10}

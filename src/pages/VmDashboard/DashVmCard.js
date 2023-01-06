@@ -2,6 +2,7 @@ import React from 'react'
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardBody, Container, Col, UncontrolledTooltip, Row, Badge, Button, Spinner } from 'reactstrap';
+import Vm from "../../assets/images/1..jpg";
 
 const DashVmCard = () => {
 
@@ -21,7 +22,7 @@ const DashVmCard = () => {
                                 <Col lg="3">
                                     <div className="avatar-sm me-4">
                                         <span className="avatar-title rounded bg-light text-danger font-size-16">
-                                            <img src='./1..jpg' height="45" width="45" style={{ borderRadius: "4px" }} />
+                                            <img src={Vm} height="45" width="45" style={{ borderRadius: "4px" }} />
                                         </span>
                                     </div>
                                 </Col>
