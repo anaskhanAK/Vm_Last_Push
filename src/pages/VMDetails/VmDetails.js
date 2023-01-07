@@ -7,6 +7,7 @@ import { useLazyQuery, useMutation } from '@apollo/client'
 import { GET_SPECIFIC_VM } from 'gqlOprations/Queries'
 import Vm from "../../assets/images/1..jpg";
 import { DELETE_VM } from 'gqlOprations/Mutations'
+import alt from "assets/images/Azure.png"
 
 
 const VmDetails = () => {
@@ -83,7 +84,7 @@ const VmDetails = () => {
                                         <Card >
                                             <CardBody>
                                                 <h4 className="card-title mb-4">VM Image</h4>
-                                                <CardImg className="img-fluid" src={svmData && svmData ? ("http://167.99.36.48:3003/" + svmData.getSpecificVM.VM_Image.split("app/")[1]) : ""} alt='Vm Image' style={{ height: "300px" }} />
+                                                <CardImg className="img-fluid" src={svmData && svmData ? ("http://167.99.36.48:3003/" + svmData.getSpecificVM.VM_Image.split("app/")[1]) : alt} alt='Vm Image' style={{ height: "300px" }} />
                                             </CardBody>
                                             <CardBody>
                                                 <Row>
@@ -114,7 +115,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Operating system:</CardTitle>
                                                                 <CardText>
-                                                                    {svmData && svmData ? (JSON.parse(svmData.getSpecificVM.Config).getConfigFile.Operating_System) : ""}
+                                                                    {svmData && svmData ? (JSON.parse(svmData.getSpecificVM.Config).getConfigFile.Operating_System) : "Windows"}
                                                                 </CardText>
                                                             </CardBody>
                                                         </Card>

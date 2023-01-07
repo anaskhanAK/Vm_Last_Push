@@ -119,7 +119,7 @@ const UserProfile = () => {
 
                                                 <Row>
                                                     <Col style={{ marginTop: "67px" }}>
-                                                        <Link to="/updateprofile" >
+                                                        <Link to={`/updateprofile/${mvid}`} >
                                                             <button
                                                                 type="button"
                                                                 className="btn btn-primary  btn-label">

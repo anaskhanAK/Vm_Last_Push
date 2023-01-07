@@ -1,12 +1,17 @@
 import React, { useState, useRef, useEffect } from "react"
 import { Card, CardBody, Col, Form, Input, Label, Row } from "reactstrap"
-import { from, useMutation, useQuery } from "@apollo/client"
+import { from, useMutation, useQuery, useLazyQuery } from "@apollo/client"
 import { USER_PROFILE_UPDATE } from "gqlOprations/Mutations"
 import { GET_USER_BY_ID } from "gqlOprations/Queries";
 // import getUserApi from "./getUserApi"
+import alt from "assets/images/userAlt.jpg"
+import { set } from "lodash";
+import { useParams } from "react-router-dom";
 
 const UpdateDetails = () => {
-    
+
+    const {mvid} = useParams()
+
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
         let result = null
@@ -19,21 +24,15 @@ const UpdateDetails = () => {
     }
 
     const mvToken = getCookies("MvUserToken");
-    const mvid = getCookies("MvUserID");
-    
+    // const mvid = getCookies("MvUserID");
 
-    const [ProfileData, setProfileData] = useState({
-        uImage: "",
-        uFName: "",
-        ulName: "",
-        uEmail: ""
-    });
     const [img, setImg] = useState();
     const [formData, setFormData] = useState({
         token: mvToken
     });
 
-    const { data: dataB, loading: loadingB, error: errorB } = useQuery(GET_USER_BY_ID, {
+
+    const [getUserById, { data: dataB, loading: loadingB, error: errorB }] = useLazyQuery(GET_USER_BY_ID, {
         variables: {
             input: {
                 id: mvid,
@@ -42,10 +41,7 @@ const UpdateDetails = () => {
         }
     });
 
-    if (dataB) {
-        console.log(dataB);
-    }
-    
+
 
     const [userProfileUpdate, { data: dataA, loading: loadingA, error: errorA }] = useMutation(USER_PROFILE_UPDATE);
 
@@ -59,16 +55,22 @@ const UpdateDetails = () => {
 
     const handleUpdate = (e) => {
         e.preventDefault();
-        // console.log(formData);
+        console.log(formData);
 
         userProfileUpdate({
             variables: {
-                input: formData
+                input: {
+                    token: mvToken,
+                    firstName: formData.First_Name,
+                    lastName: formData.Last_Name,
+                    Email: formData.Email,
+                    userImage: formData.userImage || null
+                }
             }
         })
 
         if (loadingA) {
-            // console.log("loading...")
+            console.log("loading...")
         }
 
         if (dataA) {
@@ -77,7 +79,7 @@ const UpdateDetails = () => {
         }
 
         if (errorA) {
-            // console.log(error.message)
+            console.log(error.message)
         }
     };
 
@@ -88,16 +90,28 @@ const UpdateDetails = () => {
         reader.onloadend = () => {
             setImg(reader.result.toString());
             const eImage = reader.result.toString();
+            console.log(eImage)
             setFormData(prevState => ({
                 ...prevState,
                 userImage: eImage
             })
             )
-
-
         };
         reader.readAsDataURL(file)
     }
+
+    useEffect(() => {
+        if (loadingB) { console.log("loadingB...") }
+        if (dataB) {
+            console.log(dataB);
+            setFormData(p => dataB.getUserByID)
+        }
+        if (errorB) { console.log(errorB.message) }
+    }, [dataB])
+
+    useEffect(() => {
+        getUserById()
+    }, [])
 
 
     return (
@@ -115,7 +129,7 @@ const UpdateDetails = () => {
                                                 <div style={{ height: "250px" }}>
                                                     <img className="rounded-circle"
                                                         id="UserImage"
-                                                        src={img||"./updateimage.png"}
+                                                        src={img || dataB && dataB ? ("http://167.99.36.48:3003/"+dataB.getUserByID.User_Image.split("app/")[1]):alt}
                                                         // src={"http://167.99.36.48:3003/"+dataB.getUserByID.User_Image.split("app/")[1]}
                                                         width="270px"
                                                         height="270px"
@@ -150,10 +164,10 @@ const UpdateDetails = () => {
                                                             type="text"
                                                             className="form-control"
                                                             id="Update-first-name-input"
-                                                            name="firstName"
+                                                            name="First_Name"
                                                             placeholder="Enter Your First Name"
                                                             onChange={handleChange}
-                                                            value={formData.firstName || ""}
+                                                            value={formData.First_Name || ""}
                                                         />
                                                     </div>
                                                 </Col>
@@ -164,10 +178,10 @@ const UpdateDetails = () => {
                                                             type="text"
                                                             className="form-control"
                                                             id="Update-last-name-input"
-                                                            name="lastName"
+                                                            name="Last_Name"
                                                             placeholder="Enter Your Last Name"
                                                             onChange={handleChange}
-                                                            value={formData.lastName || ""}
+                                                            value={formData.Last_Name || ""}
                                                         />
                                                     </div>
                                                 </Col>

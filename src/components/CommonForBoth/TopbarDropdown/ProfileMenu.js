@@ -18,6 +18,7 @@ import { withRouter, Link, useHistory } from "react-router-dom";
 import user1 from "../../../assets/images/users/avatar-1.jpg";
 import { GET_USER_BY_ID } from "gqlOprations/Queries";
 import { useMutation, useQuery } from "@apollo/client"
+import alt from "assets/images/userAlt.jpg"
 
 const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
@@ -85,8 +86,9 @@ const ProfileMenu = props => {
         >
           <img
             className="rounded-circle header-profile-user"
-            src={data && data ? ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]) : null}
-            alt="Header Avatar"
+            src={data && data ? ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]) : alt || alt}
+            // src={alt}
+            alt="U"
           />
           {/* <span className="d-none d-xl-inline-block ms-2 me-1">{data && data ? (data.getUserByID.Email):null}</span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" /> */}
@@ -123,11 +125,11 @@ const ProfileMenu = props => {
           </DropdownItem>
 
           <div className="dropdown-divider" />
-          <Button style={{display:"inline", border:"0px", backgroundColor:"transparent" , marginLeft:"15px"}} onClick={handleLogOut} >
+          <Button style={{ display: "inline", border: "0px", backgroundColor: "transparent", marginLeft: "15px" }} onClick={handleLogOut} >
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger" />
-            <span style={{color:"white"}}> LogOut </span>
-          </Button>        
-          </DropdownMenu>
+            <span style={{ color: "white" }}> LogOut </span>
+          </Button>
+        </DropdownMenu>
       </Dropdown>
     </React.Fragment>
   );

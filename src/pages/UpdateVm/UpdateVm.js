@@ -111,12 +111,11 @@ const UpdateVm = () => {
                     "virtualMachineName": vmUpdateData.virtualMachineName,
                     "Description": vmUpdateData.Description,
                     "id": vmId,
-                    "vmImage": updateImg
+                    "vmImage": vmUpdateData.vmImage||null,
                 }
             }
         })
     };
-
 
     useEffect(() => {
         if (loadingC) console.log("loadingC...")
@@ -150,7 +149,7 @@ const UpdateVm = () => {
                                             <CardBody>
                                                 <CardTitle className="mb-4">Update VM Image</CardTitle>
                                                 <img
-                                                    src={updateImg || "" }
+                                                    src={updateImg || dataC && dataC ? ("http://167.99.36.48:3003/" + dataC.getSpecificVM.VM_Image.split("app/")[1]): "" }
                                                     height="300px"
                                                     width="100%"
                                                 />

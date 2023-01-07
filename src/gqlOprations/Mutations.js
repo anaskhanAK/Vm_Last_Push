@@ -99,3 +99,8 @@ mutation Mutation($input: for_ids_token) {
   deleteVM(input: $input)
 }
 `
+export const DELETE_USER = gql `
+mutation DeleteUser($input: for_id_token) {
+  deleteUser(input: $input)
+}
+`

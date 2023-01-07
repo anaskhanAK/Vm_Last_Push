@@ -12,6 +12,11 @@ import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import { GET_CONFIG, GET_IOS_BY_ID } from "gqlOprations/Queries";
 import IsoModel from "pages/CreateVm/IsoModel";
 import { CREATE_ISO, CREATE_VM } from "gqlOprations/Mutations";
+import alt from "assets/images/Azure.png"
+import vin from "assets/images/widows.jpg"
+import lin from "assets/images/linux.jpg"
+import { use } from "i18next";
+
 
 
 const DcVm = () => {
@@ -29,6 +34,8 @@ const DcVm = () => {
         cpus: 2
     });
 
+    const [dropImage, setDropImage] = useState(alt);
+
     const handleDropDown = (e) => {
         e.preventDefault(),
             setDropDownVal({
@@ -45,6 +52,7 @@ const DcVm = () => {
                     Processors: dropdownVal.cpus
                 }
             }
+
         })
 
         console.log(configData)
@@ -70,6 +78,7 @@ const DcVm = () => {
             }
         })
     }
+
 
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
@@ -165,6 +174,24 @@ const DcVm = () => {
         reader.readAsDataURL(file)
     }
 
+    // if (dropdownVal.Operating_System === "Windows") {
+    //     setDropImage(vin)
+    // }
+
+    // if (dropdownVal.Operating_System === "Linux") {
+    //     setDropImage(lin)
+    // }
+
+    useEffect(()=>{
+        if (dropdownVal.Operating_System === "Windows") {
+            setDropImage(vin)
+        }
+    
+        if (dropdownVal.Operating_System === "Linux") {
+            setDropImage(lin)
+        }
+    },[dropdownVal.Operating_System])
+
 
     const uplaodURL = 'http://placed.ro:2000';
 
@@ -181,7 +208,8 @@ const DcVm = () => {
                         Name: event.file.name,
                         Size: event.file.size,
                         Type: event.file.type,
-                        userId: mvid
+                        userId: mvid,
+                        token: mvToken
                     }
                 }
             })
@@ -389,8 +417,6 @@ const DcVm = () => {
                                                             >
                                                                 <option> Windows </option>
                                                                 <option> Linux </option>
-                                                                <option> IOS </option>
-                                                                <option> Others </option>
                                                             </select>
                                                         </div>
                                                     </Row>
@@ -428,7 +454,7 @@ const DcVm = () => {
                                                         <div className="text-center">
                                                             <div style={{ height: "250px" }}>
                                                                 <img
-                                                                    src={img || "./updateimage.png"}
+                                                                    src={img || dropImage}
                                                                     width="270px"
                                                                     height="250px"
                                                                     style={{ borderRadius: "5px" }}

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, CardBody, Container, Col, UncontrolledTooltip, Row, Badge, Button, Spinner } from 'reactstrap';
 import Vm from "../../assets/images/1..jpg";
+import alt from "assets/images/Azure.png"
 
 const VmCard = () => {
 
@@ -63,7 +64,7 @@ const VmCard = () => {
                   <Col lg="3">
                     <div className="avatar-md me-4">
                       <span className="avatar-title rounded bg-light text-danger font-size-16">
-                        <img src={"http://167.99.36.48:3003/" + e.VM_Image.split("app/")[1]} height="69" width="69" style={{ borderRadius: "4px" }} />
+                        <img src={"http://167.99.36.48:3003/" + e.VM_Image.split("app/")[1] || alt} height="69" width="69" style={{ borderRadius: "4px" }} />
                       </span>
                     </div>
                   </Col>

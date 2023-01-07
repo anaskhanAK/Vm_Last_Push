@@ -4,11 +4,12 @@ import Breadcrumbs from '../../components/Common/Breadcrumb';
 import TableContainer from 'components/Common/TableContainer'
 import { useMemo } from 'react';
 import { useLayoutEffect } from 'react';
-import { useLazyQuery } from '@apollo/client';
+import { useLazyQuery, useMutation } from '@apollo/client';
 import { GET_ALL_USERS } from 'gqlOprations/Queries';
 import { useEffect } from 'react';
 import { useState } from 'react';
-
+import { DELETE_USER } from 'gqlOprations/Mutations';
+import { Link } from 'react-router-dom';
 
 const UserList = () => {
 
@@ -29,16 +30,18 @@ const UserList = () => {
     const mvUserType = getCookies("MvUserType");
     const mvToken = getCookies("MvUserToken");
 
-    const [getAllUsers, {loading, data, error}] = useLazyQuery(GET_ALL_USERS,{
-        variables:{
-            input:{
+    const [getAllUsers, { loading, data, error }] = useLazyQuery(GET_ALL_USERS, {
+        variables: {
+            input: {
                 token: mvToken
             }
         }
     })
 
+    const [deleteUser, { loading: loadingA, data: dataA, error: errorA }] = useMutation(DELETE_USER);
+
     useLayoutEffect(() => {
-        if(mvUserType !== "admin"){
+        if (mvUserType !== "admin") {
             history.push("/dashboard")
         }
     }, [])
@@ -51,18 +54,37 @@ const UserList = () => {
 
     useEffect(() => { getAllUsers() }, [])
 
-    const cellFunction = ({ value, column: { getProps } }) => {
+    const cellFunction = (row) => {
+        const { value, column: { getProps } } = row;
+
         return <>
             <i
                 className="mdi mdi-delete label-icon"
                 style={{ fontSize: '17px', color: 'white', cursor: 'pointer' }}
-                onClick={() => { console.log('clicked') }}
+                onClick={() => {
+                    console.log('clicked', row.cell.row.original.id);
+                    deleteUser({
+                        variables: {
+                            input: {
+                                id: row.cell.row.original.id,
+                                token: mvToken,
+                            }
+                        }
+                    })
+
+                    if (dataA) console.log(dataA)
+                    if (loadingA) console.log("loading...")
+                    if (errorA) console.log(errorA.message)
+                }}
             />
-            <i
-                className="bx bx-edit label-icon"
-                style={{ fontSize: '17px', color: 'white', cursor: 'pointer', marginLeft: "10px" }}
-                onClick={() => { console.log('clicked') }}
-            />
+
+            <Link to={`/updateprofile/${row.cell.row.original.id}`}>
+                <i
+                    className="bx bx-edit label-icon"
+                    style={{ fontSize: '17px', color: 'white', cursor: 'pointer', marginLeft: "10px" }}
+                    onClick={() => { console.log('clicked') }}
+                />
+            </Link>
         </>
     }
 

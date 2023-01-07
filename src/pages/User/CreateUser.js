@@ -22,6 +22,7 @@ import * as Yup from "yup";
 import { useFormik } from "formik";
 
 import avatar5 from "../../assets/images/users/avatar-5.jpg";
+import alt from "assets/images/userAlt.jpg"
 
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { USER_REGISTER } from 'gqlOprations/Mutations';
@@ -37,17 +38,11 @@ const CreateUser = props => {
     const history = useHistory();
 
     toastr.options = {
-      positionClass: "toast-top-center",
-      closeButton: true,
+        positionClass: "toast-top-center",
+        closeButton: true,
     }
-  
-    const [userRegister, { data, loading, error }] = useMutation(USER_REGISTER);
 
-  
-    if(data){
-      toastr.success("Register Successful Please Login Your Account");
-    //   history.push("/login");
-    }
+    const [userRegister, { data, loading, error }] = useMutation(USER_REGISTER);
 
 
     const handleImageUp = (e) => {
@@ -89,6 +84,9 @@ const CreateUser = props => {
                     input: values
                 }
             })
+
+            toastr.success("Register Successful Please Login Your Account");
+            console.log(data)
         }
     });
 
@@ -117,7 +115,7 @@ const CreateUser = props => {
                                                             <div style={{ height: "250px" }}>
                                                                 <img className="rounded-circle"
                                                                     id="UserImage"
-                                                                    src={img || "./updateimage.png"}
+                                                                    src={img || alt}
                                                                     width="270px"
                                                                     height="270px"
                                                                 ></img>
@@ -238,8 +236,8 @@ const CreateUser = props => {
                                                                     id="update-submit"
                                                                     type="submit"
                                                                     className="btn btn-primary  btn-label"> Update Now
-                                                                    {/* {loadingA && loadingA ? (<i className="bx bx-sync label-icon bx-spin"></i>) :
-                                                                        (<i className="bx bx-sync label-icon"></i>)} Update Now */}
+                                                                    {loading && loading ? (<i className="bx bx-sync label-icon bx-spin"></i>) :
+                                                                        (<i className="bx bx-sync label-icon"></i>)} Update Now
                                                                 </button>
                                                             </Col>
                                                         </Row>
