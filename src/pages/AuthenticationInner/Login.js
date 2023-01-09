@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useHistory } from "react-router-dom";
 import { Row, Col, CardBody, Card, Container, Form, Input, Label, FormFeedback, Alert } from "reactstrap";
 import * as Yup from "yup";
@@ -11,7 +11,7 @@ import "toastr/build/toastr.min.css";
 
 const Login = () => {
 
-  document.title = "Login | Skote - React Admin & Dashboard Template";
+  document.title = "Login";
 
   const history = useHistory();
 
@@ -28,8 +28,9 @@ const Login = () => {
     document.cookie = "MvUserId" + "=" + data.Login.id;
     document.cookie = "MvUserType" + "=" + data.Login.User_Type;
     toastr.success("Login Successful");
-    history.push("/dashboard");
+    history.push("/dashboard")
   }
+
 
   if (loading) {
     console.log("loading...")
