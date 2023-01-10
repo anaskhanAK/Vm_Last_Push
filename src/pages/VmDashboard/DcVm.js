@@ -16,10 +16,14 @@ import alt from "assets/images/Azure.png"
 import vin from "assets/images/widows.jpg"
 import lin from "assets/images/linux.jpg"
 import { use } from "i18next";
-
-
+import toastr from "toastr";
+// import * as windowBase64 from './windowBase64.txt';
+import "toastr/build/toastr.min.css";
+import text from "./windowBase64.txt"
+import text1 from "./linuxBase64.txt"
 
 const DcVm = () => {
+
 
     const [passedSteps, setPassedSteps] = useState([1]);
     const [passedStepsVertical, setPassedStepsVertical] = useState([1]);
@@ -27,32 +31,108 @@ const DcVm = () => {
     const [filename, setFilename] = useState('');
     const [uploadPercentage, setUploadPercentage] = useState(0);
     const [isoList, setIsoList] = useState([]);
-    const [vmData, setVmData] = useState({});
+    const [vmData, setVmData] = useState({
+    });
     const [img, setImg] = useState();
     const [configData, setConfigData] = useState({});
-    const [dropdownVal, setDropDownVal] = useState({
-        cpus: 2
-    });
+    const [dropdownVal, setDropDownVal] = useState({});
+    const [tpmSwitch, setTpmSwitch] = useState(false);
 
     const [dropImage, setDropImage] = useState(alt);
 
-    const handleDropDown = (e) => {
-        e.preventDefault(),
-            setDropDownVal({
-                ...dropdownVal,
-                [e.target.name]: e.target.value
-            })
+    toastr.options = {
+        positionClass: "toast-top-center",
+        closeButton: true,
+    }
+
+    const handleTpmSwitch = () => {
+        setTpmSwitch(!tpmSwitch);
+        console.log(tpmSwitch)
         setConfigData({
             ...configData,
             getConfigFile: {
                 ...configData.getConfigFile,
-                Operating_System: dropdownVal.Operating_System,
+                TPM: tpmSwitch,
+            }
+        })
+    }
+
+    const handleIsoDrop = (e) => {
+        e.preventDefault(),
+            console.log(e)
+        setConfigData({
+            ...configData,
+            getConfigFile: {
+                ...configData.getConfigFile,
+                IsoFile: e.target.value,
+            }
+        })
+        console.log(configData)
+    }
+
+    const handleOpDrop = (e) => {
+        e.preventDefault(),
+            console.log(e)
+        setConfigData({
+            ...configData,
+            getConfigFile: {
+                ...configData.getConfigFile,
+                Operating_System: e.target.value,
+            }
+        })
+
+        if (e.target.value === "Windows") {
+            setDropImage(vin)
+            fetch(text)
+                .then(r => r.text())
+                .then(text => {
+                    // console.log('text decoded:', text);
+                    setVmData(prevState => ({
+                        ...prevState,
+                        vmImage: text
+                    }))
+                });
+        }
+
+        if (e.target.value === "Linux" || "") {
+            setDropImage(lin)
+            fetch(text1)
+                .then(r => r.text())
+                .then(text => {
+                    // console.log('text decoded:', text);
+                    setVmData(prevState => ({
+                        ...prevState,
+                        vmImage: text
+                    }))
+                });
+        }
+
+        else {
+            setDropImage(vin)
+            fetch(text)
+                .then(r => r.text())
+                .then(text => {
+                    // console.log('text decoded:', text);
+                    setVmData(prevState => ({
+                        ...prevState,
+                        vmImage: text
+                    }))
+                });
+        }
+    }
+
+    const handleCpuDrop = (e) => {
+        e.preventDefault(),
+            console.log(e)
+        setConfigData({
+            ...configData,
+            getConfigFile: {
+                ...configData.getConfigFile,
                 processor: {
                     ...configData.getConfigFile.processor,
-                    Processors: dropdownVal.cpus
+                    Processors: e.target.value
                 }
             }
-
         })
 
         console.log(configData)
@@ -99,8 +179,6 @@ const DcVm = () => {
             ...vmData,
             [e.target.name]: e.target.value
         });
-
-        // console.log(vmData)
     };
 
     const [getConfig, { loading: loadingD, data: dataD, error: errorD }] = useLazyQuery(GET_CONFIG);
@@ -122,10 +200,22 @@ const DcVm = () => {
     if (loadingC) { console.log("loadingC...") }
     if (errorC) { console.log(errorC.message) }
 
+    const handleDropDownClick = () => {
+        // console.log("clicked")
+        getIsoList();
+        setIsoList([])
+        if (dataA) {
+            setIsoList(p => (dataA.getIOSById))
+        }
+        // console.log(dataA)
+        if (errorA) console.log(errorA)
+    }
+
 
     const handleVmSubmit = (e) => {
         e.preventDefault(),
             console.log(vmData)
+        console.log(configData)
         const config = JSON.stringify(configData);
         console.log(config);
         createVm({
@@ -136,11 +226,13 @@ const DcVm = () => {
                     "token": mvToken,
                     "Title": vmData.virtualMachineName,
                     "virtualMachineName": vmData.virtualMachineName,
-                    "Description": vmData.Description,
+                    "Description": vmData.Description || "",
                     "vmImage": vmData.vmImage
                 }
             }
         })
+
+        toastr.success("Virtual Machine Created")
     }
 
     function toggleTabVertical(tab) {
@@ -154,8 +246,6 @@ const DcVm = () => {
         }
     }
 
-
-
     const handleImageUp = (e) => {
         const file = e.target.files[0];
         const reader = new FileReader();
@@ -163,34 +253,15 @@ const DcVm = () => {
         reader.onloadend = () => {
             setImg(reader.result.toString());
             const eImage = reader.result.toString();
+            // console.log(eImage)
             setVmData(prevState => ({
                 ...prevState,
                 vmImage: eImage
             })
             )
-
-
         };
         reader.readAsDataURL(file)
     }
-
-    // if (dropdownVal.Operating_System === "Windows") {
-    //     setDropImage(vin)
-    // }
-
-    // if (dropdownVal.Operating_System === "Linux") {
-    //     setDropImage(lin)
-    // }
-
-    useEffect(()=>{
-        if (dropdownVal.Operating_System === "Windows") {
-            setDropImage(vin)
-        }
-    
-        if (dropdownVal.Operating_System === "Linux") {
-            setDropImage(lin)
-        }
-    },[dropdownVal.Operating_System])
 
 
     const uplaodURL = 'http://placed.ro:2000';
@@ -214,6 +285,8 @@ const DcVm = () => {
                 }
             })
 
+            toastr.success("Create Iso Successful");
+            setUploadPercentage(p => 0)
         })
         uploader.addEventListener("choose", function (event) {
             console.log(event.file, "Choose");
@@ -247,27 +320,42 @@ const DcVm = () => {
 
     }, [])
 
-    useEffect(() => {
-        if (loadingA) console.log("loading...")
-        if (dataA) {
-            setIsoList(p => (dataA.getIOSById))
-            // console.log(dataA)
-        }
-        if (errorA) console.log(errorA)
-    }, [dataA])
 
     useEffect(() => {
         if (loadingD) console.log("loadingD...")
         if (dataD) {
             console.log(dataD);
-            setConfigData(p => (dataD));
-            // console.log(configData)
+            setConfigData(p => ({
+                ...dataD,
+                getConfigFile: {
+                    ...dataD.getConfigFile,
+                    Operating_System: "Windows",
+                    IsoFile: "",
+                    TPM: false,
+                    processor: {
+                        ...dataD.getConfigFile.processor,
+                        Processors: 2
+                    }
+                }
+            }))
         }
         if (errorD) console.log(errorD)
     }, [dataD])
 
-    useEffect(() => { getIsoList() }, [])
     useEffect(() => { getConfig() }, [])
+
+    useEffect(() => {
+        setDropImage(vin)
+        fetch(text)
+            .then(r => r.text())
+            .then(text => {
+                // console.log('text decoded:', text);
+                setVmData(prevState => ({
+                    ...prevState,
+                    vmImage: text
+                }))
+            });
+    },[])
 
     return (
         <React.Fragment>
@@ -373,6 +461,10 @@ const DcVm = () => {
                                                                         <select defaultValue="0"
                                                                             className="form-select"
                                                                             style={{ marginRight: "5px" }}
+                                                                            onClick={handleDropDownClick}
+                                                                            onChange={handleIsoDrop}
+                                                                        // value={dropdownVal.IsoFile}
+                                                                        // onClick={()=>console.log('dd')}
                                                                         >
                                                                             <option value="0">Choose...</option>
                                                                             {isoList.map(e => {
@@ -412,8 +504,7 @@ const DcVm = () => {
                                                             <select
                                                                 className="form-control"
                                                                 name="Operating_System"
-                                                                onChange={(e) => handleDropDown(e)}
-                                                                value={dropdownVal.Operating_System}
+                                                                onChange={handleOpDrop}
                                                             >
                                                                 <option> Windows </option>
                                                                 <option> Linux </option>
@@ -472,7 +563,7 @@ const DcVm = () => {
                                                             <Input
                                                                 className="form-control"
                                                                 type="file"
-                                                                id="formFile"
+                                                                id="formFileImage"
                                                                 accept="image/*"
                                                                 name="vmImage"
                                                                 onChange={handleImageUp}
@@ -494,8 +585,8 @@ const DcVm = () => {
                                                                 <select
                                                                     className="form-control"
                                                                     name="cpus"
-                                                                    onChange={(e) => handleDropDown(e)}
-                                                                    value={dropdownVal.cpus}
+                                                                    onChange={handleCpuDrop}
+                                                                // value={dropdownVal.cpus}
                                                                 >
                                                                     <option> 0 </option>
                                                                     <option> 1 </option>
@@ -521,7 +612,7 @@ const DcVm = () => {
                                                                         type="checkbox"
                                                                         className="form-check-input"
                                                                         id="customSwitchsizelg"
-                                                                        defaultChecked
+                                                                        onClick={handleTpmSwitch}
                                                                     />
                                                                     <label
                                                                         className="form-check-label"

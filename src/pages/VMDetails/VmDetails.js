@@ -6,7 +6,7 @@ import StBtn from './StBtn'
 import { useLazyQuery, useMutation } from '@apollo/client'
 import { GET_SPECIFIC_VM } from 'gqlOprations/Queries'
 import Vm from "../../assets/images/1..jpg";
-import { DELETE_VM } from 'gqlOprations/Mutations'
+import { DELETE_VM, VM_ACTION } from 'gqlOprations/Mutations'
 import alt from "assets/images/Azure.png"
 
 
@@ -15,6 +15,7 @@ const VmDetails = () => {
     const history = useHistory();
     const { vmId } = useParams();
     const [svmData, setSvmData] = useState();
+    const [state, setState] = useState();
 
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
@@ -40,6 +41,8 @@ const VmDetails = () => {
 
     const [deleteVm, { loading: loadingA, data: dataA, error: errorA }] = useMutation(DELETE_VM)
 
+    const [changeVmStatus, { loading: loadingB, data: dataB, error: errorB }] = useMutation(VM_ACTION)
+
     const handleDeleteVm = () => {
 
         deleteVm({
@@ -60,11 +63,31 @@ const VmDetails = () => {
 
     };
 
+    const toggle = () => {
+        setState(!state);
+        console.log(state)
+        changeVmStatus({
+            variables: {
+                input: {
+                    "button": state,
+                    "id": vmId,
+                    "token": mvToken
+                }
+            }
+        })
+    }
+
+    if(loadingB) console.log("loading...")
+    if(dataB) console.log(dataB)
+    if(errorB) console.log(errorB)
+
     useEffect(() => {
         if (loading) console.log("loading...")
         if (data) {
-            console.log(data);
+            // console.log(data);
             setSvmData(p => (data)), console.log(data)
+            console.log(data.getSpecificVM.Status)
+            setState(p => (data.getSpecificVM.Status))
         }
         if (error) console.log(error)
     }, [data])
@@ -89,7 +112,12 @@ const VmDetails = () => {
                                             <CardBody>
                                                 <Row>
                                                     <Col>
-                                                        <StBtn />
+                                                        <div className="d-grid gap-2">
+                                                            <Button onClick={toggle} color={state ? 'danger' : 'success'} type="button" className="btn btn-label" >
+                                                                <i className={state ? 'bx bx-pause label-icon' : 'bx bx-play label-icon'}></i>
+                                                                {state ? 'STOP' : 'START'}
+                                                            </Button>
+                                                        </div>
                                                     </Col>
                                                 </Row>
                                             </CardBody>

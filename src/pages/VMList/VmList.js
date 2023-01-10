@@ -37,14 +37,6 @@ const VmList = () => {
 
                 <Row>
                     <VmCard />
-                    {/* <VmCard />
-                    <VmCard />
-                    <VmCard />
-                    <VmCard />
-                    <VmCard />
-                    <VmCard />
-                    <VmCard />
-                    <VmCard /> */}
                 </Row>
             </div>
         </React.Fragment>

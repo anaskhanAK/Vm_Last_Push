@@ -10,7 +10,6 @@ const UpdateUserProfile = () => {
 
     document.title = "Update User Profile";
 
-
     return (
         <React.Fragment>
             <div className="page-content">

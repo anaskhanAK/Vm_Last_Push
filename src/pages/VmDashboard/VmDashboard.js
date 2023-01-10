@@ -25,9 +25,6 @@ const VmDashboard = () => {
                             <h4 className="card-title mb-4">Active Virtual Machines</h4>
                             <Row>
                                 <DashVmCard />
-                                <DashVmCard />
-                                <DashVmCard />
-                                <DashVmCard />
                             </Row>
                         </Col>
                     </Row>
