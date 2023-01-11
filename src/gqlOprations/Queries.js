@@ -8,6 +8,7 @@ query GetUserByID($input: for_id_token) {
       Last_Name
       User_Type
       Email
+      token
     }
   }
   `
@@ -69,6 +70,7 @@ query GetUserByID($input: for_id_token) {
       User_Image
       User_Type
       id
+      token
     }
   }
   `

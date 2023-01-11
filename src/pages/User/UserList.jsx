@@ -75,7 +75,7 @@ const UserList = () => {
                 }}
             />
 
-            <Link to={`/updateprofile/${row.cell.row.original.id}`}>
+            <Link to={`/updateprofile/${row.cell.row.original.id}/${row.cell.row.original.token}`}>
                 <i
                     className="bx bx-edit label-icon"
                     style={{ fontSize: '17px', color: 'white', cursor: 'pointer', marginLeft: "10px" }}

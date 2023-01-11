@@ -30,7 +30,7 @@ const authProtectedRoutes = [
   {path: "/isofilelist", component: IsoFileList},
   {path: "/update-vm/:vmId", component: UpdateVm},
   {path: "/dashboard", component: VmDashboard},
-  {path: "/updateprofile/:userId", component: UpdateUserProfile},
+  {path: "/updateprofile/:userId/:usertoken", component: UpdateUserProfile},
   {path: "/userprofile", component: UserProfile},
   {path: "/allvms", component: AllVmList},
 

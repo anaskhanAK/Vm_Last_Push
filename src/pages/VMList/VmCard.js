@@ -126,14 +126,14 @@ const VmCard = () => {
                         <i className={'bx bx-power-off label-icon'}></i>
                         {loadingA && loadingA ? (
                           <i className="bx bx-loader-alt bx-spin bx-sx"></i>
-                        ) : "STOPE"}
+                        ) : "STOP"}
                       </Button>
                     ) :
                       <Button onClick={() => toggleFalse(e.id)} color={'success'} type="button" className="btn btn-label" >
                         <i className={'bx bx-power-off label-icon'}></i>
                         {loadingA && loadingA ? (
                           <i className="bx bx-loader-alt bx-spin bx-sx"></i>
-                        ) : "STOPE"}
+                        ) : "START"}
                       </Button>
                     }
 

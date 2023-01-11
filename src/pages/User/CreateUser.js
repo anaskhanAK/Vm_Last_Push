@@ -41,7 +41,6 @@ const CreateUser = props => {
         positionClass: "toast-top-center",
         closeButton: true,
     }
-
     const [userRegister, { data, loading, error }] = useMutation(USER_REGISTER);
 
 
@@ -70,23 +69,28 @@ const CreateUser = props => {
         },
 
         validationSchema: Yup.object({
-            firstName: Yup.string().required("Please Enter Your First Name"),
-            lastName: Yup.string().required("Please Enter Your Last Name"),
-            Email: Yup.string().required("Please Enter Your Last Name"),
-            Password: Yup.string().required("Please Enter Your Password"),
+            firstName: Yup.string().required("Please Enter User First Name"),
+            lastName: Yup.string().required("Please Enter User Last Name"),
+            Email: Yup.string().required("Please Enter User Last Name"),
+            Password: Yup.string().required("Please Enter User Password"),
+            userImage: Yup.string().required("Please Enter User Image")
         }),
 
         onSubmit: (values) => {
-            console.log(values);
+            // console.log(values);
 
             userRegister({
                 variables: {
                     input: values
+                },
+                onCompleted: () => {
+                    toastr.success("User Created");
+                    history.push("/user-list")
                 }
             })
 
-            toastr.success("Register Successful Please Login Your Account");
-            console.log(data)
+            // toastr.success("Register Successful Please Login Your Account");
+            // console.log(data)
         }
     });
 
@@ -130,8 +134,15 @@ const CreateUser = props => {
                                                                     id="userImageUpdate"
                                                                     accept="image/*"
                                                                     name="userImage"
+                                                                    onBlur={validation.handleBlur}
                                                                     onChange={handleImageUp}
+                                                                    invalid={
+                                                                        validation.touched.userImage && validation.errors.userImage ? true : false
+                                                                    }
                                                                 />
+                                                                {validation.touched.userImage && validation.errors.userImage ? (
+                                                                    <FormFeedback type="invalid">{validation.errors.userImage}</FormFeedback>
+                                                                ) : null}
                                                             </Col>
                                                         </Row>
                                                     </CardBody>

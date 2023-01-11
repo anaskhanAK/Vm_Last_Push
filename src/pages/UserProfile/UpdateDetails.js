@@ -12,7 +12,10 @@ import "toastr/build/toastr.min.css";
 
 const UpdateDetails = () => {
 
-    const {mvid} = useParams()
+    const {userId} = useParams()
+    const {usertoken} = useParams()
+    console.log(userId)
+
 
     toastr.options = {
         positionClass: "toast-top-center",
@@ -35,15 +38,15 @@ const UpdateDetails = () => {
 
     const [img, setImg] = useState();
     const [formData, setFormData] = useState({
-        token: mvToken
+        token: usertoken
     });
 
 
     const [getUserById, { data: dataB, loading: loadingB, error: errorB }] = useLazyQuery(GET_USER_BY_ID, {
         variables: {
             input: {
-                id: mvid,
-                token: mvToken
+                id: userId,
+                token: usertoken
             }
         },
         onCompleted: dataB => {
