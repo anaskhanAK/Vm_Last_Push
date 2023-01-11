@@ -55,6 +55,12 @@ const Register = () => {
       userRegister({
         variables:{
           input:values
+        },
+
+        onCompleted: data => {
+          // console.log(data)
+          toastr.success("Register Successful Please Login Your Account");
+          history.push("/login");
         }
       })
     }

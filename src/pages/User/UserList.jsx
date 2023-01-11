@@ -35,7 +35,12 @@ const UserList = () => {
             input: {
                 token: mvToken
             }
-        }
+        },
+        onCompleted: data => {
+            // console.log(data);
+            setUsersList(data.getUserList);
+        },
+        fetchPolicy: "cache-and-network"
     })
 
     const [deleteUser, { loading: loadingA, data: dataA, error: errorA }] = useMutation(DELETE_USER);
@@ -46,11 +51,6 @@ const UserList = () => {
         }
     }, [])
 
-    useEffect(() => {
-        if (loading) console.log("loading...")
-        if (data) setUsersList(p => (data.getUserList)), console.log(data)
-        if (error) console.log(error)
-    }, [data])
 
     useEffect(() => { getAllUsers() }, [])
 
@@ -69,12 +69,9 @@ const UserList = () => {
                                 id: row.cell.row.original.id,
                                 token: mvToken,
                             }
-                        }
+                        },
+                        onCompleted: getAllUsers()
                     })
-
-                    if (dataA) console.log(dataA)
-                    if (loadingA) console.log("loading...")
-                    if (errorA) console.log(errorA.message)
                 }}
             />
 

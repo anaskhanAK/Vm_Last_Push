@@ -10,9 +10,18 @@ import { GET_CONFIG, GET_SPECIFIC_VM } from 'gqlOprations/Queries'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { UPDATE_VM } from 'gqlOprations/Mutations'
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
+import alt from "assets/images/Azure.png"
+
 
 const UpdateVm = () => {
     document.title = "Update VM";
+
+    toastr.options = {
+        positionClass: "toast-top-center",
+        closeButton: true,
+    }
 
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
@@ -55,8 +64,6 @@ const UpdateVm = () => {
         })
     };
 
-    console.log(vmId)
-    console.log(mvToken)
 
     const [updateVm, { loading: loadingB, data: dataB, error: errorB }] = useMutation(UPDATE_VM)
     const [getCurrant, { loading: loadingC, data: dataC, error: errorC }] = useLazyQuery(GET_SPECIFIC_VM, {
@@ -65,12 +72,15 @@ const UpdateVm = () => {
                 token: mvToken,
                 id: vmId
             }
-        }
+        },
+        onCompleted: dataC => {
+            setVmUpdateData(dataC.getSpecificVM);
+            const jsonConfig = JSON.parse(dataC.getSpecificVM.Config);
+            // console.log(jsonConfig)
+            setConfig(p => (jsonConfig))
+        },
+        fetchPolicy: "cache-and-network"
     });
-
-    if (loadingB) { console.log("loadingb...") }
-    if (dataB) { console.log(dataB) }
-    if (errorB) { console.log(errorB.message) }
 
     const handleUpdateChange = (e) => {
         setVmUpdateData({
@@ -99,7 +109,7 @@ const UpdateVm = () => {
 
     const handleUpdateSubmit = (e) => {
         e.preventDefault(),
-            console.log(vmUpdateData)
+            console.log("nnnn")
         const strConfig = JSON.stringify(config);
         updateVm({
             variables: {
@@ -111,29 +121,19 @@ const UpdateVm = () => {
                     "virtualMachineName": vmUpdateData.virtualMachineName,
                     "Description": vmUpdateData.Description,
                     "id": vmId,
-                    "vmImage": vmUpdateData.vmImage||null,
+                    "vmImage": vmUpdateData.vmImage || null,
                 }
+            },
+            onCompleted: dataB => {
+                toastr.success("Virtual Machine Updated");
+                getCurrant()
+                // console.log(dataB)
             }
         })
     };
 
-    useEffect(() => {
-        if (loadingC) console.log("loadingC...")
-        if (dataC) {
-            setVmUpdateData(p => (dataC.getSpecificVM));
-            const jsonConfig = JSON.parse(dataC.getSpecificVM.Config);
-            console.log(jsonConfig)
-            setConfig(p => (jsonConfig))
-        }
-        if (errorC) console.log(errorC)
-    }, [loadingC])
-
     useEffect(() => { getCurrant() }, [])
 
-
-
-    console.log(vmUpdateData)
-    console.log(config)
 
     return (
         <React.Fragment>
@@ -149,7 +149,14 @@ const UpdateVm = () => {
                                             <CardBody>
                                                 <CardTitle className="mb-4">Update VM Image</CardTitle>
                                                 <img
-                                                    src={updateImg || dataC && dataC ? ("http://167.99.36.48:3003/" + dataC.getSpecificVM.VM_Image.split("app/")[1]): "" }
+                                                    // src={updateImg || dataC && dataC ? ("http://167.99.36.48:3003/" + dataC.getSpecificVM.VM_Image.split("app/")[1]) : ""}
+                                                    src={updateImg && updateImg ? (
+                                                        updateImg
+                                                    ) : (
+                                                        dataC && dataC ? (
+                                                            "http://167.99.36.48:3003/" + dataC.getSpecificVM.VM_Image.split("app/")[1]
+                                                        ) : alt
+                                                    )}
                                                     height="300px"
                                                     width="100%"
                                                 />

@@ -93,8 +93,7 @@ mutation Mutation($input: VM) {
   }
 }
 `
-
-export const DELETE_VM =gql `
+export const DELETE_VM = gql `
 mutation Mutation($input: for_ids_token) {
   deleteVM(input: $input)
 }
@@ -108,5 +107,11 @@ mutation DeleteUser($input: for_id_token) {
 export const VM_ACTION = gql `
 mutation Mutation($input: status) {
   forStatus(input: $input)
+}
+`
+
+export const DELETE_ISO = gql `
+mutation Mutation($input: for_id_token) {
+  deleteIOS(input: $input)
 }
 `

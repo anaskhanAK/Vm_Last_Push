@@ -17,7 +17,7 @@ import { withRouter, Link, useHistory } from "react-router-dom";
 // users
 import user1 from "../../../assets/images/users/avatar-1.jpg";
 import { GET_USER_BY_ID } from "gqlOprations/Queries";
-import { useMutation, useQuery } from "@apollo/client"
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import alt from "assets/images/userAlt.jpg"
 
 const ProfileMenu = props => {
@@ -56,14 +56,20 @@ const ProfileMenu = props => {
   const mvid = getCookies("MvUserId");
   const mvtoken = getCookies("MvUserToken");
 
-  const { loading, data, error } = useQuery(GET_USER_BY_ID, {
+  const [getprofileImage, { loading, data, error }] = useLazyQuery(GET_USER_BY_ID, {
     variables: {
       input: {
         id: mvid,
         token: mvtoken
       }
-    }
+    },
+    onCompleted: data => {
+      console.log("ddd")
+    },
+    fetchPolicy: "cache-and-network"
   });
+
+  useEffect(() => { getprofileImage() }, [])
 
   const handleLogOut = () => {
     document.cookie = "MvUserType=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -86,10 +92,19 @@ const ProfileMenu = props => {
         >
           <img
             className="rounded-circle header-profile-user"
-            src={data && data ? ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]) : alt || alt}
+            src={data && data ? (
+              data.getUserByID.User_Image.length < 2 && data.getUserByID.User_Image.length < 2 ? (
+                alt) : ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]
+              )
+            ) :
+              alt || alt}
             // src={alt}
             alt="U"
           />
+
+          {/* "http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1] */}
+
+
           {/* <span className="d-none d-xl-inline-block ms-2 me-1">{data && data ? (data.getUserByID.Email):null}</span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" /> */}
         </DropdownToggle>

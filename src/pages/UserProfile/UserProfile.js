@@ -1,9 +1,10 @@
-import React, { useState, useRef } from "react"
+import React, { useState, useRef, useEffect } from "react"
 import { Card, CardBody, Col, Button, Container, CardImg, CardText, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, CardTitle, Table } from "reactstrap"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import { Link } from "react-router-dom"
-import { useMutation, useQuery } from "@apollo/client"
+import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { GET_USER_BY_ID } from "gqlOprations/Queries"
+import alt from "assets/images/userAlt.jpg"
 
 
 const UserProfile = () => {
@@ -22,30 +23,25 @@ const UserProfile = () => {
     }
     const mvid = getCookies("MvUserId");
     const mvtoken = getCookies("MvUserToken");
-    console.log(mvid)
-    console.log(mvtoken)
+    // console.log(mvid)
+    // console.log(mvtoken)
 
-    const { loading, data, error } = useQuery(GET_USER_BY_ID, {
+
+    const [getUserD, { data, loading, error }] = useLazyQuery(GET_USER_BY_ID, {
         variables: {
             input: {
                 id: mvid,
                 token: mvtoken
             }
-        }
-    });
+        },
+        onCompleted: data => {
+            console.log("ddd")
+        },
+        fetchPolicy: "cache-and-network"
+    })
 
-    if (loading) {
-        console.log("loading...")
-    };
+    useEffect(() => { getUserD() }, [])
 
-    if (data) {
-        console.log(data)
-
-    }
-
-    if (error) {
-        console.log(error)
-    }
 
     return (
         <React.Fragment>
@@ -61,7 +57,13 @@ const UserProfile = () => {
                                             <CardBody>
                                                 <h4 className="card-title mb-4">User Image</h4>
                                                 <CardImg className="img-fluid rounded-circle"
-                                                    src={data && data ? ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]) : null}
+                                                    // src={data && data ? ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]) : null}
+                                                    src={data && data ? (
+                                                        data.getUserByID.User_Image.length < 2 && data.getUserByID.User_Image.length < 2 ? (
+                                                            alt) : ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]
+                                                        )
+                                                    ) :
+                                                        alt || alt}
                                                     style={{ height: "330px", width: "330px", marginLeft: "20px" }} />
                                             </CardBody>
                                         </Card>

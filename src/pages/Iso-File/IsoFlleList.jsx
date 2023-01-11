@@ -2,8 +2,9 @@ import React, { useState, useMemo } from 'react';
 import Breadcrumbs from '../../components/Common/Breadcrumb';
 import TableContainer from '../../components/Common/TableContainer';
 import { GET_IOS_BY_ID } from 'gqlOprations/Queries';
-import { useQuery, useLazyQuery } from '@apollo/client';
+import { useQuery, useLazyQuery, useMutation } from '@apollo/client';
 import { useEffect } from 'react';
+import { DELETE_ISO } from 'gqlOprations/Mutations';
 // import { Type } from 'pages/Crypto/CryptoWallet/CryptoWalCol';
 // import { map } from 'lodash';
 
@@ -31,14 +32,43 @@ const IsoFileList = () => {
             input: {
                 token: mvToken
             }
-        }
+        },
+        onCompleted: data => {
+            // console.log(data);
+            setIsoData(data.getIOSById);
+        },
+        fetchPolicy: "cache-and-network"
     });
 
-    const cellFunction = ({ value, column: { getProps } }) => {
+    const [deleteIso, { data:dataD, loading:loadingD, error:errorD }] = useMutation(DELETE_ISO)
+
+    const cellFunction = (row) => {
+        const { value, column: { getProps } } = row;
         return <i
             className="mdi mdi-cloud-download label-icon"
             style={{ fontSize: '17px', color: 'white', cursor: 'pointer' }}
             onClick={() => { console.log('clicked') }}
+        />
+    }
+
+    const cellFunctionD = (row) => {
+        const { value, column: { getProps } } = row;
+        return <i
+            className="mdi mdi-delete label-icon"
+            style={{ fontSize: '17px', color: 'white', cursor: 'pointer' }}
+            onClick={() => {
+                console.log(row.cell.row.original.id)
+                console.log(mvToken)
+                deleteIso({
+                    variables:{
+                        input:{
+                            id: row.cell.row.original.id,
+                            token: mvToken
+                        }
+                    },
+                    onCompleted: () => getIos()
+                })
+            }}
         />
     }
 
@@ -59,24 +89,21 @@ const IsoFileList = () => {
             },
             {
                 Header: 'Download',
-                accessor: 'age',
+                accessor: 'download',
                 Cell: cellFunction,
+                getProps: () => ({ name: 'table' })
+            },
+            {
+                Header: 'Delete',
+                accessor: 'delete',
+                Cell: cellFunctionD,
                 getProps: () => ({ name: 'table' })
             },
         ],
         []
     );
 
-
-
-
     document.title = "Iso File List";
-
-    useEffect(() => {
-        if (loading) console.log("loading...")
-        if (data) setIsoData(p => (data.getIOSById)), console.log(data)
-        if (error) console.log(error)
-    }, [data])
 
     useEffect(() => { getIos() }, [])
 

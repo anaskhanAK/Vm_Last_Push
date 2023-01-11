@@ -36,7 +36,12 @@ const VmDetails = () => {
                 token: mvToken,
                 id: vmId
             }
-        }
+        },
+        onCompleted: data => {
+            console.log(data);
+            setSvmData(data);
+        },
+        fetchPolicy: "cache-and-network"
     });
 
     const [deleteVm, { loading: loadingA, data: dataA, error: errorA }] = useMutation(DELETE_VM)
@@ -51,48 +56,45 @@ const VmDetails = () => {
                     token: mvToken,
                     id: [vmId]
                 }
+            },
+            onCompleted: dataA => {
+                console.log(dataA);
+                history.push("/vmlist")
             }
+
         });
-
-        if (loadingA) console.log(loadingA);
-        if (dataA) {
-            console.log(dataA);
-            history.push("/vmlist")
-        };
-        if (errorA) console.log(errorA.message)
-
     };
 
-    const toggle = () => {
-        setState(!state);
-        console.log(state)
+    const toggleTrue = () => {
         changeVmStatus({
             variables: {
                 input: {
-                    "button": state,
+                    "button": false,
                     "id": vmId,
                     "token": mvToken
                 }
-            }
+            },
+            onCompleted: () => getSpecificVm()
         })
     }
 
-    if(loadingB) console.log("loading...")
-    if(dataB) console.log(dataB)
-    if(errorB) console.log(errorB)
+    const toggleFalse = () => {
+        changeVmStatus({
+            variables: {
+                input: {
+                    "button": true,
+                    "id": vmId,
+                    "token": mvToken
+                }
+            },
+            onCompleted: () => getSpecificVm()
+        })
+    }
+
 
     useEffect(() => {
-        if (loading) console.log("loading...")
-        if (data) {
-            // console.log(data);
-            setSvmData(p => (data)), console.log(data)
-            console.log(data.getSpecificVM.Status)
-            setState(p => (data.getSpecificVM.Status))
-        }
-        if (error) console.log(error)
-    }, [data])
-
-    useEffect(() => { getSpecificVm() }, [])
+        getSpecificVm()
+    }, [])
 
     return (
         <React.Fragment>
@@ -113,10 +115,20 @@ const VmDetails = () => {
                                                 <Row>
                                                     <Col>
                                                         <div className="d-grid gap-2">
-                                                            <Button onClick={toggle} color={state ? 'danger' : 'success'} type="button" className="btn btn-label" >
-                                                                <i className={state ? 'bx bx-pause label-icon' : 'bx bx-play label-icon'}></i>
-                                                                {state ? 'STOP' : 'START'}
-                                                            </Button>
+                                                            {svmData && svmData ? (
+                                                                svmData.getSpecificVM.Status === true && svmData.getSpecificVM.Status ? (
+                                                                    <Button onClick={toggleTrue} color={'danger'} type="button" className="btn btn-label" >
+                                                                        <i className={'bx bx-pause label-icon'}></i>
+                                                                        {'STOP'}
+                                                                    </Button>
+                                                                ) : (
+                                                                    <Button onClick={toggleFalse} color={'success'} type="button" className="btn btn-label" >
+                                                                        <i className={'bx bx-play label-icon'}></i>
+                                                                        {'START'}
+                                                                    </Button>
+                                                                )
+                                                            ) : ""}
+
                                                         </div>
                                                     </Col>
                                                 </Row>

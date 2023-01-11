@@ -34,13 +34,15 @@ const DashVmCard = () => {
                 Status: true,
                 token: mvToken
             }
-        }
+        },
+        onCompleted : dataA => {
+            // console.log(dataA.getUserAllVM)
+            setActiveVmList(dataA.getUserAllVM)
+        },
+        fetchPolicy: "cache-and-network"
     });
 
-
-    const [state, setState] = useState(true);
     const toggle = (id) => {
-        console.log(id)
         changeVmStatus({
             variables:{
                 input:{
@@ -48,19 +50,15 @@ const DashVmCard = () => {
                     token: mvToken,
                     id: id
                 }
-            }
+            },
+
+            onCompleted: () => getActiveVms()
         })
     }
 
     useEffect(() => {
         getActiveVms()
-        if (dataA) {
-            console.log(dataA)
-            setActiveVmList(p => (dataA.getUserAllVM))
-        }
-        if (loadingA) console.log("loading...")
-        if (errorA) console.log(errorA.message)
-    }, [dataA,dataB])
+    }, [])
 
     return (
         <React.Fragment>
@@ -87,7 +85,7 @@ const DashVmCard = () => {
                                     </Col>
                                     <Col lg="1">
                                         <div style={{ marginTop: "15px", marginLeft: '12px' }}>
-                                            <Spinner type="grow" size="sm" color="success" style={{ display: state ? '' : 'none' }} />
+                                            <Spinner type="grow" size="sm" color="success" />
                                         </div>
                                     </Col>
                                 </div>
@@ -98,9 +96,9 @@ const DashVmCard = () => {
                             <Row>
                                 <Col lg="10">
                                     <div className="d-grid gap-2">
-                                        <Button onClick={()=> toggle(e.id)} color={state ? 'danger' : 'success'} type="button" className="btn-sm btn-label" >
-                                            <i className={state ? 'bx bx-pause label-icon' : 'bx bx-play label-icon'}></i>
-                                            {state ? 'STOP' : 'START'}
+                                        <Button onClick={()=> toggle(e.id)} color={'danger'} type="button" className="btn-sm btn-label" >
+                                            <i className={'bx bx-pause label-icon'}></i>
+                                            {'STOP'}
                                         </Button>
                                     </div>
                                 </Col>

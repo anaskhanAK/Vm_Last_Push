@@ -7,10 +7,17 @@ import { GET_USER_BY_ID } from "gqlOprations/Queries";
 import alt from "assets/images/userAlt.jpg"
 import { set } from "lodash";
 import { useParams } from "react-router-dom";
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 const UpdateDetails = () => {
 
     const {mvid} = useParams()
+
+    toastr.options = {
+        positionClass: "toast-top-center",
+        closeButton: true,
+    };
 
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
@@ -38,7 +45,12 @@ const UpdateDetails = () => {
                 id: mvid,
                 token: mvToken
             }
-        }
+        },
+        onCompleted: dataB => {
+            console.log(dataB);
+            setFormData(dataB.getUserByID);
+        },
+        fetchPolicy: "cache-and-network"
     });
 
 
@@ -66,6 +78,10 @@ const UpdateDetails = () => {
                     Email: formData.Email,
                     userImage: formData.userImage || null
                 }
+            },
+            onCompleted: () => {
+                toastr.success("Profile Updated");
+                getUserById();
             }
         })
 
@@ -100,14 +116,14 @@ const UpdateDetails = () => {
         reader.readAsDataURL(file)
     }
 
-    useEffect(() => {
-        if (loadingB) { console.log("loadingB...") }
-        if (dataB) {
-            console.log(dataB);
-            setFormData(p => dataB.getUserByID)
-        }
-        if (errorB) { console.log(errorB.message) }
-    }, [dataB])
+    // useEffect(() => {
+    //     if (loadingB) { console.log("loadingB...") }
+    //     if (dataB) {
+    //         console.log(dataB);
+    //         setFormData(p => dataB.getUserByID)
+    //     }
+    //     if (errorB) { console.log(errorB.message) }
+    // }, [dataB])
 
     useEffect(() => {
         getUserById()
@@ -129,8 +145,19 @@ const UpdateDetails = () => {
                                                 <div style={{ height: "250px" }}>
                                                     <img className="rounded-circle"
                                                         id="UserImage"
-                                                        src={img || dataB && dataB ? ("http://167.99.36.48:3003/"+dataB.getUserByID.User_Image.split("app/")[1]):alt}
-                                                        // src={"http://167.99.36.48:3003/"+dataB.getUserByID.User_Image.split("app/")[1]}
+                                                        // src={img || dataB && dataB ? ("http://167.99.36.48:3003/"+dataB.getUserByID.User_Image.split("app/")[1]):alt}
+                                                        src={img && img ? (
+                                                            img
+                                                        ) : (
+                                                            dataB && dataB ? ( dataB.getUserByID.User_Image.length < 2 && dataB.getUserByID.User_Image.length < 2 ? (
+                                                                alt
+                                                            ):("http://167.99.36.48:3003/" + dataB.getUserByID.User_Image.split("app/")[1])
+                                                                
+                                                            ) : alt
+                                                        )}
+
+                                                        
+
                                                         width="270px"
                                                         height="270px"
                                                     ></img>

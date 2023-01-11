@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Col, Container, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, Progress, CardTitle, Table } from "reactstrap";
 import classnames from "classnames";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import "react-rangeslider/lib/index.css";
 import UploadImg from "pages/CreateVm/UploadImg";
 import RamSlider from "pages/CreateVm/RamSlider";
@@ -39,6 +39,8 @@ const DcVm = () => {
     const [tpmSwitch, setTpmSwitch] = useState(false);
 
     const [dropImage, setDropImage] = useState(alt);
+
+    const history = useHistory()
 
     toastr.options = {
         positionClass: "toast-top-center",
@@ -189,27 +191,24 @@ const DcVm = () => {
             input: {
                 token: mvToken
             }
-        }
+        },
+        onCompleted: dataA => {
+            setIsoList(dataA.getIOSById)
+        },
+        fetchPolicy: "cache-and-network"
     });
 
-    if (loadingB) { console.log("loadingb...") }
-    if (dataB) console.log(dataB)
-    if (errorB) { console.log(errorB.message) }
 
-    if (dataC) { console.log(dataC) }
-    if (loadingC) { console.log("loadingC...") }
-    if (errorC) { console.log(errorC.message) }
-
-    const handleDropDownClick = () => {
-        // console.log("clicked")
-        getIsoList();
-        setIsoList([])
-        if (dataA) {
-            setIsoList(p => (dataA.getIOSById))
-        }
-        // console.log(dataA)
-        if (errorA) console.log(errorA)
-    }
+    // const handleDropDownClick = () => {
+    //     // console.log("clicked")
+    //     getIsoList();
+    //     setIsoList([])
+    //     if (dataA) {
+    //         setIsoList(p => (dataA.getIOSById))
+    //     }
+    //     // console.log(dataA)
+    //     if (errorA) console.log(errorA)
+    // }
 
 
     const handleVmSubmit = (e) => {
@@ -229,10 +228,12 @@ const DcVm = () => {
                     "Description": vmData.Description || "",
                     "vmImage": vmData.vmImage
                 }
+            },
+            onCompleted: () => {
+                toastr.success("Virtual Machine Created")
+                history.push("/vmlist")
             }
         })
-
-        toastr.success("Virtual Machine Created")
     }
 
     function toggleTabVertical(tab) {
@@ -282,7 +283,8 @@ const DcVm = () => {
                         userId: mvid,
                         token: mvToken
                     }
-                }
+                },
+                onCompleted: () => getIsoList()
             })
 
             toastr.success("Create Iso Successful");
@@ -343,6 +345,7 @@ const DcVm = () => {
     }, [dataD])
 
     useEffect(() => { getConfig() }, [])
+    useEffect(() => { getIsoList() }, [])
 
     useEffect(() => {
         setDropImage(vin)
@@ -355,7 +358,7 @@ const DcVm = () => {
                     vmImage: text
                 }))
             });
-    },[])
+    }, [])
 
     return (
         <React.Fragment>
@@ -461,7 +464,7 @@ const DcVm = () => {
                                                                         <select defaultValue="0"
                                                                             className="form-select"
                                                                             style={{ marginRight: "5px" }}
-                                                                            onClick={handleDropDownClick}
+                                                                            // onClick={handleDropDownClick}
                                                                             onChange={handleIsoDrop}
                                                                         // value={dropdownVal.IsoFile}
                                                                         // onClick={()=>console.log('dd')}
