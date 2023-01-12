@@ -28,20 +28,20 @@ const ProfileMenu = props => {
 
   const history = useHistory();
 
-  useEffect(() => {
-    if (localStorage.getItem("authUser")) {
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-        const obj = JSON.parse(localStorage.getItem("authUser"));
-        setusername(obj.displayName);
-      } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
-      ) {
-        const obj = JSON.parse(localStorage.getItem("authUser"));
-        setusername(obj.username);
-      }
-    }
-  }, [props.success]);
+  // useEffect(() => {
+  //   if (localStorage.getItem("authUser")) {
+  //     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
+  //       const obj = JSON.parse(localStorage.getItem("authUser"));
+  //       setusername(obj.displayName);
+  //     } else if (
+  //       process.env.REACT_APP_DEFAULTAUTH === "fake" ||
+  //       process.env.REACT_APP_DEFAULTAUTH === "jwt"
+  //     ) {
+  //       const obj = JSON.parse(localStorage.getItem("authUser"));
+  //       setusername(obj.username);
+  //     }
+  //   }
+  // }, [props.success]);
 
   const getCookies = (cname) => {
     const e = document.cookie.split("; ")
@@ -102,47 +102,24 @@ const ProfileMenu = props => {
             alt="U"
           />
 
-          {/* "http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1] */}
-
-
-          {/* <span className="d-none d-xl-inline-block ms-2 me-1">{data && data ? (data.getUserByID.Email):null}</span>
-          <i className="mdi mdi-chevron-down d-none d-xl-inline-block" /> */}
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">
-          {/* <div style={{display:"flex", justifyContent:"center"}}>
-          <p> User Name </p>
-          </div>
-          <div style={{display:"flex", justifyContent:"center"}}>
-          <p> Admin </p>
-          </div> */}
-
-          {/* <div className="dropdown-divider" /> */}
-
           <DropdownItem tag="a" href="/userprofile">
             {" "}
             <i className="bx bx-user font-size-16 align-middle me-1" />
             {props.t("Profile")}{" "}
           </DropdownItem>
 
-          {/* <DropdownItem tag="a" href="/crypto-wallet">
-            <i className="bx bx-wallet font-size-16 align-middle me-1" />
-            {props.t("My Wallet")}
-          </DropdownItem> */}
-          {/* <DropdownItem tag="a" href="#">
-            <span className="badge bg-success float-end">11</span>
-            <i className="bx bx-wrench font-size-16 align-middle me-1" />
-            {props.t("Settings")}
-          </DropdownItem> */}
 
           <DropdownItem tag="a" href="auth-lock-screen">
             <i className="bx bx-question-mark font-size-16 align-middle me-1" />
-            {props.t("Heed Help")}
+            {props.t("Need Help ?")}
           </DropdownItem>
 
           <div className="dropdown-divider" />
           <Button style={{ display: "inline", border: "0px", backgroundColor: "transparent", marginLeft: "15px" }} onClick={handleLogOut} >
             <i className="bx bx-power-off font-size-16 align-middle me-1 text-danger" />
-            <span style={{ color: "white" }}> LogOut </span>
+            <span style={{ color: "white" }}> Sign out </span>
           </Button>
         </DropdownMenu>
       </Dropdown>

@@ -91,7 +91,7 @@ const ForgetPasswordPage = () => {
                         <Input
                           name="Email"
                           className="form-control"
-                          placeholder="Enter email"
+                          placeholder="Enter Your Email"
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
@@ -134,7 +134,7 @@ const ForgetPasswordPage = () => {
                         className="fw-medium text-primary"
                       >
                         {" "}
-                        Login{" "}
+                        Sign In{" "}
                       </Link>{" "}
                     </p>
                   </div>

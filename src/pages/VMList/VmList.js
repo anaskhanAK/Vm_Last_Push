@@ -16,7 +16,7 @@ const VmList = () => {
             <div className="page-content">
 
                 <Container fluid={true}>
-                    <Breadcrumbs title="VM list" breadcrumbItem="VM List" />
+                    <Breadcrumbs title="Dashboard" breadcrumbItem="VM List" />
                 </Container>
 
                 <div className='mb-2 overflow-auto' >

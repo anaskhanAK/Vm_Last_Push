@@ -111,7 +111,7 @@ const IsoFileList = () => {
         <div className="page-content">
             <div className="container-fluid">
 
-                <Breadcrumbs title="ISO File" breadcrumbItem="File List" />
+                <Breadcrumbs title="Dashboard" breadcrumbItem="ISO Files List" />
 
                 <TableContainer
                     columns={columns}

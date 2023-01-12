@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Card, CardBody, Col, Container, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, Progress, CardTitle, Table } from "reactstrap";
+import { Card, CardBody, Col, Container, Form, FormGroup, Input, Label, FormFeedback, NavItem, NavLink, Row, TabContent, TabPane, Progress, CardTitle, Table } from "reactstrap";
 import classnames from "classnames";
 import { Link, useHistory } from "react-router-dom";
 import "react-rangeslider/lib/index.css";
@@ -9,8 +9,7 @@ import StoregeSlider from "pages/CreateVm/StoregeSlider";
 import { io } from "socket.io-client";
 import SocketIOFileUploadServer from "socketio-file-upload";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { GET_CONFIG, GET_IOS_BY_ID } from "gqlOprations/Queries";
-import IsoModel from "pages/CreateVm/IsoModel";
+import { GET_CONFIG, GET_IOS_BY_ID, CHECK_VM_NAME } from "gqlOprations/Queries";
 import { CREATE_ISO, CREATE_VM } from "gqlOprations/Mutations";
 import alt from "assets/images/Azure.png"
 import vin from "assets/images/widows.jpg"
@@ -24,7 +23,6 @@ import text1 from "./linuxBase64.txt"
 
 const DcVm = () => {
 
-
     const [passedSteps, setPassedSteps] = useState([1]);
     const [passedStepsVertical, setPassedStepsVertical] = useState([1]);
     const [activeTabVartical, setoggleTabVertical] = useState(1);
@@ -37,6 +35,7 @@ const DcVm = () => {
     const [configData, setConfigData] = useState({});
     const [dropdownVal, setDropDownVal] = useState({});
     const [tpmSwitch, setTpmSwitch] = useState(false);
+    const [nameV, setNameV] = useState();
 
     const [dropImage, setDropImage] = useState(alt);
 
@@ -183,6 +182,7 @@ const DcVm = () => {
         });
     };
 
+    const [checkVmName, {loading:loadingE, data:dataE, error:errorE}] = useLazyQuery(CHECK_VM_NAME)
     const [getConfig, { loading: loadingD, data: dataD, error: errorD }] = useLazyQuery(GET_CONFIG);
     const [createIso, { loading: loadingB, data: dataB, error: errorB }] = useMutation(CREATE_ISO);
     const [createVm, { loading: loadingC, data: dataC, error: errorC }] = useMutation(CREATE_VM);
@@ -198,18 +198,21 @@ const DcVm = () => {
         fetchPolicy: "cache-and-network"
     });
 
-
-    // const handleDropDownClick = () => {
-    //     // console.log("clicked")
-    //     getIsoList();
-    //     setIsoList([])
-    //     if (dataA) {
-    //         setIsoList(p => (dataA.getIOSById))
-    //     }
-    //     // console.log(dataA)
-    //     if (errorA) console.log(errorA)
-    // }
-
+    const vmValidation = e => {
+        checkVmName({
+            variables:{
+                input:{
+                    virtualMachineName: e.target.value
+                }
+            },
+            onCompleted: dataE => {
+                console.log(typeof(dataE.findVMName))
+                setNameV(dataE.findVMName)
+                // console.log(nameV.type)
+            },
+            fetchPolicy: "cache-and-network"
+        })
+    }
 
     const handleVmSubmit = (e) => {
         e.preventDefault(),
@@ -385,7 +388,7 @@ const DcVm = () => {
                                                 }}
                                                 disabled={!(passedStepsVertical || []).includes(1)}
                                             >
-                                                <span className="number">1</span> CreateVm
+                                                <span className="number">1</span> Create VM
                                             </NavLink>
                                         </NavItem>
                                         <NavItem
@@ -439,7 +442,7 @@ const DcVm = () => {
                                                     <Row>
                                                         <div className="mb-3" >
                                                             <Label for="basicpill-phoneno-input3">
-                                                                Name:
+                                                                Name :
                                                             </Label>
                                                             <Input
                                                                 type="text"
@@ -447,15 +450,23 @@ const DcVm = () => {
                                                                 id="vm-name"
                                                                 placeholder="Enter VM Name"
                                                                 name="virtualMachineName"
-                                                                onChange={handleDataChange}
+                                                                // onChange={handleDataChange}
+                                                                // onBlur={vmValidation}
+                                                                onChange={(e) => { handleDataChange(e); vmValidation(e) }}
                                                                 value={vmData.virtualMachineName || ""}
+                                                                invalid={nameV === "true" && nameV === "true" ? true : false}
+                                                                valid={nameV === "false" && nameV === "false" ? true : false}
                                                             />
+                                                            {nameV === "true" && nameV === "true" ? (
+                                                                <FormFeedback type="invalid">{"Invalid VM Name"}</FormFeedback>
+                                                            ) : (<FormFeedback valid>{"valid VM Name"}</FormFeedback>)}
+                                                            {/* {nameV.length  && nameV.length  < 1 ? ("nnnnn") : null} */}
                                                         </div>
                                                     </Row>
                                                     <Row>
                                                         <div className="mb-3">
                                                             <Label for="basicpill-phoneno-input3">
-                                                                ISO File
+                                                                ISO File :
                                                             </Label>
                                                             <div>
 
@@ -502,7 +513,7 @@ const DcVm = () => {
                                                     <Row>
                                                         <div className="mb-3">
                                                             <Label for="basicpill-phoneno-input3">
-                                                                Operating System:
+                                                                Operating System :
                                                             </Label>
                                                             <select
                                                                 className="form-control"
@@ -598,7 +609,7 @@ const DcVm = () => {
                                                                     <option> 4 </option>
                                                                     <option> 5 </option>
                                                                 </select>
-                                                                <Label> minimum requird 2 </Label>
+                                                                <Label> Minimum required -2 </Label>
                                                             </div>
                                                         </Row>
                                                         <br></br>

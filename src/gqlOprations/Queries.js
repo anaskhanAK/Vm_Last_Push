@@ -90,3 +90,9 @@ query GetUserByID($input: for_id_token) {
   }
   `
 
+  export const CHECK_VM_NAME = gql `
+  query Query($input: forfindVM) {
+    findVMName(input: $input)
+  }
+  `
+

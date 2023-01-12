@@ -13,7 +13,7 @@ import "toastr/build/toastr.min.css";
 const Register = () => {
 
   //meta title
-  document.title = "Register | Skote - React Admin & Dashboard Template";
+  document.title = "Sign Up";
 
   const history = useHistory();
 
@@ -45,7 +45,7 @@ const Register = () => {
     validationSchema: Yup.object({
       firstName: Yup.string().required("Please Enter Your First Name"),
       lastName: Yup.string().required("Please Enter Your Last Name"),
-      Email: Yup.string().required("Please Enter Your Last Name"),
+      Email: Yup.string().required("Please Enter Your Email"),
       Password: Yup.string().required("Please Enter Your Password"),
     }),
 
@@ -77,7 +77,7 @@ const Register = () => {
                   <Row>
                     <Col className="col-7">
                       <div className="text-primary p-4">
-                        <h5 className="text-primary">Registration Form</h5>
+                        <h4 className="text-primary">SIGN UP</h4>
                         <p>Welcome !</p>
                       </div>
                     </Col>
@@ -137,7 +137,7 @@ const Register = () => {
                           id="email"
                           name="Email"
                           className="form-control"
-                          placeholder="Enter email"
+                          placeholder="Enter Your Email"
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
@@ -175,7 +175,7 @@ const Register = () => {
                         >
                           {loading && loading ? (
                             <i className="bx bx-loader-alt bx-spin bx-sx"></i>
-                          ) : "Register"}
+                          ) : "SIGN UP"}
                         </button>
                       </div>
 
@@ -191,7 +191,7 @@ const Register = () => {
                             className="fw-medium text-primary"
                           >
                             {" "}
-                            Login
+                            Sign In
                           </Link>{" "}
                         </p>
                       </div>

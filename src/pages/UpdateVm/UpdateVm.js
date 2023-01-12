@@ -139,7 +139,7 @@ const UpdateVm = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="Update VM" breadcrumbItem="Update VM" />
+                    <Breadcrumbs title="VM Details" breadcrumbItem="Update VM" />
                     <Row>
                         <Col lg="12">
                             <Card>

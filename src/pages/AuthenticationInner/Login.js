@@ -73,7 +73,7 @@ const Login = () => {
                     <Col className="col-7">
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Welcome Back !</h5>
-                        <p>Login to continue Virtual Machine</p>
+                        <p>Please Sign in to continue</p>
                       </div>
                     </Col>
                     <Col className="col-5 align-self-end">
@@ -95,7 +95,7 @@ const Login = () => {
                         <Input
                           name="Email"
                           className="form-control"
-                          placeholder="Enter email"
+                          placeholder="Enter Your Email"
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
@@ -114,7 +114,7 @@ const Login = () => {
                         <Input
                           name="Password"
                           type="password"
-                          placeholder="Enter Password"
+                          placeholder="Enter Your Password"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
                           value={validation.values.Password || ""}
@@ -148,7 +148,7 @@ const Login = () => {
                         >
                           {loading && loading ? (
                             <i className="bx bx-loader-alt bx-spin bx-sx"></i>
-                          ) : "Login"}
+                          ) : "SIGN IN"}
                         </button>
                       </div>
 

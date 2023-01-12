@@ -152,8 +152,8 @@ const VmCard = () => {
                     <input
                       className="form-check-input"
                       type="checkbox"
-                      value=""
-                      id="defaultCheck1"
+                      value={e.id}
+                      id={e.id}
                     />
                   </div>
                 </Col>

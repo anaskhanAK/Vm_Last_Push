@@ -138,12 +138,19 @@ const VmDetails = () => {
                                     <Col lg="8">
                                         <Card>
                                             <CardBody>
-                                                <h4 className="card-title mb-4">VM Details</h4>
+                                                <Row>
+                                                    <Col lg="11">
+                                                        <h4 className="card-title mb-4">VM Details</h4>
+                                                    </Col>
+                                                    <Col>
+                                                    
+                                                    </Col>
+                                                </Row>
                                                 <Row>
                                                     <Col>
                                                         <Card>
                                                             <CardBody>
-                                                                <CardTitle>Name:</CardTitle>
+                                                                <CardTitle>Name :</CardTitle>
                                                                 <CardText>
                                                                     {svmData && svmData ? (svmData.getSpecificVM.VirtualMachine_Name) : ""}
                                                                 </CardText>
@@ -153,7 +160,7 @@ const VmDetails = () => {
                                                     <Col>
                                                         <Card>
                                                             <CardBody>
-                                                                <CardTitle>Operating system:</CardTitle>
+                                                                <CardTitle>Operating system :</CardTitle>
                                                                 <CardText>
                                                                     {svmData && svmData ? (JSON.parse(svmData.getSpecificVM.Config).getConfigFile.Operating_System) : "Windows"}
                                                                 </CardText>
@@ -163,7 +170,7 @@ const VmDetails = () => {
                                                     <Col>
                                                         <Card>
                                                             <CardBody>
-                                                                <CardTitle>Date:</CardTitle>
+                                                                <CardTitle>Date :</CardTitle>
                                                                 <CardText>
                                                                     31/12/1999
                                                                 </CardText>
@@ -175,12 +182,22 @@ const VmDetails = () => {
                                                     <Col>
                                                         <Card>
                                                             <CardBody>
-                                                                <CardTitle>Description:</CardTitle>
+                                                                <CardTitle>Description :</CardTitle>
                                                                 <CardText>
                                                                     {svmData && svmData ? (svmData.getSpecificVM.Description) : ""}                                                                </CardText>
                                                             </CardBody>
                                                         </Card>
                                                     </Col>
+                                                    <Col>
+                                                        <Card>
+                                                            <CardBody>
+                                                                <CardTitle>IP :</CardTitle>
+                                                                <CardText>
+                                                                    {"59.103.210.167"}                                                                </CardText>
+                                                            </CardBody>
+                                                        </Card>
+                                                    </Col>
+                                                    <Col></Col>
                                                 </Row>
 
                                                 <Row>
@@ -204,6 +221,22 @@ const VmDetails = () => {
                                                             <i className="bx bx-trash label-icon"></i> Delete VM
                                                         </button>
 
+                                                    </Col>
+
+                                                    <Col>
+                                                        {svmData && svmData ? (
+                                                            svmData.getSpecificVM.Status === true && svmData.getSpecificVM.Status ? (
+                                                                <button
+                                                                    type="button"
+                                                                    className="btn btn-success  btn-label"
+                                                                // onClick={}
+                                                                >
+                                                                    <i className="bx bx-window-open label-icon"></i> Open VNC
+                                                                </button>
+                                                            ) : (
+                                                                ""
+                                                            )
+                                                        ) : ""}
                                                     </Col>
                                                 </Row>
                                             </CardBody>

@@ -13,7 +13,7 @@ const RamSlider = (props) => {
   return (
     <>
       <div className="mb-3">
-        <h5 className="font-size-14 mb-3 mt-0">Ram:</h5>
+        <h5 className="font-size-14 mb-3 mt-0">Ram :</h5>
         <Slider
           min={0}
           max={8192}

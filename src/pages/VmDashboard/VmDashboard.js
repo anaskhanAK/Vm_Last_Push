@@ -7,11 +7,13 @@ import DashVmCard from './DashVmCard';
 
 
 const VmDashboard = () => {
+    document.title = "Dashboard";
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="Dashboard" breadcrumbItem="Dashboard" />
+                    {/* <Breadcrumbs breadcrumbItem="Dashboard" /> */}
+                    <h3 className="card-title mb-4">DASHBOARD</h3>
                     <Row>
                         <Col lg="8">
                             <DcVm />
