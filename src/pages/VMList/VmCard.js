@@ -9,9 +9,29 @@ import Vm from "../../assets/images/1..jpg";
 import alt from "assets/images/Azure.png"
 import { VM_ACTION } from 'gqlOprations/Mutations';
 
-const VmCard = () => {
+const VmCard = (props) => {
 
   const [vmsList, setVmsList] = useState([]);
+  const [checklist, setchecklist] = useState([])
+
+  const handleCheck = (id) => {
+    const value = id
+    const hashValue = checklist.includes(value);
+    console.log(hashValue)
+    if(hashValue === true){
+      const index = checklist.indexOf(value);
+      if(index > -1){
+        checklist.splice(index, 1)
+        console.log("true")
+      }
+    }
+    if(hashValue === false){
+      console.log("false")
+      checklist.push(value)
+    }
+    // console.log(checklist)
+    props.listItem(checklist)
+  };
 
   const getCookies = (cname) => {
     const cArray = document.cookie.split("; ")
@@ -154,6 +174,7 @@ const VmCard = () => {
                       type="checkbox"
                       value={e.id}
                       id={e.id}
+                      onClick={() => handleCheck(e.id)}
                     />
                   </div>
                 </Col>

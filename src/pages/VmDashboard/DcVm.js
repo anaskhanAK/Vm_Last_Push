@@ -16,7 +16,6 @@ import vin from "assets/images/widows.jpg"
 import lin from "assets/images/linux.jpg"
 import { use } from "i18next";
 import toastr from "toastr";
-// import * as windowBase64 from './windowBase64.txt';
 import "toastr/build/toastr.min.css";
 import text from "./windowBase64.txt"
 import text1 from "./linuxBase64.txt"
@@ -36,9 +35,7 @@ const DcVm = () => {
     const [dropdownVal, setDropDownVal] = useState({});
     const [tpmSwitch, setTpmSwitch] = useState(false);
     const [nameV, setNameV] = useState();
-
     const [dropImage, setDropImage] = useState(alt);
-
     const history = useHistory()
 
     toastr.options = {
@@ -160,7 +157,6 @@ const DcVm = () => {
         })
     }
 
-
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
         let result = null
@@ -206,7 +202,7 @@ const DcVm = () => {
                 }
             },
             onCompleted: dataE => {
-                console.log(typeof(dataE.findVMName))
+                // console.log()
                 setNameV(dataE.findVMName)
                 // console.log(nameV.type)
             },
