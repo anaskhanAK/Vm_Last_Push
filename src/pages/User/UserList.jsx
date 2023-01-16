@@ -70,7 +70,7 @@ const UserList = () => {
                                 token: mvToken,
                             }
                         },
-                        onCompleted: getAllUsers()
+                        onCompleted: () => { getAllUsers() }
                     })
                 }}
             />
@@ -79,7 +79,7 @@ const UserList = () => {
                 <i
                     className="bx bx-edit label-icon"
                     style={{ fontSize: '17px', color: 'white', cursor: 'pointer', marginLeft: "10px" }}
-                    onClick={() => { console.log('clicked') }}
+                    // onClick={() => { console.log('clicked') }}
                 />
             </Link>
         </>
@@ -88,20 +88,20 @@ const UserList = () => {
     const columns = useMemo(
         () => [
             {
-                Header: 'User Name',
+                Header: 'First Name',
                 accessor: "First_Name",
             },
             {
+                Header: 'Last Name',
+                accessor: "Last_Name",
+            },
+            {
                 Header: 'Email',
-                // id: 'filetype',
-                // accessor: d => d.filetype,
                 accessor: 'Email'
             },
             {
                 Header: 'Actions',
-                accessor: 'Actions',
                 Cell: cellFunction,
-                // getProps: () => ({ name: 'table' })
             },
         ],
         []
@@ -116,7 +116,7 @@ const UserList = () => {
 
                 <Breadcrumbs title="ISO File" breadcrumbItem="File List" />
 
-                <div className='mb-2 overflow-auto' >
+                <div className='mb-2 overflow-auto'>
                     <button
                         className="btn btn-primary w-md float-end"
                         onClick={() => history.push('/create-user')}
@@ -124,15 +124,16 @@ const UserList = () => {
                         Create User
                     </button>
                 </div>
-
-                <TableContainer
-                    columns={columns}
-                    data={usersList}
-                    isGlobalFilter={true}
-                    // isAddOptions={true}
-                    customPageSize={10}
-                    className="custom-header-css"
-                />
+                <div style={{ marginTop: "-50px" }}>
+                    <TableContainer
+                        columns={columns}
+                        data={usersList}
+                        isGlobalFilter={true}
+                        // isAddOptions={true}
+                        customPageSize={10}
+                        className="custom-header-css"
+                    />
+                </div>
             </div>
         </div>
     )

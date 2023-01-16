@@ -13,6 +13,7 @@ const VmCard = (props) => {
 
   const [vmsList, setVmsList] = useState([]);
   const [checklist, setchecklist] = useState([])
+  const [deleteList, setDeleteList] = useState([])
 
   const handleCheck = (id) => {
     const value = id

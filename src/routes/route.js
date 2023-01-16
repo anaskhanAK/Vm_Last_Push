@@ -8,6 +8,7 @@ const Authmiddleware = ({
   isAuthProtected,
   ...rest
 }) => {
+  
   const getCookies = (cname) => {
     const cArray = document.cookie.split("; ")
     let result = null
@@ -19,7 +20,6 @@ const Authmiddleware = ({
     return result;
   }
 
-  // const mvUserType = getCookies("MvUserType");
   return (
     <Route
       {...rest}

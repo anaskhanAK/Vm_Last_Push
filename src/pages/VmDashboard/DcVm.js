@@ -622,7 +622,7 @@ const DcVm = () => {
                                                                         type="checkbox"
                                                                         className="form-check-input"
                                                                         id="customSwitchsizelg"
-                                                                        onClick={handleTpmSwitch}
+                                                                        onClick={(e) => {handleTpmSwitch(e)}}
                                                                     />
                                                                     <label
                                                                         className="form-check-label"

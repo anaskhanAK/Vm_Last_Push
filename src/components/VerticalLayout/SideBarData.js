@@ -25,6 +25,12 @@ export const AdminBarData = [
         icon: <i className="mdi mdi-disc" />
     },
 
+    {
+        title: "All VMs",
+        link: "/allvms",
+        icon: <i className="mdi mdi-desktop-classic" />
+    },
+
 ]
 
 export const UserBarData = [

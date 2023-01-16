@@ -7,41 +7,20 @@ import {
   DropdownItem,
   Button
 } from "reactstrap";
-
-//i18n
 import { withTranslation } from "react-i18next";
-// Redux
 import { connect } from "react-redux";
 import { withRouter, Link, useHistory } from "react-router-dom";
-
-// users
-import user1 from "../../../assets/images/users/avatar-1.jpg";
 import { GET_USER_BY_ID } from "gqlOprations/Queries";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import alt from "assets/images/userAlt.jpg"
 
 const ProfileMenu = props => {
-  // Declare a new state variable, which we'll call "menu"
+
   const [menu, setMenu] = useState(false);
 
   const [username, setusername] = useState("Admin");
 
   const history = useHistory();
-
-  // useEffect(() => {
-  //   if (localStorage.getItem("authUser")) {
-  //     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-  //       const obj = JSON.parse(localStorage.getItem("authUser"));
-  //       setusername(obj.displayName);
-  //     } else if (
-  //       process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-  //       process.env.REACT_APP_DEFAULTAUTH === "jwt"
-  //     ) {
-  //       const obj = JSON.parse(localStorage.getItem("authUser"));
-  //       setusername(obj.username);
-  //     }
-  //   }
-  // }, [props.success]);
 
   const getCookies = (cname) => {
     const e = document.cookie.split("; ")
@@ -98,7 +77,6 @@ const ProfileMenu = props => {
               )
             ) :
               alt || alt}
-            // src={alt}
             alt="U"
           />
 
