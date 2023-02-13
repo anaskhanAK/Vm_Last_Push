@@ -38,6 +38,7 @@ const UserList = () => {
         },
         onCompleted: data => {
             // console.log(data);
+            console.log(data.getUserList)
             setUsersList(data.getUserList);
         },
         fetchPolicy: "cache-and-network"
@@ -59,8 +60,8 @@ const UserList = () => {
 
         return <>
             <i
-                className="mdi mdi-delete label-icon"
-                style={{ fontSize: '17px', color: 'white', cursor: 'pointer' }}
+                className="bx bx-trash label-icon"
+                style={{ fontSize: '17px', cursor: 'pointer'}}
                 onClick={() => {
                     console.log('clicked', row.cell.row.original.id);
                     deleteUser({
@@ -114,7 +115,7 @@ const UserList = () => {
         <div className="page-content">
             <div className="container-fluid">
 
-                <Breadcrumbs title="ISO File" breadcrumbItem="File List" />
+                <Breadcrumbs title="Users" breadcrumbItem="User List" />
 
                 <div className='mb-2 overflow-auto'>
                     <button

@@ -8,7 +8,8 @@ import store from "./store";
 import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
 
 const client = new ApolloClient({
-  uri: 'https://6882-167-99-36-48.eu.ngrok.io/',
+  // uri: 'https://6882-167-99-36-48.eu.ngrok.io/',
+  uri: "http://167.99.36.48:9090/",
   cache: new InMemoryCache(),
 });
 

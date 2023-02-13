@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { useEffect } from "react";
 import { io } from "socket.io-client";
 import SocketIOFileUploadServer from "socketio-file-upload";
+import * as Yup from "yup";
+import { useFormik } from "formik";
 
 import {
     Row,
@@ -12,15 +14,19 @@ import {
     Modal,
     Container,
     Label,
-    Progress
+    Progress,
+    Input,
+    FormFeedback,
+    Form
 } from "reactstrap";
 
 
-const IsoModel = () => {
+const IsoModel = (props) => {
 
     const [modal_standard, setmodal_standard] = useState(false);
-    const [filename, setFilename] = useState('')
-    const [uploadPercentage, setUploadPercentage] = useState(0)
+    const [vmPassData, setVmPassData] = useState({})
+
+    // console.log(props.dataParentToChild)
 
     function tog_standard() {
         setmodal_standard(!modal_standard);
@@ -31,64 +37,80 @@ const IsoModel = () => {
         document.body.classList.add("no_padding");
     }
 
-    const uplaodURL = 'http://placed.ro:2000';
+    const handleVmPassChange = (e) => {
+        setVmPassData({
+            ...vmPassData,
+            [e.target.name]: e.target.value
+        });
+    }
 
-    useEffect(() => {
-        var socket = io.connect(uplaodURL)
-        var uploader = new SocketIOFileUploadServer(socket)
+    const handleVmPassSubmit = async (e) => {
+        e.preventDefault();
+        const response = await fetch('http://157.245.19.134:5001', {
+            method: 'post',
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                "jsonrpc": "2.0",
+                "method": "updateSpicePasswordCall",
+                "params": {
+                    "name": props.dataParentToChild,
+                    "password": vmPassData.VmPassword
+                },
+                "id": 1
+            })
+        })
+        const res = await response.json();
+        if(res) {
+            console.log(res.result)
+        }
 
-        // uploader.addEventListener("complete", function (event) {
-        //     console.log(event.file.name, 'Upload Complete');
+        // console.log(vmPassData)
+    }
 
-        // })
-        // uploader.addEventListener("choose", function (event) {
-        //     console.log(event.file, "Choose");
-        // })
-        // uploader.addEventListener("start", function (event) {
-        //     console.log(event.file.name, "Start");
-        //     setFilename(p => (event.file.name))
-        //     const videoFile = event.file
-        // })
-        // uploader.addEventListener("progress", function (event) {
-        //     setUploadPercentage(p => (event.bytesLoaded / event.file.size * 100))
-        //     console.log(event.bytesLoaded / event.file.size * 100, 'Upload progress');
-        // })
-        // uploader.addEventListener("load", function (event) {
-        //     console.log(event.file.name, "load");
-        // })
-        // uploader.addEventListener("error", function (event) {
-        //     console.error(event.message)
-        // })
-        // uploader.useBuffer = true
-        // uploader.chunkSize = ((1 * 1000) * (0.2 * 1000))
-        // //uploader.maxFileSize = 90000
-        // // uploader.useText = true
-        // // uploader.serializedOctets = true
+    // const handleSingin = async (e) => {
+    //     e.preventDefault();
+    //     const response = await fetch('http://127.0.0.1:8000/singin', {
+    //         method: 'post',
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         body: JSON.stringify({
+    //           firstname : firstname,
+    //           lastname : lastname, 
+    //           email: email, 
+    //           password: password, })
+    //     })
+    //     const res = await response.json();
+    //     if (res) {
+    //       if(res.msg==="Data Send Successfully"){
+    //         navigate('/login')
+    //       }
+    //       else{
+    //       navigate('/')}
 
-        // uploader.listenOnInput(document.getElementById("file-upload-btn"));
-        // uploader.listenOnInput(document.getElementById("file-upload-btn"));
+    //         console.log(res.msg)
+    //     }
+    // }
 
-        // document.getElementById("file-upload-btn").addEventListener("click", uploader.prompt, false);
-console.log(document.getElementById("file-upload-btn"),'sss')
-    }, [])
 
     return (
         <React.Fragment>
-
-            <Col >
+            <Col>
                 <div>
                     <button
+                        style={{ float: "right" }}
                         type="button"
                         onClick={() => {
                             tog_standard();
                         }}
-                        className="btn btn-primary "
+                        className="btn btn-primary btn-label"
                         data-toggle="modal"
                         data-target="#myModal"
                     >
-                        Upload
+                        <i className="bx bx-key label-icon"></i> Set Password
                     </button>
-
                     <Modal
                         isOpen={modal_standard}
                         toggle={() => {
@@ -97,7 +119,7 @@ console.log(document.getElementById("file-upload-btn"),'sss')
                     >
                         <div className="modal-header">
                             <h5 className="modal-title mt-0" id="myModalLabel">
-                                Modal Heading
+                                Set VirtualMachine Password
                             </h5>
                             <button
                                 type="button"
@@ -111,48 +133,46 @@ console.log(document.getElementById("file-upload-btn"),'sss')
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
+
                         <div className="modal-body">
 
 
                             <Row>
                                 <div className="mb-3">
                                     <Label for="basicpill-phoneno-input3">
-                                        ISO File
+                                        Set Password
                                     </Label>
                                     <div>
+                                        <Input
+                                            type="password"
+                                            className="form-control"
+                                            id="setVmPass"
+                                            placeholder="Set Vm Password"
+                                            name="VmPassword"
+                                            onChange={(e) => { handleVmPassChange(e) }}
+                                        />
+                                    </div>
+                                </div>
+                            </Row>
 
-                                        <div>
-                                            <div className="d-flex">
-                                                <input
-                                                    className="form-control"
-                                                    type="text"
-                                                    onChange={(e) => { }}
-                                                    placeholder="choose file"
-                                                    value={filename}
-                                                    style={{ marginRight: "5px" }}
-                                                />
-                                                <input type="file" hidden id="file-input"/>
-                                                <button
-                                                    style={{ margin: "0px" }}
-                                                    id="file-upload-btn"
-                                                    className="btn btn-primary"
-                                                    onClick={(e) => e.preventDefault()}
-                                                >
-                                                    Upload
-                                                </button>
-                                            </div>
-                                            <Progress
-                                                className="progress-sm"
-                                                color="primary"
-                                                value={uploadPercentage}
-                                                style={{ marginTop: "3px" }}
-                                            />
-                                        </div>
+                            <Row>
+                                <div className="mb-3">
+                                    <Label for="basicpill-phoneno-input3">
+                                        Confirm Password
+                                    </Label>
+                                    <div>
+                                        <Input
+                                            type="password"
+                                            className="form-control"
+                                            id="setVmPassC"
+                                            placeholder="Confirm Vm Password"
+                                            name="CVmPassword"
+                                            onChange={(e) => { handleVmPassChange(e) }}
+                                        />
                                     </div>
                                 </div>
                             </Row>
                         </div>
-
 
                         <div className="modal-footer">
                             <button
@@ -168,15 +188,17 @@ console.log(document.getElementById("file-upload-btn"),'sss')
                             <button
                                 type="button"
                                 className="btn btn-primary "
+                                onClick={handleVmPassSubmit}
                             >
-                                Save changes
+                                Save Password
                             </button>
                         </div>
+                        {/* </Form> */}
                     </Modal>
                 </div>
             </Col>
 
-        </React.Fragment>
+        </React.Fragment >
     )
 }
 

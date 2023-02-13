@@ -57,20 +57,20 @@ const DcVm = () => {
 
     const handleIsoDrop = (e) => {
         e.preventDefault(),
-            console.log(e)
-        setConfigData({
-            ...configData,
-            getConfigFile: {
-                ...configData.getConfigFile,
-                IsoFile: e.target.value,
-            }
-        })
+            // console.log(e)
+            setConfigData({
+                ...configData,
+                getConfigFile: {
+                    ...configData.getConfigFile,
+                    IsoFile: e.target.value,
+                }
+            })
         console.log(configData)
     }
 
     const handleOpDrop = (e) => {
         e.preventDefault(),
-            console.log(e)
+            // console.log(e)
         setConfigData({
             ...configData,
             getConfigFile: {
@@ -78,6 +78,8 @@ const DcVm = () => {
                 Operating_System: e.target.value,
             }
         })
+
+        // console.log(configData.getConfigFile.Operating_System)
 
         if (e.target.value === "Windows") {
             setDropImage(vin)
@@ -137,12 +139,13 @@ const DcVm = () => {
     }
 
     const getStorageVal = (storage) => {
-        console.log("this is Storage Value : ", storage);
+        console.log("this is Storage Value : ",storage);
+        // console.log(typeof(storage))
         setConfigData({
             ...configData,
             getConfigFile: {
                 ...configData.getConfigFile,
-                Storage: storage
+                Storage: 8
             }
         })
     };
@@ -178,7 +181,9 @@ const DcVm = () => {
         });
     };
 
-    const [checkVmName, {loading:loadingE, data:dataE, error:errorE}] = useLazyQuery(CHECK_VM_NAME)
+
+
+    const [checkVmName, { loading: loadingE, data: dataE, error: errorE }] = useLazyQuery(CHECK_VM_NAME)
     const [getConfig, { loading: loadingD, data: dataD, error: errorD }] = useLazyQuery(GET_CONFIG);
     const [createIso, { loading: loadingB, data: dataB, error: errorB }] = useMutation(CREATE_ISO);
     const [createVm, { loading: loadingC, data: dataC, error: errorC }] = useMutation(CREATE_VM);
@@ -194,10 +199,12 @@ const DcVm = () => {
         fetchPolicy: "cache-and-network"
     });
 
+    // console.log(mvToken)
+
     const vmValidation = e => {
         checkVmName({
-            variables:{
-                input:{
+            variables: {
+                input: {
                     virtualMachineName: e.target.value
                 }
             },
@@ -210,12 +217,20 @@ const DcVm = () => {
         })
     }
 
+    if(dataC){
+        console.log(dataC)
+    }
+
+    if (errorC){
+        console.log(errorC)
+    }
+
     const handleVmSubmit = (e) => {
         e.preventDefault(),
             console.log(vmData)
         console.log(configData)
         const config = JSON.stringify(configData);
-        console.log(config);
+        console.log(JSON.stringify(config));
         createVm({
             variables: {
                 input: {
@@ -228,9 +243,10 @@ const DcVm = () => {
                     "vmImage": vmData.vmImage
                 }
             },
-            onCompleted: () => {
+            onCompleted: (dataC) => {
                 toastr.success("Virtual Machine Created")
                 history.push("/vmlist")
+                console.log(dataC)
             }
         })
     }
@@ -253,7 +269,7 @@ const DcVm = () => {
         reader.onloadend = () => {
             setImg(reader.result.toString());
             const eImage = reader.result.toString();
-            // console.log(eImage)
+            console.log(eImage)
             setVmData(prevState => ({
                 ...prevState,
                 vmImage: eImage
@@ -264,7 +280,8 @@ const DcVm = () => {
     }
 
 
-    const uplaodURL = 'http://placed.ro:2000';
+    // const uplaodURL = 'http://placed.ro:2000';
+    const uplaodURL = 'http://157.245.19.134:2000';
 
     useEffect(() => {
         var socket = io.connect(uplaodURL)
@@ -273,6 +290,7 @@ const DcVm = () => {
         uploader.addEventListener("complete", function (event) {
             console.log(event.file.name, 'Upload Complete');
             console.log(event.file, "111this is file ");
+            // console.log(configData.getConfigFile.Operating_System || "")
             createIso({
                 variables: {
                     input: {
@@ -295,7 +313,17 @@ const DcVm = () => {
         uploader.addEventListener("start", function (event) {
             console.log(event.file.name, "Start");
             setFilename(p => (event.file.name))
-            const videoFile = event.file
+            const videoFile = event.file;
+            const filename=event.file.name.split(".");
+            const ext=filename.pop();
+            console.log(ext)
+            if(ext.toLowerCase()!=='iso'){
+                console.log('dd')
+                toastr.error("Please Select Iso File");
+                document.getElementById("file-upload-btn").removeEventListener("click",funcA=()=>{});
+                uploader.destroy()
+                toastr.error("Please Select Iso File");
+            }
         })
         uploader.addEventListener("progress", function (event) {
             setUploadPercentage(p => (event.bytesLoaded / event.file.size * 100))
@@ -622,7 +650,7 @@ const DcVm = () => {
                                                                         type="checkbox"
                                                                         className="form-check-input"
                                                                         id="customSwitchsizelg"
-                                                                        onClick={(e) => {handleTpmSwitch(e)}}
+                                                                        onClick={(e) => { handleTpmSwitch(e) }}
                                                                     />
                                                                     <label
                                                                         className="form-check-label"

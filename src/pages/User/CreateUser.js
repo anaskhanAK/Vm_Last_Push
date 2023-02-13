@@ -98,7 +98,7 @@ const CreateUser = props => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="User Profile" breadcrumbItem="Update Profile" />
+                    <Breadcrumbs title="User List" breadcrumbItem="Create User" />
                     <Row>
                         <Form
                             onSubmit={(e) => {
@@ -114,7 +114,7 @@ const CreateUser = props => {
                                             <Col lg="3">
                                                 <Card >
                                                     <CardBody>
-                                                        <h4 className="card-title mb-4">Update Image</h4>
+                                                        <h4 className="card-title mb-4">Upload Image</h4>
                                                         <div className="text-center">
                                                             <div style={{ height: "250px" }}>
                                                                 <img className="rounded-circle"
@@ -151,7 +151,7 @@ const CreateUser = props => {
                                             <Col lg="9">
                                                 <Card>
                                                     <CardBody>
-                                                        <h4 className="card-title mb-4">Update Details</h4>
+                                                        <h4 className="card-title mb-4">User Details</h4>
                                                         <Row style={{ marginTop: "45px" }}>
                                                             <Col md={6}>
                                                                 <div className="mb-3">

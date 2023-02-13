@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react"
 import { Card, CardBody, Col, Button, Container, CardImg, CardText, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, CardTitle, Table } from "reactstrap"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { GET_USER_BY_ID } from "gqlOprations/Queries"
 import alt from "assets/images/userAlt.jpg"

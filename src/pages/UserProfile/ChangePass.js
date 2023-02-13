@@ -7,6 +7,7 @@ import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { useParams } from "react-router-dom";
 
 
 const ChangePass = () => {
@@ -22,6 +23,7 @@ const ChangePass = () => {
         return result;
     }
 
+    
     const mvToken = getCookies("MvUserToken");
     // console.log(mvToken);
 

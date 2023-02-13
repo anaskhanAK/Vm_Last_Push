@@ -28,7 +28,7 @@ export const AdminBarData = [
     {
         title: "All VMs",
         link: "/allvms",
-        icon: <i className="mdi mdi-desktop-classic" />
+        icon: <i className="mdi mdi-clipboard-list" />
     },
 
 ]

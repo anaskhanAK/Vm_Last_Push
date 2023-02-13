@@ -9,11 +9,14 @@ import { useMutation } from "@apollo/client";
 import { USER_REGISTER } from "gqlOprations/Mutations";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import text from "./windowBase64.txt"
 
 const Register = () => {
 
   //meta title
   document.title = "Sign Up";
+  
+  const [userImage, setUserImage] = useState()
 
   const history = useHistory();
 
@@ -50,11 +53,19 @@ const Register = () => {
     }),
 
     onSubmit: (values) => {
-      console.log(values);
+      console.log(values.firstName, values.lastName, values.Email, values.Password, userImage);
 
       userRegister({
         variables:{
-          input:values
+          input:{
+            id: null,
+            firstName: values.firstName,
+            lastName: values.lastName,
+            Email: values.Email,
+            Password: values.Password,
+            userImage: userImage,
+            Deleted: false
+          }
         },
 
         onCompleted: data => {
@@ -65,6 +76,16 @@ const Register = () => {
       })
     }
   });
+
+  useEffect(()=> {
+    fetch(text)
+    .then(r => r.text())
+    .then(text => {
+        console.log('text decoded:', text);
+        setUserImage(text)
+
+    });
+  },[])
 
   return (
     <React.Fragment>

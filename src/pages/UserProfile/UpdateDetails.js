@@ -38,7 +38,7 @@ const UpdateDetails = () => {
 
     const [img, setImg] = useState();
     const [formData, setFormData] = useState({
-        token: usertoken
+        token: mvToken
     });
 
 
@@ -46,7 +46,7 @@ const UpdateDetails = () => {
         variables: {
             input: {
                 id: userId,
-                token: usertoken
+                token: mvToken
             }
         },
         onCompleted: dataB => {

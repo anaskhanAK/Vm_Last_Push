@@ -48,6 +48,10 @@ const VmDetails = () => {
 
     const [changeVmStatus, { loading: loadingB, data: dataB, error: errorB }] = useMutation(VM_ACTION)
 
+    // if(dataA){
+    //     console.log(dataA)
+    // }
+
     const handleDeleteVm = () => {
 
         deleteVm({
@@ -57,7 +61,7 @@ const VmDetails = () => {
                     id: [vmId]
                 }
             },
-            onCompleted: dataA => {
+            onCompleted: (dataA) => {
                 console.log(dataA);
                 history.push("/vmlist")
             }
@@ -89,6 +93,10 @@ const VmDetails = () => {
             },
             onCompleted: () => getSpecificVm()
         })
+    }
+
+    const handleVnc = () => {
+        window.open(`http://157.245.19.134/vmview/?name=${svmData.getSpecificVM.VirtualMachine_Name}`, '_blank', 'noreferrer')
     }
 
 
@@ -143,7 +151,7 @@ const VmDetails = () => {
                                                         <h4 className="card-title mb-4">VM Details</h4>
                                                     </Col>
                                                     <Col>
-                                                    
+
                                                     </Col>
                                                 </Row>
                                                 <Row>
@@ -193,7 +201,8 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>IP :</CardTitle>
                                                                 <CardText>
-                                                                    {"59.103.210.167"}                                                                </CardText>
+                                                                    {"59.103.210.167"}
+                                                                </CardText>
                                                             </CardBody>
                                                         </Card>
                                                     </Col>
@@ -229,7 +238,7 @@ const VmDetails = () => {
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-success  btn-label"
-                                                                // onClick={}
+                                                                    onClick={handleVnc}
                                                                 >
                                                                     <i className="bx bx-window-open label-icon"></i> Open VNC
                                                                 </button>

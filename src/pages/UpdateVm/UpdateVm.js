@@ -1,22 +1,25 @@
 import React from 'react'
-import { Card, CardBody, Col, Button, Container, CardImg, CardText, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, CardTitle, Table } from "reactstrap"
+import { Card, CardBody, Col, Button, Container, CardImg, CardText, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, CardTitle, Table, FormFeedback } from "reactstrap"
 import Breadcrumbs from "../../components/Common/Breadcrumb"
 import RamSlider from 'pages/CreateVm/RamSlider'
 import StoregeSlider from 'pages/CreateVm/StoregeSlider'
 import Vm from "../../assets/images/1..jpg";
 import { useState } from 'react'
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
-import { GET_CONFIG, GET_SPECIFIC_VM } from 'gqlOprations/Queries'
+import { CHECK_VM_NAME, GET_CONFIG, GET_SPECIFIC_VM } from 'gqlOprations/Queries'
 import { useEffect } from 'react'
 import { useParams } from 'react-router-dom'
 import { UPDATE_VM } from 'gqlOprations/Mutations'
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import alt from "assets/images/Azure.png"
+import IsoModel from 'pages/CreateVm/IsoModel'
 
 
 const UpdateVm = () => {
     document.title = "Update VM";
+
+    const [parentToChild, setParentToChild] = useState('');
 
     toastr.options = {
         positionClass: "toast-top-center",
@@ -41,6 +44,7 @@ const UpdateVm = () => {
     const [vmUpdateData, setVmUpdateData] = useState({});
     const [updateImg, setUpdateImg] = useState();
     const [config, setConfig] = useState();
+    const [nameVm, setNameVm] = useState();
 
     const getStorageVal = (storage) => {
         console.log("this is Storage Value From Update Vm : ", storage);
@@ -78,9 +82,11 @@ const UpdateVm = () => {
             const jsonConfig = JSON.parse(dataC.getSpecificVM.Config);
             // console.log(jsonConfig)
             setConfig(p => (jsonConfig))
+            setParentToChild(dataC.getSpecificVM.VirtualMachine_Name)
         },
         fetchPolicy: "cache-and-network"
     });
+    const [checkVmName, { loading: loadingE, data: dataE, error: errorE }] = useLazyQuery(CHECK_VM_NAME)
 
     const handleUpdateChange = (e) => {
         setVmUpdateData({
@@ -131,6 +137,23 @@ const UpdateVm = () => {
             }
         })
     };
+
+    const vmValidation = e => {
+        checkVmName({
+            variables: {
+                input: {
+                    virtualMachineName: e.target.value
+                }
+            },
+            onCompleted: dataE => {
+                // console.log(dataE.findVMName)
+                setNameVm(dataE.findVMName)
+                // console.log(nameV.type)
+            },
+            fetchPolicy: "cache-and-network"
+        })
+    }
+
 
     useEffect(() => { getCurrant() }, [])
 
@@ -201,9 +224,14 @@ const UpdateVm = () => {
                                                                         id="basicpill-phoneno-input3"
                                                                         placeholder="Enter VM Name"
                                                                         name='virtualMachineName'
-                                                                        onChange={handleUpdateChange}
+                                                                        onChange={(e) => { handleUpdateChange(e); vmValidation(e) }}
                                                                         value={vmUpdateData.virtualMachineName || ""}
+                                                                        invalid={nameVm === "true" && nameVm === "true" ? true : false}
+                                                                        valid={nameVm === "false" && nameVm === "false" ? true : false}
                                                                     />
+                                                                    {nameVm === "true" && nameVm === "true" ? (
+                                                                        <FormFeedback type="invalid">{"Invalid VM Name"}</FormFeedback>
+                                                                    ) : (<FormFeedback valid>{"valid VM Name"}</FormFeedback>)}
                                                                 </div>
                                                             </Row>
                                                             <Row>
@@ -235,11 +263,16 @@ const UpdateVm = () => {
                                                     </Row>
 
                                                     <Row>
+                                                        <Col lg="9">
                                                         <div className="d-grid gap-2">
-                                                            <Button color="primary" type="submit" className="btn-lg" >
+                                                            <Button color="primary" type="submit" className="" >
                                                                 UPDATE
                                                             </Button>
                                                         </div>
+                                                        </Col>
+                                                        <Col lg="3">
+                                                            <IsoModel dataParentToChild={parentToChild} />
+                                                        </Col>
                                                     </Row>
 
                                                 </Form>
