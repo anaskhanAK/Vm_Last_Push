@@ -10,32 +10,27 @@ const StoregeSlider = (props) => {
   const [prefix, setprefix] = useState(0);
   const [con, setCon] = useState("MB")
   const [valueToShow, setValueToShow] = useState(0)
+  const [sliderVal, setSliderVal] = useState(0)
 
-  function valueLabelFormat(value) {
 
-    const units = ['MB', 'GB'];
-
-    let unitIndex = 0;
-    let scaledValue = value;
-
-    while (scaledValue >= 1024 && unitIndex < units.length - 1) {
-      unitIndex += 1;
-      scaledValue /= 1024;
-      console.log(typeof(scaledValue))
+  const ManageValue = (value) => {
+    let currantValue = value;
+    if (currantValue >= 1020) {
+      currantValue /= 1024;
+      let ToFix = currantValue.toFixed(2);
+      let Float = parseFloat(ToFix);
+      // console.log(Float)
+      setSliderVal(Float)
+      setCon("GB")
+      props.sValue(Float)
     }
-    // const mValue = scaledValue
-    // if (scaledValue < 1024){
-    //   setprefix(scaledValue)
-    // }
-    // else {
-    //   setprefix(Math.round(scaledValue))
-    // }
-    // setValueToShow(scaledValue))
-    setprefix(Math.round(scaledValue))
-    setCon(units[unitIndex])
-    props.sValue(Math.round(scaledValue))
-    // return `${Math.round(scaledValue)} ${units[unitIndex]}`;
+    else {
+      setSliderVal(currantValue)
+      setCon("MB")
+      props.sValue(currantValue)
+    }
   }
+
 
 
   return (
@@ -45,15 +40,13 @@ const StoregeSlider = (props) => {
         <Slider
           min={0}
           max={16825}
-          format={prefix}
           value={prefix}
           onChange={value => {
-            // setprefix(value);
-            valueLabelFormat(value)
-            // props.sValue(value)
+            setprefix(value);
+            ManageValue(value);
           }}
         />
-        <span className="float-right mt-4">{prefix} {con} </span>
+        <span className="float-right mt-4">{sliderVal} {con}</span>
       </div>
     </>
   )

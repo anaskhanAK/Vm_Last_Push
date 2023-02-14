@@ -145,7 +145,7 @@ const DcVm = () => {
             ...configData,
             getConfigFile: {
                 ...configData.getConfigFile,
-                Storage: 8
+                Storage: storage
             }
         })
     };
