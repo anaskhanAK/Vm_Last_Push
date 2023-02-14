@@ -78,7 +78,7 @@ const VmDetails = () => {
                     "token": mvToken
                 }
             },
-            onCompleted: () => getSpecificVm()
+            onCompleted: () => {getSpecificVm()}
         })
     }
 
@@ -91,7 +91,7 @@ const VmDetails = () => {
                     "token": mvToken
                 }
             },
-            onCompleted: () => getSpecificVm()
+            onCompleted: () => {getSpecificVm()}
         })
     }
 

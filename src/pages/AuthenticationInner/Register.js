@@ -87,6 +87,8 @@ const Register = () => {
     });
   },[])
 
+  console.log(alert)
+
   return (
     <React.Fragment>
       <div className="account-pages my-4 pt-sm-5">

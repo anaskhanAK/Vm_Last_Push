@@ -17,7 +17,8 @@ import {
     Progress,
     Input,
     FormFeedback,
-    Form
+    Form,
+    Alert
 } from "reactstrap";
 
 
@@ -25,6 +26,7 @@ const IsoModel = (props) => {
 
     const [modal_standard, setmodal_standard] = useState(false);
     const [vmPassData, setVmPassData] = useState({})
+    const [alert, setAlert] = useState()
 
     // console.log(props.dataParentToChild)
 
@@ -36,6 +38,8 @@ const IsoModel = (props) => {
     function removeBodyCss() {
         document.body.classList.add("no_padding");
     }
+
+    // console.log(typeof(alert));
 
     const handleVmPassChange = (e) => {
         setVmPassData({
@@ -62,8 +66,14 @@ const IsoModel = (props) => {
             })
         })
         const res = await response.json();
-        if(res) {
-            console.log(res.result)
+        if (res) {
+            console.log(res.result.status)
+            if (res.result.status === true) {
+                setAlert("true")
+            }
+            else {
+                setAlert("false")
+            }
         }
 
         // console.log(vmPassData)
@@ -172,6 +182,17 @@ const IsoModel = (props) => {
                                     </div>
                                 </div>
                             </Row>
+
+                            <Row>
+                                <Col>
+                                    {alert && alert ? (
+                                        alert === "false" && alert === "false" ? (
+                                        <Alert color="danger">Failed To Update Password</Alert>)
+                                        :<Alert color="success">Password Updated Successfully</Alert>
+                                    ):null}
+                                </Col>
+                            </Row>
+
                         </div>
 
                         <div className="modal-footer">
