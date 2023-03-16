@@ -2,6 +2,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
+import { Card, CardBody, Col, Button, Container, CardImg, CardText, Form, FormGroup, Input, Label, NavItem, NavLink, Row, TabContent, TabPane, CardTitle, Table } from "reactstrap"
 
 //i18n
 import { withTranslation } from "react-i18next";
@@ -13,6 +14,8 @@ import logo from "../../assets/images/logo.svg";
 import logoLightPng from "../../assets/images/logo-light.png";
 import logoLightSvg from "../../assets/images/logo-light.svg";
 import logoDark from "../../assets/images/logo-dark.png";
+// import logoVm from "../../assets/images/WHITE.png"
+import logoVm from "../../assets/images/PNG.png"
 
 const Sidebar = props => {
 
@@ -31,12 +34,12 @@ const Sidebar = props => {
 
           <Link to="/" className="logo logo-light">
             <span className="logo-sm">
-              {/* <img src={logoLightSvg} alt="" height="22" /> */}
-              <h4 style={{marginTop:"20px"}}>VM</h4>
+              <img src={logoVm} alt="" height="30" style={{ marginLeft: "-17px" }} />
             </span>
             <span className="logo-lg">
-              {/* <img src={logoLightPng} alt="" height="19" /> */}
-              <h4 style={{marginTop:"20px"}}>Virtual Machine</h4>
+              <div style={{marginTop:"8px"}}>  </div>
+                <img src={logoVm} alt="" height="80" />
+                {/* <h4 style={{ marginTop: "20px" }}>INFINIBAY</h4> */}
             </span>
           </Link>
         </div>

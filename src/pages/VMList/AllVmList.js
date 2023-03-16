@@ -71,7 +71,7 @@ const AllVmsList = () => {
                         <span className="avatar-title rounded bg-light text-danger font-size-16">
                             <img src={
                                 allVmsList && allVmsList ? (
-                                    "http://167.99.36.48:3003/" + row.cell.row.original.VM_Image.split("app/")[1] || alt
+                                    "http://167.99.36.48:3003/" + row.cell.row.original.vmImage.split("app/")[1] || alt
                                 ) : alt
                             }
                                 height="45"
@@ -83,11 +83,11 @@ const AllVmsList = () => {
                 </Col>
                 <Col lg="6">
                     <Label for="basicpill-phoneno-input3" style={{ marginTop: "15px" }}>
-                        {allVmsList && allVmsList ? (row.cell.row.original.VirtualMachine_Name) : ""}
+                        {allVmsList && allVmsList ? (row.cell.row.original.virtualMachineName) : ""}
                     </Label>
                 </Col>
                 <Col sm="auto">
-                    {/* <Button onClick={() => { console.log(row.cell.row.original.VM_Image) }}><i className="mdi mdi-desktop-classic" /></Button> */}
+                    {/* <Button onClick={() => { console.log(row.cell.row.original.vmImage) }}><i className="mdi mdi-desktop-classic" /></Button> */}
                 </Col>
                 <Col>
                 </Col>

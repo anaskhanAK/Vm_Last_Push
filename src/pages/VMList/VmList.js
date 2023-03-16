@@ -14,7 +14,6 @@ import alt from "assets/images/Azure.png"
 const VmList = () => {
 
     const history = useHistory();
-    document.title = "VM List";
 
     const [checklist, setchecklist] = useState([])
     const [vmsList, setVmsList] = useState([]);
@@ -30,7 +29,6 @@ const VmList = () => {
         })
         return result;
     }
-
 
     const mvToken = getCookies("MvUserToken");
 
@@ -63,7 +61,7 @@ const VmList = () => {
         setTimeout(() => {
             console.log("Delayed for 1 second.");
             getUserVms()
-          }, "2000")
+        }, "2000")
     }
 
     const toggleTrue = (id) => {
@@ -143,6 +141,8 @@ const VmList = () => {
         getUserVms()
     }, [])
 
+    document.title = "VM List";
+
     return (
         <React.Fragment>
             <div className="page-content">
@@ -169,7 +169,7 @@ const VmList = () => {
 
                 <Row>
                     {vmsList && vmsList ? (vmsList.map((e, ind) => {
-                        return <Col xl="4" sm="6" key={ind} value={e.VirtualMachine_Name}>
+                        return <Col xl="4" sm="6" key={ind} value={e.virtualMachineName}>
                             <Card>
                                 <Link to={`/vmdetails/${e.id}`}>
                                     <CardBody>
@@ -179,7 +179,7 @@ const VmList = () => {
                                             <Col lg="3">
                                                 <div className="avatar-md me-4">
                                                     <span className="avatar-title rounded bg-light text-danger font-size-16">
-                                                        <img src={"http://167.99.36.48:3003/" + e.VM_Image.split("app/")[1] || alt} height="69" width="69" style={{ borderRadius: "4px" }} />
+                                                        <img src={"http://167.99.36.48:3003/" + e.vmImage.split("app/")[1] || alt} height="69" width="69" style={{ borderRadius: "4px" }} />
                                                     </span>
                                                 </div>
                                             </Col>
@@ -187,7 +187,7 @@ const VmList = () => {
                                                 <div className="flex-grow-1 overflow-hidden" style={{ marginTop: '25px' }}>
 
                                                     <h5 className="text-truncate font-size-15">
-                                                        {e.VirtualMachine_Name}
+                                                        {e.virtualMachineName}
                                                     </h5>
                                                 </div>
                                             </Col>

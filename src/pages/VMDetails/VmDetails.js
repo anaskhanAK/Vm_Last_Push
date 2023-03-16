@@ -59,7 +59,7 @@ const VmDetails = () => {
             variables: {
                 input: {
                     token: mvToken,
-                    id: [vmId]
+                    id: vmId
                 }
             },
             onCompleted: (dataA) => {
@@ -111,7 +111,7 @@ const VmDetails = () => {
     }
 
     const handleVnc = () => {
-        window.open(`http://157.245.19.134/vmview/?name=${svmData.getSpecificVM.VirtualMachine_Name}`, '_blank', 'noreferrer')
+        window.open(`http://168.119.24.70/vmview/?name=${svmData.getSpecificVM.virtualMachineName}`, '_blank', 'noreferrer')
     }
 
 
@@ -132,7 +132,7 @@ const VmDetails = () => {
                                         <Card >
                                             <CardBody>
                                                 <h4 className="card-title mb-4">VM Image</h4>
-                                                <CardImg className="img-fluid" src={svmData && svmData ? ("http://167.99.36.48:3003/" + svmData.getSpecificVM.VM_Image.split("app/")[1]) : alt} alt='Vm Image' style={{ height: "300px" }} />
+                                                <CardImg className="img-fluid" src={svmData && svmData ? ("http://167.99.36.48:3003/" + svmData.getSpecificVM.vmImage.split("app/")[1]) : alt} alt='Vm Image' style={{ height: "300px" }} />
                                             </CardBody>
                                             <CardBody>
                                                 <Row>
@@ -175,7 +175,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Name :</CardTitle>
                                                                 <CardText>
-                                                                    {svmData && svmData ? (svmData.getSpecificVM.VirtualMachine_Name) : ""}
+                                                                    {svmData && svmData ? (svmData.getSpecificVM.virtualMachineName) : ""}
                                                                 </CardText>
                                                             </CardBody>
                                                         </Card>

@@ -58,18 +58,18 @@ const Register = () => {
       userRegister({
         variables:{
           input:{
-            id: null,
             firstName: values.firstName,
             lastName: values.lastName,
             Email: values.Email,
             Password: values.Password,
             userImage: userImage,
-            Deleted: false
+            Deleted: false,
+            userType: "user"
           }
         },
 
         onCompleted: data => {
-          // console.log(data)
+          console.log(data)
           toastr.success("Register Successful Please Login Your Account");
           history.push("/login");
         }
@@ -87,7 +87,7 @@ const Register = () => {
     });
   },[])
 
-  console.log(alert)
+  // console.log(alert)
 
   return (
     <React.Fragment>

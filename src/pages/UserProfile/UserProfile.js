@@ -30,12 +30,11 @@ const UserProfile = () => {
     const [getUserD, { data, loading, error }] = useLazyQuery(GET_USER_BY_ID, {
         variables: {
             input: {
-                id: mvid,
                 token: mvtoken
             }
         },
         onCompleted: data => {
-            console.log("ddd")
+            console.log("ddd",data)
         },
         fetchPolicy: "cache-and-network"
     })
@@ -59,8 +58,8 @@ const UserProfile = () => {
                                                 <CardImg className="img-fluid rounded-circle"
                                                     // src={data && data ? ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]) : null}
                                                     src={data && data ? (
-                                                        data.getUserByID.User_Image.length < 2 && data.getUserByID.User_Image.length < 2 ? (
-                                                            alt) : ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]
+                                                        data.getUserByID.userImage.length < 2 && data.getUserByID.userImage.length < 2 ? (
+                                                            alt) : ("http://167.99.36.48:3003/" + data.getUserByID.userImage.split("app/")[1]
                                                         )
                                                     ) :
                                                         alt || alt}
@@ -80,7 +79,7 @@ const UserProfile = () => {
                                                                 <CardText>
                                                                     {loading && loading ? (<i className="bx bx-loader-alt bx-spin bx-sx"></i>) :
                                                                         data && data ? (
-                                                                            data.getUserByID.First_Name
+                                                                            data.getUserByID.firstName
                                                                         ) : null
                                                                     }
                                                                 </CardText>
@@ -94,7 +93,7 @@ const UserProfile = () => {
                                                                 <CardText>
                                                                     {loading && loading ? (<i className="bx bx-loader-alt bx-spin bx-sx"></i>) :
                                                                         data && data ? (
-                                                                            data.getUserByID.Last_Name
+                                                                            data.getUserByID.lastName
                                                                         ) : null
                                                                     }
                                                                 </CardText>

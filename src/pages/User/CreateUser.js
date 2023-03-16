@@ -59,13 +59,13 @@ const CreateUser = props => {
         enableReinitialize: true,
 
         initialValues: {
-            id: null,
             firstName: '',
             lastName: '',
             Email: '',
             Password: '',
             Deleted: false,
-            userImage: img || ""
+            userImage: img || "",
+            userType: "user"
         },
 
         validationSchema: Yup.object({

@@ -15,6 +15,7 @@ const UpdateDetails = () => {
     const {userId} = useParams()
     const {usertoken} = useParams()
     console.log(userId)
+    console.log(usertoken)
 
 
     toastr.options = {
@@ -45,8 +46,7 @@ const UpdateDetails = () => {
     const [getUserById, { data: dataB, loading: loadingB, error: errorB }] = useLazyQuery(GET_USER_BY_ID, {
         variables: {
             input: {
-                id: userId,
-                token: mvToken
+                token: usertoken
             }
         },
         onCompleted: dataB => {
@@ -75,9 +75,9 @@ const UpdateDetails = () => {
         userProfileUpdate({
             variables: {
                 input: {
-                    token: mvToken,
-                    firstName: formData.First_Name,
-                    lastName: formData.Last_Name,
+                    token: usertoken,
+                    firstName: formData.firstName,
+                    lastName: formData.lastName,
                     Email: formData.Email,
                     userImage: formData.userImage || null
                 }
@@ -152,9 +152,9 @@ const UpdateDetails = () => {
                                                         src={img && img ? (
                                                             img
                                                         ) : (
-                                                            dataB && dataB ? ( dataB.getUserByID.User_Image.length < 2 && dataB.getUserByID.User_Image.length < 2 ? (
+                                                            dataB && dataB ? ( dataB.getUserByID.userImage.length < 2 && dataB.getUserByID.userImage.length < 2 ? (
                                                                 alt
-                                                            ):("http://167.99.36.48:3003/" + dataB.getUserByID.User_Image.split("app/")[1])
+                                                            ):("http://167.99.36.48:3003/" + dataB.getUserByID.userImage.split("app/")[1])
                                                                 
                                                             ) : alt
                                                         )}
@@ -194,10 +194,10 @@ const UpdateDetails = () => {
                                                             type="text"
                                                             className="form-control"
                                                             id="Update-first-name-input"
-                                                            name="First_Name"
+                                                            name="firstName"
                                                             placeholder="Enter Your First Name"
                                                             onChange={handleChange}
-                                                            value={formData.First_Name || ""}
+                                                            value={formData.firstName || ""}
                                                         />
                                                     </div>
                                                 </Col>
@@ -208,10 +208,10 @@ const UpdateDetails = () => {
                                                             type="text"
                                                             className="form-control"
                                                             id="Update-last-name-input"
-                                                            name="Last_Name"
+                                                            name="lastName"
                                                             placeholder="Enter Your Last Name"
                                                             onChange={handleChange}
-                                                            value={formData.Last_Name || ""}
+                                                            value={formData.lastName || ""}
                                                         />
                                                     </div>
                                                 </Col>

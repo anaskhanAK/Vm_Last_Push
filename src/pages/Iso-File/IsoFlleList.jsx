@@ -35,7 +35,7 @@ const IsoFileList = () => {
         },
         onCompleted: data => {
             // console.log(data);
-            setIsoData(data.getIOSById);
+            setIsoData(data.getISOById);
         },
         fetchPolicy: "cache-and-network"
     });

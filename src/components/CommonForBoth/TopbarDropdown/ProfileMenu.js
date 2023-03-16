@@ -38,7 +38,6 @@ const ProfileMenu = props => {
   const [getprofileImage, { loading, data, error }] = useLazyQuery(GET_USER_BY_ID, {
     variables: {
       input: {
-        id: mvid,
         token: mvtoken
       }
     },
@@ -72,8 +71,8 @@ const ProfileMenu = props => {
           <img
             className="rounded-circle header-profile-user"
             src={data && data ? (
-              data.getUserByID.User_Image.length < 2 && data.getUserByID.User_Image.length < 2 ? (
-                alt) : ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]
+              data.getUserByID.userImage.length < 2 && data.getUserByID.userImage.length < 2 ? (
+                alt) : ("http://167.99.36.48:3003/" + data.getUserByID.userImage.split("app/")[1]
               )
             ) :
               alt || alt}

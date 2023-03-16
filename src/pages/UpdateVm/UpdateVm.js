@@ -80,9 +80,9 @@ const UpdateVm = () => {
         onCompleted: dataC => {
             setVmUpdateData(dataC.getSpecificVM);
             const jsonConfig = JSON.parse(dataC.getSpecificVM.Config);
-            // console.log(jsonConfig)
+            console.log(jsonConfig)
             setConfig(p => (jsonConfig))
-            setParentToChild(dataC.getSpecificVM.VirtualMachine_Name)
+            setParentToChild(dataC.getSpecificVM.virtualMachineName)
         },
         fetchPolicy: "cache-and-network"
     });
@@ -117,11 +117,14 @@ const UpdateVm = () => {
         e.preventDefault(),
             console.log("nnnn")
         const strConfig = JSON.stringify(config);
+        const fstr = JSON.stringify(strConfig)
+        console.log(fstr)
+        // console.log(JSON.stringify(config))
         updateVm({
             variables: {
                 input: {
                     "Status": false,
-                    "Config": strConfig,
+                    "Config": fstr,
                     "token": mvToken,
                     "Title": vmUpdateData.virtualMachineName,
                     "virtualMachineName": vmUpdateData.virtualMachineName,
@@ -177,7 +180,7 @@ const UpdateVm = () => {
                                                         updateImg
                                                     ) : (
                                                         dataC && dataC ? (
-                                                            "http://167.99.36.48:3003/" + dataC.getSpecificVM.VM_Image.split("app/")[1]
+                                                            "http://167.99.36.48:3003/" + dataC.getSpecificVM.vmImage.split("app/")[1]
                                                         ) : alt
                                                     )}
                                                     height="300px"
@@ -210,7 +213,7 @@ const UpdateVm = () => {
                                                                     <Label for="basicpill-phoneno-input3">
                                                                         Name:
                                                                     </Label>
-                                                                    <p style={{ fontSize: "15px", marginBottom: "0px" }}> {vmUpdateData.VirtualMachine_Name} </p>
+                                                                    <p style={{ fontSize: "15px", marginBottom: "0px" }}> {vmUpdateData.virtualMachineName} </p>
                                                                 </div>
                                                             </Row>
                                                             <Row>

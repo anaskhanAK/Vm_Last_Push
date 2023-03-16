@@ -71,7 +71,7 @@ const DashVmCard = () => {
                                     <Col lg="3">
                                         <div className="avatar-sm me-4">
                                             <span className="avatar-title rounded bg-light text-danger font-size-16">
-                                                <img src={"http://167.99.36.48:3003/" + e.VM_Image.split("app/")[1] || alt} height="45" width="45" style={{ borderRadius: "4px" }} />
+                                                <img src={"http://167.99.36.48:3003/" + e.vmImage.split("app/")[1] || alt} height="45" width="45" style={{ borderRadius: "4px" }} />
                                             </span>
                                         </div>
                                     </Col>
@@ -79,7 +79,7 @@ const DashVmCard = () => {
                                         <div className="flex-grow-1 overflow-hidden" style={{ marginTop: '14px' }}>
 
                                             <h5 className="text-truncate font-size-14">
-                                                {e.VirtualMachine_Name}
+                                                {e.virtualMachineName}
                                             </h5>
                                         </div>
                                     </Col>

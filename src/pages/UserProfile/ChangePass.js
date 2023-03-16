@@ -12,6 +12,8 @@ import { useParams } from "react-router-dom";
 
 const ChangePass = () => {
 
+    const {usertoken} = useParams()
+
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
         let result = null
@@ -63,7 +65,7 @@ const ChangePass = () => {
                 changePassword({
                     variables: {
                         input: {
-                            token: mvToken,
+                            token: usertoken,
                             Password: values.Password
                         }
                     }

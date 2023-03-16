@@ -194,7 +194,8 @@ const DcVm = () => {
             }
         },
         onCompleted: dataA => {
-            setIsoList(dataA.getIOSById)
+            console.log("oncomptete",dataA)
+            setIsoList(dataA.getISOById)
         },
         fetchPolicy: "cache-and-network"
     });
@@ -279,9 +280,12 @@ const DcVm = () => {
         reader.readAsDataURL(file)
     }
 
+    // console.log(filename)
+
 
     // const uplaodURL = 'http://placed.ro:2000';
-    const uplaodURL = 'http://157.245.19.134:2000';
+    // const uplaodURL = 'http://157.245.19.134:2000';
+    const uplaodURL = 'http://168.119.24.70:2000';
 
     useEffect(() => {
         var socket = io.connect(uplaodURL)
@@ -290,18 +294,21 @@ const DcVm = () => {
         uploader.addEventListener("complete", function (event) {
             console.log(event.file.name, 'Upload Complete');
             console.log(event.file, "111this is file ");
+            console.log(event.file.size)
             // console.log(configData.getConfigFile.Operating_System || "")
             createIso({
                 variables: {
                     input: {
                         Name: event.file.name,
                         Size: event.file.size,
-                        Type: event.file.type,
-                        userId: mvid,
-                        token: mvToken
+                        Type: "iso",
+                        token: mvToken,
                     }
                 },
-                onCompleted: () => getIsoList()
+                onCompleted: (dataB) => {
+                    console.log(dataB)
+                    getIsoList()
+                }
             })
 
             toastr.success("Create Iso Successful");
@@ -314,16 +321,16 @@ const DcVm = () => {
             console.log(event.file.name, "Start");
             setFilename(p => (event.file.name))
             const videoFile = event.file;
-            const filename=event.file.name.split(".");
-            const ext=filename.pop();
-            console.log(ext)
-            if(ext.toLowerCase()!=='iso'){
-                console.log('dd')
-                toastr.error("Please Select Iso File");
-                document.getElementById("file-upload-btn").removeEventListener("click",funcA=()=>{});
-                uploader.destroy()
-                toastr.error("Please Select Iso File");
-            }
+            // const filename=event.file.name.split(".");
+            // const ext=filename.pop();
+            // console.log(ext)
+            // if(ext.toLowerCase()!=='iso'){
+            //     console.log('dd')
+            //     toastr.error("Please Select Iso File");
+            //     document.getElementById("file-upload-btn").removeEventListener("click",funcA=()=>{});
+            //     uploader.destroy()
+            //     toastr.error("Please Select Iso File");
+            // }
         })
         uploader.addEventListener("progress", function (event) {
             setUploadPercentage(p => (event.bytesLoaded / event.file.size * 100))
@@ -348,6 +355,17 @@ const DcVm = () => {
 
 
     }, [])
+
+    // if (dataA){
+    //     console.log(dataA)
+    // }
+    // if (errorA) {
+    //     console.log(errorA)
+    // }
+
+    // if (isoList) {
+    //     console.log("iso List",isoList)
+    // }
 
 
     useEffect(() => {

@@ -33,7 +33,9 @@ const UserList = () => {
     const [getAllUsers, { loading, data, error }] = useLazyQuery(GET_ALL_USERS, {
         variables: {
             input: {
-                token: mvToken
+                token: mvToken,
+                page: 1,
+                Search: null
             }
         },
         onCompleted: data => {
@@ -57,6 +59,7 @@ const UserList = () => {
 
     const cellFunction = (row) => {
         const { value, column: { getProps } } = row;
+        console.log(row)
 
         return <>
             <i
@@ -90,11 +93,11 @@ const UserList = () => {
         () => [
             {
                 Header: 'First Name',
-                accessor: "First_Name",
+                accessor: "firstName",
             },
             {
                 Header: 'Last Name',
-                accessor: "Last_Name",
+                accessor: "lastName",
             },
             {
                 Header: 'Email',

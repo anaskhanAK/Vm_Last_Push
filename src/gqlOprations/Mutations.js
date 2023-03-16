@@ -1,117 +1,132 @@
 import { gql } from "@apollo/client";
 
-export const USER_REGISTER = gql `
-mutation Mutation($input: userInput) {
+export const USER_REGISTER = gql`
+mutation CreateUser($input: createUserInput) {
   createUser(input: $input) {
+    Deleted
     Email
-    First_Name
-    Last_Name
     Password
-    User_Image
+    _count
     id
+    firstName
+    lastName
     token
+    userImage
+    userType
   }
 }
 `
 
-export const USER_LOGIN = gql `
-mutation Mutation($input: for_login) {
+export const USER_LOGIN = gql`
+mutation Login($input: LoginInput) {
   Login(input: $input) {
-    First_Name
-    Last_Name
-    User_Type
+    Deleted
+    Email
+    Password
+    _count
+    firstName
     id
+    lastName
     token
-    Email
+    userImage
+    userType
   }
 }
 `
 
-export const USER_PROFILE_UPDATE = gql `
-mutation Mutation($input: userInput) {
+export const USER_PROFILE_UPDATE = gql`
+mutation Mutation($input: updateUserInput) {
   updateUser(input: $input) {
-    User_Image
-    First_Name
-    Last_Name
+    id
+    firstName
+    lastName
     Email
+    Password
+    Deleted
     token
+    userImage
+    userType
+    _count
   }
 }
 `
 
-export const CHANGE_USER_PASSWORD = gql `
-mutation Mutation($input: Authentication) {
+export const CHANGE_USER_PASSWORD = gql`
+mutation Mutation($input: resetPasswordInput) {
   resetPassword(input: $input)
 }
 `
 
-export const EMAIL_VERIFICATION = gql `
-mutation ForgetPassword($input: forget_password) {
+export const EMAIL_VERIFICATION = gql`
+mutation Mutation($input: forgetPasswordInput) {
   forgetPassword(input: $input)
 }
 `
 
-export const CREATE_ISO = gql `
-mutation Mutation($input: for_IOS) {
-  createIOS(input: $input) {
+export const CREATE_ISO = gql`
+mutation Mutation($input: createISOInput) {
+  createISO(input: $input) {
+    id
     Name
-    Size
     Type
-    createdAt
-    id
     userId
+    createdAt
+    Size
   }
 }
 `
 
-export const CREATE_VM = gql `
-mutation Mutation($input: For_VirtualMachine) {
+export const CREATE_VM = gql`
+mutation CreateVM($input: createVMInput) {
   createVM(input: $input) {
-    Config
-    Description
-    GU_ID
-    Status
-    Title
-    VM_Image
-    VirtualMachine_Name
     id
+    guId
+    Config
+    Status
+    virtualMachineName
+    Title
+    Description
+    vmImage
+    storageId
   }
 }
 `
 
-export const UPDATE_VM = gql `
-mutation Mutation($input: VM) {
+export const UPDATE_VM = gql`
+mutation Mutation($input: upadteVMInput) {
   upadteVM(input: $input) {
-    Config
-    Description
-    GU_ID
-    Status
-    Title
-    VirtualMachine_Name
-    VM_Image
     id
+    guId
+    Config
+    Status
+    virtualMachineName
+    Title
+    Description
+    vmImage
+    storageId
+    diskId
   }
 }
 `
-export const DELETE_VM = gql `
-mutation Mutation($input: for_ids_token) {
+export const DELETE_VM = gql`
+mutation Mutation($input: deleteVMInput) {
   deleteVM(input: $input)
 }
 `
-export const DELETE_USER = gql `
-mutation DeleteUser($input: for_id_token) {
+export const DELETE_USER = gql`
+mutation Mutation($input: deleteUserInput) {
   deleteUser(input: $input)
 }
 `
 
-export const VM_ACTION = gql `
-mutation Mutation($input: status) {
+export const VM_ACTION = gql`
+mutation Mutation($input: forStatusInput) {
   forStatus(input: $input)
 }
 `
 
-export const DELETE_ISO = gql `
-mutation Mutation($input: for_id_token) {
-  deleteIOS(input: $input)
+export const DELETE_ISO = gql`
+mutation Mutation($input: deleteISOInput) {
+  deleteISO(input: $input)
 }
 `
