@@ -109,7 +109,7 @@ const UserProfile = () => {
                                                                 <CardText>
                                                                     {loading && loading ? (<i className="bx bx-loader-alt bx-spin bx-sx"></i>) :
                                                                         data && data ? (
-                                                                            data.getUserByID.Email
+                                                                            data.getUserByID.eMail
                                                                         ) : null
                                                                     }
                                                                 </CardText>

@@ -53,23 +53,23 @@ const Register = () => {
     }),
 
     onSubmit: (values) => {
-      console.log(values.firstName, values.lastName, values.Email, values.Password, userImage);
+      // console.log(values.firstName, values.lastName, values.Email, values.Password, userImage);
 
       userRegister({
         variables:{
           input:{
             firstName: values.firstName,
             lastName: values.lastName,
-            Email: values.Email,
-            Password: values.Password,
+            eMail: values.Email,
+            password: values.Password,
             userImage: userImage,
-            Deleted: false,
+            deleted: false,
             userType: "user"
           }
         },
 
         onCompleted: data => {
-          console.log(data)
+          // console.log(data)
           toastr.success("Register Successful Please Login Your Account");
           history.push("/login");
         }
@@ -81,7 +81,7 @@ const Register = () => {
     fetch(text)
     .then(r => r.text())
     .then(text => {
-        console.log('text decoded:', text);
+        // console.log('text decoded:', text);
         setUserImage(text)
 
     });

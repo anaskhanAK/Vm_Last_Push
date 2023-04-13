@@ -26,15 +26,15 @@ const ResetPassword = () => {
     const [changePassword, { data, loading, error }] = useMutation(CHANGE_USER_PASSWORD);
 
     if (loading) {
-        console.log("loading...")
+        // console.log("loading...")
     }
 
     if (data) {
-        console.log(data)
+        // console.log(data)
     }
 
     if (error) {
-        console.log(error.message)
+        // console.log(error.message)
     }
 
     const validation = useFormik({
@@ -49,13 +49,13 @@ const ResetPassword = () => {
             CPassword: Yup.string().required("Please Confirm New Password"),
         }),
         onSubmit: (values) => {
-            console.log(values);
+            // console.log(values);
             if (values.CPassword == values.Password) {
                 changePassword({
                     variables: {
                         input: {
                             token: token,
-                            Password: values.Password
+                            password: values.Password
                         }
                     }
                 })

@@ -3,9 +3,9 @@ import { gql } from "@apollo/client";
 export const USER_REGISTER = gql`
 mutation CreateUser($input: createUserInput) {
   createUser(input: $input) {
-    Deleted
-    Email
-    Password
+    deleted
+    eMail
+    password
     _count
     id
     firstName
@@ -20,9 +20,9 @@ mutation CreateUser($input: createUserInput) {
 export const USER_LOGIN = gql`
 mutation Login($input: LoginInput) {
   Login(input: $input) {
-    Deleted
-    Email
-    Password
+    deleted
+    eMail
+    password
     _count
     firstName
     id
@@ -40,9 +40,9 @@ mutation Mutation($input: updateUserInput) {
     id
     firstName
     lastName
-    Email
-    Password
-    Deleted
+    eMail
+    password
+    deleted
     token
     userImage
     userType
@@ -52,13 +52,13 @@ mutation Mutation($input: updateUserInput) {
 `
 
 export const CHANGE_USER_PASSWORD = gql`
-mutation Mutation($input: resetPasswordInput) {
+mutation Mutation($input: resetpasswordInput) {
   resetPassword(input: $input)
 }
 `
 
 export const EMAIL_VERIFICATION = gql`
-mutation Mutation($input: forgetPasswordInput) {
+mutation Mutation($input: forgetpasswordInput) {
   forgetPassword(input: $input)
 }
 `
@@ -67,11 +67,11 @@ export const CREATE_ISO = gql`
 mutation Mutation($input: createISOInput) {
   createISO(input: $input) {
     id
-    Name
-    Type
+    name
+    type
     userId
     createdAt
-    Size
+    size
   }
 }
 `
@@ -81,11 +81,11 @@ mutation CreateVM($input: createVMInput) {
   createVM(input: $input) {
     id
     guId
-    Config
-    Status
+    config
+    status
     virtualMachineName
-    Title
-    Description
+    title
+    description
     vmImage
     storageId
   }
@@ -97,14 +97,13 @@ mutation Mutation($input: upadteVMInput) {
   upadteVM(input: $input) {
     id
     guId
-    Config
-    Status
+    config
+    status
     virtualMachineName
-    Title
-    Description
+    title
+    description
     vmImage
     storageId
-    diskId
   }
 }
 `
@@ -120,7 +119,7 @@ mutation Mutation($input: deleteUserInput) {
 `
 
 export const VM_ACTION = gql`
-mutation Mutation($input: forStatusInput) {
+mutation Mutation($input: forstatusInput) {
   forStatus(input: $input)
 }
 `
@@ -128,5 +127,16 @@ mutation Mutation($input: forStatusInput) {
 export const DELETE_ISO = gql`
 mutation Mutation($input: deleteISOInput) {
   deleteISO(input: $input)
+}
+`
+
+export const Create_Storage = gql`
+mutation Mutation($input: createStorageInput) {
+  createStorage(input: $input) {
+    id
+    storageName
+    storageType
+    storageSize 
+  }
 }
 `

@@ -49,32 +49,34 @@ const IsoModel = (props) => {
     }
 
     const handleVmPassSubmit = async (e) => {
+        console.log(props.dataParentToChild)
+        console.log(vmPassData.VmPassword)
         e.preventDefault();
-        const response = await fetch('http://157.245.19.134:5001', {
-            method: 'post',
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                "jsonrpc": "2.0",
-                "method": "updateSpicePasswordCall",
-                "params": {
-                    "name": props.dataParentToChild,
-                    "password": vmPassData.VmPassword
-                },
-                "id": 1
-            })
-        })
-        const res = await response.json();
-        if (res) {
-            console.log(res.result.status)
-            if (res.result.status === true) {
-                setAlert("true")
-            }
-            else {
-                setAlert("false")
-            }
-        }
+        // const response = await fetch('http://157.245.19.134:5001', {
+        //     method: 'post',
+        //     headers: {
+        //         "Content-Type": "application/json"
+        //     },
+        //     body: JSON.stringify({
+        //         "jsonrpc": "2.0",
+        //         "method": "updateSpicePasswordCall",
+        //         "params": {
+        //             "name": props.dataParentToChild,
+        //             "password": vmPassData.VmPassword
+        //         },
+        //         "id": 1
+        //     })
+        // })
+        // const res = await response.json();
+        // if (res) {
+        //     console.log(res.result.status)
+        //     if (res.result.status === true) {
+        //         setAlert("true")
+        //     }
+        //     else {
+        //         setAlert("false")
+        //     }
+        // }
     }
 
 

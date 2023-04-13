@@ -45,7 +45,7 @@ const DcVm = () => {
 
     const handleTpmSwitch = () => {
         setTpmSwitch(!tpmSwitch);
-        console.log(tpmSwitch)
+        // console.log(tpmSwitch)
         setConfigData({
             ...configData,
             getConfigFile: {
@@ -65,7 +65,7 @@ const DcVm = () => {
                     IsoFile: e.target.value,
                 }
             })
-        console.log(configData)
+        // console.log(configData)
     }
 
     const handleOpDrop = (e) => {
@@ -123,7 +123,7 @@ const DcVm = () => {
 
     const handleCpuDrop = (e) => {
         e.preventDefault(),
-            console.log(e)
+            // console.log(e)
         setConfigData({
             ...configData,
             getConfigFile: {
@@ -135,11 +135,11 @@ const DcVm = () => {
             }
         })
 
-        console.log(configData)
+        // console.log(configData)
     }
 
     const getStorageVal = (storage) => {
-        console.log("this is Storage Value : ",storage);
+        // console.log("this is Storage Value : ",storage);
         // console.log(typeof(storage))
         setConfigData({
             ...configData,
@@ -150,7 +150,7 @@ const DcVm = () => {
         })
     };
     const getRamVal = (ram) => {
-        console.log("this is Ram Value : ", ram);
+        // console.log("this is Ram Value : ", ram);
         setConfigData({
             ...configData,
             getConfigFile: {
@@ -194,7 +194,7 @@ const DcVm = () => {
             }
         },
         onCompleted: dataA => {
-            console.log("oncomptete",dataA)
+            // console.log("oncomptete",dataA)
             setIsoList(dataA.getISOById)
         },
         fetchPolicy: "cache-and-network"
@@ -219,35 +219,35 @@ const DcVm = () => {
     }
 
     if(dataC){
-        console.log(dataC)
+        // console.log(dataC)
     }
 
     if (errorC){
-        console.log(errorC)
+        // console.log(errorC)
     }
 
     const handleVmSubmit = (e) => {
         e.preventDefault(),
-            console.log(vmData)
-        console.log(configData)
+            // console.log(vmData)
+        console.log("in");
         const config = JSON.stringify(configData);
-        console.log(JSON.stringify(config));
+        // console.log(JSON.stringify(config));
         createVm({
             variables: {
                 input: {
-                    "Status": false,
-                    "Config": config,
+                    "status": false,
+                    "config": config,
                     "token": mvToken,
-                    "Title": vmData.virtualMachineName,
+                    "title": vmData.virtualMachineName,
                     "virtualMachineName": vmData.virtualMachineName,
-                    "Description": vmData.Description || "",
+                    "description": vmData.Description || "",
                     "vmImage": vmData.vmImage
                 }
             },
             onCompleted: (dataC) => {
                 toastr.success("Virtual Machine Created")
                 history.push("/vmlist")
-                console.log(dataC)
+                // console.log(dataC)
             }
         })
     }
@@ -270,7 +270,7 @@ const DcVm = () => {
         reader.onloadend = () => {
             setImg(reader.result.toString());
             const eImage = reader.result.toString();
-            console.log(eImage)
+            // console.log(eImage)
             setVmData(prevState => ({
                 ...prevState,
                 vmImage: eImage
@@ -299,9 +299,9 @@ const DcVm = () => {
             createIso({
                 variables: {
                     input: {
-                        Name: event.file.name,
-                        Size: event.file.size,
-                        Type: "iso",
+                        name: event.file.name,
+                        size: event.file.size,
+                        type: "iso",
                         token: mvToken,
                     }
                 },
@@ -369,9 +369,9 @@ const DcVm = () => {
 
 
     useEffect(() => {
-        if (loadingD) console.log("loadingD...")
+        // if (loadingD) console.log("loadingD...")
         if (dataD) {
-            console.log(dataD);
+            // console.log(dataD);
             setConfigData(p => ({
                 ...dataD,
                 getConfigFile: {
@@ -386,7 +386,7 @@ const DcVm = () => {
                 }
             }))
         }
-        if (errorD) console.log(errorD)
+        // if (errorD) console.log(errorD)
     }, [dataD])
 
     useEffect(() => { getConfig() }, [])
@@ -526,9 +526,9 @@ const DcVm = () => {
                                                                             {isoList.map(e => {
                                                                                 return <option
                                                                                     key={e.id}
-                                                                                    value={e.Name}
+                                                                                    value={e.name}
                                                                                 >
-                                                                                    {e.Name}
+                                                                                    {e.name}
                                                                                 </option>
                                                                             })}
 

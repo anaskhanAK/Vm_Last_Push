@@ -3,15 +3,15 @@ import { gql } from "@apollo/client";
 export const GET_USER_BY_ID = gql`
 query Query($input: getUserByIDInput) {
   getUserByID(input: $input) {
+    userType
+    userImage
     id
     firstName
     lastName
-    Email
-    Password
-    Deleted
+    eMail
+    password
+    deleted
     token
-    userImage
-    userType
     _count
   }
 }
@@ -21,11 +21,11 @@ export const GET_IOS_BY_ID = gql`
 query GetAllISO($input: getISOByIdInput) {
   getISOById(input: $input) {
     id
-    Name
+    name
     userId
-    Type
+    type
     createdAt
-    Size
+    size
   }
 }
 `
@@ -42,11 +42,11 @@ query Query($input: getUserAllVMInput) {
     vmImage
     id
     guId
-    Config
-    Status
+    config
+    status
     virtualMachineName
-    Title
-    Description
+    title
+    description
     storageId
   }
 }
@@ -57,11 +57,11 @@ query Query($input: getSpecificVMInput) {
   getSpecificVM(input: $input) {
     id
     guId
-    Config
-    Status
+    config
+    status
     virtualMachineName
-    Title
-    Description
+    title
+    description
     vmImage
     storageId
   }
@@ -69,14 +69,14 @@ query Query($input: getSpecificVMInput) {
   `
 
 export const GET_ALL_USERS = gql`
-query GetUserList($input: getUserListInput) {
+query Query($input: getUserListInput) {
   getUserList(input: $input) {
     id
     firstName
     lastName
-    Email
-    Password
-    Deleted
+    eMail
+    password
+    deleted
     token
     userImage
     userType
@@ -90,11 +90,11 @@ query GetUserAllVM($input: getAllVMInput) {
   getAllVM(input: $input) {
     id
     guId
-    Config
-    Status
+    config
+    status
     virtualMachineName
-    Title
-    Description
+    title
+    description
     vmImage
     storageId
   }

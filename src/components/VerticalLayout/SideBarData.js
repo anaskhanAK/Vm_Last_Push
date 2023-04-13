@@ -31,6 +31,12 @@ export const AdminBarData = [
         icon: <i className="mdi mdi-clipboard-list" />
     },
 
+    {
+        title: "Storage",
+        link: "/storage",
+        icon: <i className="bx bxs-hdd" />
+    },
+
 ]
 
 export const UserBarData = [
@@ -50,6 +56,12 @@ export const UserBarData = [
         title: "ISOs",
         link: "/isofilelist",
         icon: <i className="mdi mdi-disc" />
+    },
+    
+    {
+        title: "Storage",
+        link: "/storage",
+        icon: <i className="bx bxs-hdd" />
     },
 ]
 

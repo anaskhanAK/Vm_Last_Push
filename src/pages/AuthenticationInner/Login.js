@@ -23,7 +23,7 @@ const Login = () => {
   const [userLogin, { data, loading, error }] = useMutation(USER_LOGIN);
 
   if (data) {
-    console.log(data);
+    // console.log(data);
     document.cookie = "MvUserToken" + "=" + data.Login.token;
     document.cookie = "MvUserId" + "=" + data.Login.id;
     document.cookie = "MvUserType" + "=" + data.Login.userType;
@@ -33,26 +33,26 @@ const Login = () => {
 
 
   if (loading) {
-    console.log("loading...")
+    // console.log("loading...")
   }
 
   if (error) {
-    console.log(error.message)
+    // console.log(error.message)
   }
 
   const validation = useFormik({
     enableReinitialize: true,
 
     initialValues: {
-      Email: '',
-      Password: '',
+      eMail: '',
+      password: '',
     },
     validationSchema: Yup.object({
-      Email: Yup.string().required("Please Enter Your Email"),
-      Password: Yup.string().required("Please Enter Your Password"),
+      eMail: Yup.string().required("Please Enter Your Email"),
+      password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
 
       userLogin({
         variables: {
@@ -93,37 +93,37 @@ const Login = () => {
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
                         <Input
-                          name="Email"
+                          name="eMail"
                           className="form-control"
                           placeholder="Enter Your Email"
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.Email || ""}
+                          value={validation.values.eMail || ""}
                           invalid={
-                            validation.touched.Email && validation.errors.Email ? true : false
+                            validation.touched.eMail && validation.errors.eMail ? true : false
                           }
                         />
-                        {validation.touched.Email && validation.errors.Email ? (
-                          <FormFeedback type="invalid">{validation.errors.Email}</FormFeedback>
+                        {validation.touched.eMail && validation.errors.eMail ? (
+                          <FormFeedback type="invalid">{validation.errors.eMail}</FormFeedback>
                         ) : null}
                       </div>
 
                       <div className="mb-3">
                         <Label className="form-label">Password</Label>
                         <Input
-                          name="Password"
+                          name="password"
                           type="password"
                           placeholder="Enter Your Password"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.Password || ""}
+                          value={validation.values.password || ""}
                           invalid={
-                            validation.touched.Password && validation.errors.Password ? true : false
+                            validation.touched.password && validation.errors.password ? true : false
                           }
                         />
-                        {validation.touched.Password && validation.errors.Password ? (
-                          <FormFeedback type="invalid">{validation.errors.Password}</FormFeedback>
+                        {validation.touched.password && validation.errors.password ? (
+                          <FormFeedback type="invalid">{validation.errors.password}</FormFeedback>
                         ) : null}
                       </div>
 

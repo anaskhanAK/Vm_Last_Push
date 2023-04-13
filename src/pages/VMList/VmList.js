@@ -47,7 +47,7 @@ const VmList = () => {
 
         },
         onCompleted: (DataD) => {
-            console.log(DataD);
+            // console.log(DataD);
             // resetData(DataD)
             setVmsList(DataD.getUserAllVM);
         },
@@ -56,16 +56,17 @@ const VmList = () => {
     });
 
     const resetData = () => {
-        console.log("this is reset data")
+        // console.log("this is reset data")
         // setTimeout(getUserVms(),3000)
         setTimeout(() => {
-            console.log("Delayed for 1 second.");
+            // console.log("Delayed for 1 second.");
             getUserVms()
         }, "2000")
     }
 
     const toggleTrue = (id) => {
         // console.log(id)
+        // console.log("////////")
         changeVmStatus({
             variables: {
                 input: {
@@ -75,7 +76,7 @@ const VmList = () => {
                 }
             },
             onCompleted: (dataO) => {
-                console.log(dataO);
+                // console.log(dataO);
                 // setTimeout(resetData(), 5000)
                 resetData()
                 // getUserVms()
@@ -85,6 +86,7 @@ const VmList = () => {
 
     const toggleFalse = (id) => {
         // console.log(id)
+        // console.log(".......")
         changeVmStatus({
             variables: {
                 input: {
@@ -94,7 +96,7 @@ const VmList = () => {
                 }
             },
             onCompleted: (dataI) => {
-                console.log(dataI)
+                // console.log(dataI)
                 let timeout;
                 // timeout = setTimeout(resetData(),3000)
                 resetData()
@@ -106,16 +108,16 @@ const VmList = () => {
     const handleCheck = (id) => {
         const value = id
         const hashValue = checklist.includes(value);
-        console.log(hashValue)
+        // console.log(hashValue)
         if (hashValue === true) {
             const index = checklist.indexOf(value);
             if (index > -1) {
                 checklist.splice(index, 1)
-                console.log("true")
+                // console.log("true")
             }
         }
         if (hashValue === false) {
-            console.log("false")
+            // console.log("false")
             checklist.push(value)
         }
     };
@@ -129,7 +131,7 @@ const VmList = () => {
                 }
             },
             onCompleted: dataB => {
-                console.log(dataB);
+                // console.log(dataB);
                 toastr.success("Selected VMs Deleted");
                 getUserVms()
                 setchecklist([]);
@@ -193,7 +195,7 @@ const VmList = () => {
                                             </Col>
                                             <Col lg="1">
                                                 <div style={{ marginTop: "27px", marginLeft: '15px' }}>
-                                                    {e.Status === true && e.Status === true ? (
+                                                    {e.status === true && e.status === true ? (
                                                         <Spinner type="grow" size="sm" color="success" />
                                                     ) : null}
                                                 </div>
@@ -207,7 +209,7 @@ const VmList = () => {
                                         <Col lg="10">
                                             <div className="d-grid gap-2">
 
-                                                {e.Status === true && e.Status === true ? (
+                                                {e.status === true && e.status === true ? (
                                                     <Button onClick={() => toggleTrue(e.id)} color={'danger'} type="button" className="btn btn-label" >
                                                         <i className={'bx bx-power-off label-icon'}></i>
                                                         {loadingA && loadingA ? (

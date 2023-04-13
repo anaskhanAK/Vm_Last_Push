@@ -39,12 +39,12 @@ const VmDetails = () => {
         },
         onCompleted: (data) => {
             setSvmData({ ...data })
-            console.log(data, 'vvvvvvvvvvvvvvvvvvvvv');
+            // console.log(data, 'vvvvvvvvvvvvvvvvvvvvv');
             // setSvmData()
         },
         fetchPolicy: "cache-and-network"
     });
-    console.log(svmData?.getSpecificVM, '...........')
+    // console.log(svmData?.getSpecificVM, '...........')
     const [deleteVm, { loading: loadingA, data: dataA, error: errorA }] = useMutation(DELETE_VM)
 
     const [changeVmStatus, { loading: loadingB, data: dataB, error: errorB }] = useMutation(VM_ACTION)
@@ -63,7 +63,7 @@ const VmDetails = () => {
                 }
             },
             onCompleted: (dataA) => {
-                console.log(dataA);
+                // console.log(dataA);
                 history.push("/vmlist")
             }
 
@@ -82,7 +82,7 @@ const VmDetails = () => {
             onCompleted: () => {
 
                 setSvmData(prev => {
-                    const newData = { getSpecificVM: { ...prev.getSpecificVM, Status: false } }
+                    const newData = { getSpecificVM: { ...prev.getSpecificVM, status: false } }
                     return newData
                 })
 
@@ -103,7 +103,7 @@ const VmDetails = () => {
             // onCompleted: () => getSpecificVm()
             onCompleted: () => {
                 setSvmData(prev => {
-                    const newData = { getSpecificVM: { ...prev.getSpecificVM, Status: true } }
+                    const newData = { getSpecificVM: { ...prev.getSpecificVM, status: true } }
                     return newData
                 })
             }
@@ -139,7 +139,7 @@ const VmDetails = () => {
                                                     <Col>
                                                         <div className="d-grid gap-2">
                                                             {svmData && svmData ? (
-                                                                svmData.getSpecificVM.Status === true && svmData.getSpecificVM.Status ? (
+                                                                svmData.getSpecificVM.status === true && svmData.getSpecificVM.status ? (
                                                                     <Button onClick={toggleTrue} color={'danger'} type="button" className="btn btn-label" >
                                                                         <i className={'bx bx-pause label-icon'}></i>
                                                                         {'STOP'}
@@ -185,7 +185,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Operating system :</CardTitle>
                                                                 <CardText>
-                                                                    {svmData && svmData ? (JSON.parse(svmData.getSpecificVM.Config).getConfigFile.Operating_System) : "Windows"}
+                                                                    {svmData && svmData ? (JSON.parse(svmData.getSpecificVM.config).getConfigFile.Operating_System) : "Windows"}
                                                                 </CardText>
                                                             </CardBody>
                                                         </Card>
@@ -207,7 +207,7 @@ const VmDetails = () => {
                                                             <CardBody>
                                                                 <CardTitle>Description :</CardTitle>
                                                                 <CardText>
-                                                                    {svmData && svmData ? (svmData.getSpecificVM.Description) : ""}                                                                </CardText>
+                                                                    {svmData && svmData ? (svmData.getSpecificVM.description) : ""}                                                                </CardText>
                                                             </CardBody>
                                                         </Card>
                                                     </Col>
@@ -249,7 +249,7 @@ const VmDetails = () => {
 
                                                     <Col>
                                                         {svmData && svmData ? (
-                                                            svmData.getSpecificVM.Status === true && svmData.getSpecificVM.Status ? (
+                                                            svmData.getSpecificVM.status === true && svmData.getSpecificVM.status ? (
                                                                 <button
                                                                     type="button"
                                                                     className="btn btn-success  btn-label"

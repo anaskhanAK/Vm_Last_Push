@@ -18,6 +18,9 @@ import VmDashboard from "pages/VmDashboard/VmDashboard";
 import UpdateUserProfile from "pages/UserProfile/UpdateUserProfile";
 import UserProfile from "pages/UserProfile/UserProfile";
 import AllVmList from "pages/VMList/AllVmList";
+import StorageMain from "pages/StorageM/StorageMain";
+import CreateStorage from "pages/StorageM/CreateStorage";
+import UpdatePool from "pages/StorageM/UpdatePool";
 
 
 const authProtectedRoutes = [
@@ -33,6 +36,9 @@ const authProtectedRoutes = [
   {path: "/updateprofile/:userId/:usertoken", component: UpdateUserProfile},
   {path: "/userprofile", component: UserProfile},
   {path: "/allvms", component: AllVmList},
+  {path: "/storage", component: StorageMain},
+  {path: "/create-storage", component: CreateStorage},
+  {path: "/update-storage", component: UpdatePool},
 
 
 
@@ -47,6 +53,9 @@ const publicRoutes = [
   { path: "/forgetpassword", component: ResetPassword },
   { path: "/page-confirm-mail", component: ConfirmMail },
   { path: "/auth-email-verification", component: EmailVerification },
+  // {path: "/storage", component: StorageMain},
+  // {path: "/create-storage", component: CreateStorage},
+  // {path: "/update-storage", component: UpdatePool},
 ];
 
 export { authProtectedRoutes, publicRoutes };

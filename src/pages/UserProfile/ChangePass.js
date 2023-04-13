@@ -66,7 +66,7 @@ const ChangePass = () => {
                     variables: {
                         input: {
                             token: usertoken,
-                            Password: values.Password
+                            password: values.Password
                         }
                     }
                 })

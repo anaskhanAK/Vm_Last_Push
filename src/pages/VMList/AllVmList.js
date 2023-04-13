@@ -103,7 +103,7 @@ const AllVmsList = () => {
         () => [
             {
                 Header: 'All Virtual Machine List',
-                accessor: "VirtualMachine_Name",
+                accessor: "virtualMachineName",
                 Cell: ListFunc
             }
         ],

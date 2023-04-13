@@ -79,7 +79,7 @@ const UpdateVm = () => {
         },
         onCompleted: dataC => {
             setVmUpdateData(dataC.getSpecificVM);
-            const jsonConfig = JSON.parse(dataC.getSpecificVM.Config);
+            const jsonConfig = JSON.parse(dataC.getSpecificVM.config);
             console.log(jsonConfig)
             setConfig(p => (jsonConfig))
             setParentToChild(dataC.getSpecificVM.virtualMachineName)
@@ -119,16 +119,19 @@ const UpdateVm = () => {
         const strConfig = JSON.stringify(config);
         const fstr = JSON.stringify(strConfig)
         console.log(fstr)
-        // console.log(JSON.stringify(config))
+        // console.log(vmUpdateData.virtualMachineName)
+        // console.log(vmUpdateData.description)
+        // console.log(vmUpdateData.vmImage)
+        // console.log(mvToken)
         updateVm({
             variables: {
                 input: {
-                    "Status": false,
-                    "Config": fstr,
+                    "status": false,
+                    "config": fstr,
                     "token": mvToken,
-                    "Title": vmUpdateData.virtualMachineName,
+                    "title": vmUpdateData.virtualMachineName,
                     "virtualMachineName": vmUpdateData.virtualMachineName,
-                    "Description": vmUpdateData.Description,
+                    "description": vmUpdateData.description,
                     "id": vmId,
                     "vmImage": vmUpdateData.vmImage || null,
                 }
@@ -247,9 +250,9 @@ const UpdateVm = () => {
                                                                         className="form-control"
                                                                         rows="2"
                                                                         placeholder="Description..."
-                                                                        name='Description'
+                                                                        name='description'
                                                                         onChange={handleUpdateChange}
-                                                                        value={vmUpdateData.Description || ""}
+                                                                        value={vmUpdateData.description || ""}
                                                                     />
                                                                 </div>
                                                             </Row>

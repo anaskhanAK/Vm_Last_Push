@@ -57,8 +57,8 @@ const IsoFileList = () => {
             className="mdi mdi-delete label-icon"
             style={{ fontSize: '17px', color: 'white', cursor: 'pointer' }}
             onClick={() => {
-                console.log(row.cell.row.original.id)
-                console.log(mvToken)
+                // console.log(row.cell.row.original.id)
+                // console.log(mvToken)
                 deleteIso({
                     variables:{
                         input:{
@@ -76,16 +76,16 @@ const IsoFileList = () => {
         () => [
             {
                 Header: 'File Name',
-                accessor: 'Name',
+                accessor: 'name',
             },
             {
                 Header: 'File Type',
                 // id: 'Type',
-                accessor: 'Type',
+                accessor: 'type',
             },
             {
                 Header: 'File Size',
-                accessor: 'Size',
+                accessor: 'size',
             },
             {
                 Header: 'Download',

@@ -42,7 +42,7 @@ const ProfileMenu = props => {
       }
     },
     onCompleted: data => {
-      console.log("ddd")
+      // console.log("ddd")
     },
     fetchPolicy: "cache-and-network"
   });

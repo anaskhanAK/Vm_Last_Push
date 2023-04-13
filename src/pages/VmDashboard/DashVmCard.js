@@ -31,7 +31,7 @@ const DashVmCard = () => {
     const [getActiveVms, { loading: loadingA, data: dataA, error: errorA }] = useLazyQuery(GET_USER_VMS, {
         variables: {
             input: {
-                Status: true,
+                status: true,
                 token: mvToken
             }
         },

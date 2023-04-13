@@ -35,12 +35,12 @@ const UserList = () => {
             input: {
                 token: mvToken,
                 page: 1,
-                Search: null
+                search: null
             }
         },
         onCompleted: data => {
             // console.log(data);
-            console.log(data.getUserList)
+            // console.log(data.getUserList)
             setUsersList(data.getUserList);
         },
         fetchPolicy: "cache-and-network"
@@ -66,7 +66,7 @@ const UserList = () => {
                 className="bx bx-trash label-icon"
                 style={{ fontSize: '17px', cursor: 'pointer'}}
                 onClick={() => {
-                    console.log('clicked', row.cell.row.original.id);
+                    // console.log('clicked', row.cell.row.original.id);
                     deleteUser({
                         variables: {
                             input: {
@@ -101,7 +101,7 @@ const UserList = () => {
             },
             {
                 Header: 'Email',
-                accessor: 'Email'
+                accessor: 'eMail'
             },
             {
                 Header: 'Actions',
@@ -112,7 +112,7 @@ const UserList = () => {
     );
 
 
-    document.title = "Iso File List";
+    document.title = "Users List";
 
     return (
         <div className="page-content">

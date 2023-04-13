@@ -22,13 +22,13 @@ const ForgetPasswordPage = () => {
   const [emailVerification, { data, loading, error }] = useMutation(EMAIL_VERIFICATION);
 
   if (loading) {
-    console.log("loading...")
+    // console.log("loading...")
   }
   if (data) {
-    console.log(data)
+    // console.log(data)
   }
   if (error) {
-    console.log(error)
+    // console.log(error)
   }
 
   const history = useHistory();
@@ -36,13 +36,13 @@ const ForgetPasswordPage = () => {
     enableReinitialize: true,
 
     initialValues: {
-      Email: '',
+      eMail: '',
     },
     validationSchema: Yup.object({
-      Email: Yup.string().required("Please Enter Your Email"),
+      eMail: Yup.string().required("Please Enter Your Email"),
     }),
     onSubmit: (values) => {
-      console.log(values);
+      // console.log(values);
 
       emailVerification({
         variables: {
@@ -89,19 +89,19 @@ const ForgetPasswordPage = () => {
                       <div className="mb-3">
                         <Label className="form-label">Email</Label>
                         <Input
-                          name="Email"
+                          name="eMail"
                           className="form-control"
                           placeholder="Enter Your Email"
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.Email || ""}
+                          value={validation.values.eMail || ""}
                           invalid={
-                            validation.touched.Email && validation.errors.Email ? true : false
+                            validation.touched.eMail && validation.errors.eMail ? true : false
                           }
                         />
-                        {validation.touched.Email && validation.errors.Email ? (
-                          <FormFeedback type="invalid">{validation.errors.Email}</FormFeedback>
+                        {validation.touched.eMail && validation.errors.eMail ? (
+                          <FormFeedback type="invalid">{validation.errors.eMail}</FormFeedback>
                         ) : null}
                       </div>
                       <Row className="mb-3">

@@ -46,7 +46,7 @@ const UpdateDetails = () => {
     const [getUserById, { data: dataB, loading: loadingB, error: errorB }] = useLazyQuery(GET_USER_BY_ID, {
         variables: {
             input: {
-                token: usertoken
+                token: mvToken
             }
         },
         onCompleted: dataB => {
@@ -78,7 +78,7 @@ const UpdateDetails = () => {
                     token: usertoken,
                     firstName: formData.firstName,
                     lastName: formData.lastName,
-                    Email: formData.Email,
+                    eMail: formData.eMail,
                     userImage: formData.userImage || null
                 }
             },
@@ -224,10 +224,10 @@ const UpdateDetails = () => {
                                                             type="email"
                                                             className="form-control"
                                                             id="update-email-input"
-                                                            name="Email"
+                                                            name="eMail"
                                                             placeholder="Enter Your Email"
                                                             onChange={handleChange}
-                                                            value={formData.Email || ""}
+                                                            value={formData.eMail || ""}
                                                         />
                                                     </div>
                                                 </Col>
