@@ -290,3 +290,78 @@ export const LiData2 = [
     },
 
 ]
+
+export const LiDisk1 = [
+    {
+        id: "1",
+        diskName: "Disk 01",
+        diskSize: 1000
+    },
+
+    {
+        id: "2",
+        diskName: "Disk 02",
+        diskSize: 1000
+    },
+
+    {
+        id: "3",
+        diskName: "Disk 03",
+        diskSize: 2000
+    },
+    {
+        id: "4",
+        diskName: "Disk 04",
+        diskSize: 2000
+    },
+
+    {
+        id: "5",
+        diskName: "Disk 05",
+        diskSize: 3000
+    },
+
+    {
+        id: "6",
+        diskName: "Disk 06",
+        diskSize: 3000
+    },
+
+    {
+        id: "7",
+        diskName: "Disk 07",
+        diskSize: 4000
+    },
+
+    {
+        id: "8",
+        diskName: "Disk 8",
+        diskSize: 4000
+    },
+
+    {
+        id: "9",
+        diskName: "Disk 09",
+        diskSize: 5000
+    },
+
+    {
+        id: "10",
+        diskName: "Disk 10",
+        diskSize: 5000
+    },
+
+    {
+        id: "11",
+        diskName: "Disk 11",
+        diskSize: 500
+    },
+
+    {
+        id: "12",
+        diskName: "Disk 12",
+        diskSize: 500
+    },
+
+    
+]

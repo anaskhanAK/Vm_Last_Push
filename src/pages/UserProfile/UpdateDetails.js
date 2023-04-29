@@ -46,7 +46,7 @@ const UpdateDetails = () => {
     const [getUserById, { data: dataB, loading: loadingB, error: errorB }] = useLazyQuery(GET_USER_BY_ID, {
         variables: {
             input: {
-                token: mvToken
+                token: usertoken
             }
         },
         onCompleted: dataB => {

@@ -1,7 +1,5 @@
 import React, { useState } from "react";
 import { useEffect } from "react";
-import { io } from "socket.io-client";
-import SocketIOFileUploadServer from "socketio-file-upload";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import { LiData1 } from "./LiData";
@@ -18,73 +16,141 @@ import {
     Input,
     FormFeedback,
     Form,
-    Alert
+    Alert,
+    Tooltip,
+    UncontrolledTooltip
 } from "reactstrap";
-
+import { useLazyQuery } from "@apollo/client";
+import { GET_UNUSED_DISKS } from "gqlOprations/Queries";
+import { LiDisk1 } from "./LiData";
+import "./card.scss"
+import toastr from "toastr";
+import "toastr/build/toastr.min.css";
 
 const AddDiskModel = (props) => {
 
-    const [checklist, setchecklist] = useState([])
-    const [checkValue, setcheckValue] = useState([])
+    const [selectedItems, setSelectedItems] = useState([]);
+    const [selectedSize, setSelectedSize] = useState([])
     const [modal_standard, setmodal_standard] = useState(false);
     const [alert, setAlert] = useState()
-    const [progressColor, setProgressColor] = useState("")
+    // const [progressColor, setProgressColor] = useState("")
+    const [storageSize, setStorageSize] = useState()
+    const [minimumSel, setMinimumSel] = useState("2")
+    const [diskLi, setDiskLi] = useState()
+    const [selectedObj, setSelectedObj] = useState()
 
-    // console.log(props.dataParentToChild)
+    const [getUnUsedDisks, { loading: loadingB, data: dataB, error: errorB }] = useLazyQuery(GET_UNUSED_DISKS)
+
 
     function tog_standard() {
         setmodal_standard(!modal_standard);
         removeBodyCss();
+        console.log("from child", props.numOfSelect)
+        setMinimumSel(props.numOfSelect)
     }
 
     function removeBodyCss() {
         document.body.classList.add("no_padding");
     }
 
-    const handleCheck = (e) => {
-        // console.log(e)
-        const conId = document.getElementById("cardId"+e.id);
-        console.log(conId)
-        conId.classList.remove("border-primary");
-        conId.classList.add("border-success")
-
-        // console.log(e)
-        const id = e.id
-        const value = e.us
-        const hashValue = checklist.includes(id);
-        console.log(hashValue)
-        if (hashValue === true) {
-            const index = checklist.indexOf(id);
-
-            if (index > -1) {
-                checklist.splice(index, 1)
-                checkValue.splice(index, 1)
-                console.log("true")
-                const conId = document.getElementById("cardId"+e.id);
-                console.log(conId)
-                conId.classList.remove("border-success");
-                conId.classList.add("border-primary")
-            }
-        }
-        if (hashValue === false) {
-            console.log("false")
-            checklist.push(id)
-            checkValue.push(value)
-            const conId = document.getElementById("cardId"+e.id);
-            console.log(conId)
-            conId.classList.remove("border-primary");
-            conId.classList.add("border-success")
-        }
-        if (checkValue.length > 1) {
-            if (checkValue[0] !== checkValue[1]) {
-                setProgressColor("warning")
-            }
-        }
-        else { setProgressColor("success") }
-
-        console.log(checkValue)
-        console.log(checklist)
+    function percentage(num, per) {
+        return (num / 100) * per;
     }
+
+    const mixed = () => {
+        const N = 6;
+        const Smin = 1;
+        const Nminus1 = N - 1;
+        const result = Nminus1 * Smin;
+        console.log("The adjusted value is: " + result);
+        return result
+    }
+
+
+    const saveDisks = () => {
+        const ids = selectedItems
+        const Obj = diskLi.filter((item) => ids.includes(item.id));
+        // console.log(Obj)
+        console.log(parseInt(minimumSel))
+        console.log(selectedItems.length)
+        if (selectedItems.length < parseInt(minimumSel)) {
+            const elem = document.getElementById("myModalLabel1")
+            elem.classList.add("shake")
+            setTimeout(() => {
+                elem.classList.remove("shake")
+            }, 500);
+        }else{
+            props.finalDisks(Obj)
+            setSelectedItems([])
+            tog_standard()
+        }
+    };
+
+    const handleItemClick = (item) => {
+        const itemId = item.id;
+        const getId = "cardId_" + itemId;
+        const getLi = document.getElementById(getId)
+        const isSelected = selectedItems.includes(itemId);
+        // console.log("hhhh")
+        if (isSelected) {
+            setSelectedItems(selectedItems.filter(id => id !== itemId));
+            const getLi = document.getElementById(getId)
+            // getLi.classList.add("border-primary")
+            // getLi.classList.remove("border-success")
+            getLi.classList.remove("bg-primary")
+        } else {
+            setSelectedItems([...selectedItems, itemId]);
+            // getLi.classList.remove("border-primary")
+            // getLi.classList.add("border-success")
+            getLi.classList.add("bg-primary")
+        }
+    };
+
+    let progressColor;
+    if (selectedItems.length > 0) {
+        const ids = selectedItems
+        const Obj = diskLi.filter((item) => ids.includes(item.id));
+        // console.log(Obj)
+        const array = []
+        for (let i = 0; i < Obj.length; i++) {
+            const getVal = Obj[i].diskSize;
+            array.push(getVal)
+        }
+        // console.log(array)
+
+        const myArray = array;
+
+        let areAllValuesSame = true;
+        for (let i = 1; i < myArray.length; i++) {
+            if (myArray[i] !== myArray[0]) {
+                areAllValuesSame = false;
+                break;
+            }
+        }
+
+        if (areAllValuesSame == true) {
+            progressColor = "success"
+        }
+        else {
+            progressColor = "warning"
+        }
+
+    }
+
+    useEffect(() => {
+        if (dataB) {
+            setDiskLi(dataB.getUnAssignedDisk)
+        }
+    }, [dataB])
+    useEffect(() => { getUnUsedDisks() }, [])
+
+    // useEffect(() => {
+    //     if (LiDisk1) {
+    //         setDiskLi(LiDisk1)
+    //     }
+    // }, [])
+
+
 
 
     return (
@@ -96,7 +162,8 @@ const AddDiskModel = (props) => {
                         onClick={() => {
                             tog_standard();
                         }}
-                        className="btn btn-primary btn-label mt-4"
+                        className="btn btn-primary btn-label"
+                        style={{marginLeft:"-20px", fontSize:"12px", marginTop:"15px"}}
                         data-toggle="modal"
                         data-target="#myModal"
                     >
@@ -111,80 +178,66 @@ const AddDiskModel = (props) => {
                         }}
                     >
                         <div className="modal-header">
-                            <h5 className="modal-title mt-0" id="myModalLabel">
-                                Select Disks
-                            </h5>
-                            <button
-                                type="button"
-                                onClick={() => {
-                                    setmodal_standard(false);
-                                }}
-                                className="close"
-                                data-dismiss="modal"
-                                aria-label="Close"
-                            >
-                                <span aria-hidden="true">&times;</span>
-                            </button>
+                            <Col>
+                                <h5 className="modal-title mt-0" id="myModalLabel">
+                                    Select Disks
+                                </h5>
+                            </Col>
+                            <Col className="d-flex justify-content-center">
+                                <h6 className="modal-title mt-0 text-warning" id="myModalLabel1">
+                                    Please Select Minimum {minimumSel} Disk
+                                </h6>
+                            </Col>
+                            <Col>
+                                <button
+                                    type="button"
+                                    onClick={() => {
+                                        setmodal_standard(false);
+                                    }}
+                                    className="close"
+                                    data-dismiss="modal"
+                                    aria-label="Close"
+                                >
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </Col>
+
                         </div>
 
                         <div className="modal-body">
                             <Row>
-                                {LiData1.map((value, index) => {
+                                {diskLi && diskLi ? (diskLi.map((value, index) => {
                                     return (
-                                        <Col lg="2" key={index} id={"liId_"+value.id} onClick={()=>{handleCheck(value)}}>
-                                            <Card className="mini-stats-wid shadow-lg rounded-2 border-primary border-2" id={"cardId"+value.id}>
-                                                <CardBody>
-                                                    <Row>
-                                                        <Col lg={12}>
-                                                            <div className="d-flex flex-wrap">
+                                        <Col lg="2" key={index} id={"liId_" + value.id} onClick={() => { handleItemClick(value) }}>
+                                            <a>
+                                                <Card className="mini-stats-wid shadow-lg rounded-2 border-primary border-2 card2 eee" id={"cardId_" + value.id} >
+                                                    <CardBody className="p-3">
+                                                        <Row>
+                                                            <Col lg={12}>
                                                                 <div className="d-flex flex-wrap">
-                                                                    <div className="me-3">
-                                                                        <p className="mb-0">Name: </p>
-                                                                        <p className="mb-0">Type: </p>
-                                                                        <p className="mb-0">Size: </p>
+                                                                    <div className="d-flex flex-wrap">
+                                                                        <div className="me-2">
+                                                                            <p className="mb-0">Name: </p>
+                                                                            <p className="mb-0">Size: </p>
+                                                                        </div>
+                                                                        <div>
+                                                                            <p className="text-muted mb-0 text-truncate" style={{ maxWidth: "75px" }}>{value.diskName}</p>
+                                                                            <p className="text-muted mb-0">{value.diskSize}</p>
+                                                                        </div>
                                                                     </div>
-                                                                    <div>
-                                                                        <p className="text-muted mb-0">{value.name}</p>
-                                                                        <p className="text-muted mb-0">{value.type}</p>
-                                                                        <p className="text-muted mb-0">{value.as}</p>
-                                                                    </div>
                                                                 </div>
-                                                            </div>
-                                                        </Col>
-                                                    </Row>
-                                                </CardBody>
-                                            </Card>
-                                            {/* <Card className="mini-stats-wid shadow-lg rounded-2 border-primary border-1">
-                                                <CardBody>
-                                                    <Row>
-                                                        <Col lg={10}>
-                                                            <div className="d-flex flex-wrap">
-                                                                <div className="me-3">
-                                                                    <p className="mb-0">Name: </p>
-                                                                    <p className="mb-0">Type: </p>
-                                                                    <p className="mb-0">Size: </p>
-                                                                </div>
-                                                                <div>
-                                                                    <p className="text-muted mb-0">{value.name}</p>
-                                                                    <p className="text-muted mb-0">{value.type}</p>
-                                                                    <p className="text-muted mb-0">{value.as}</p>
-                                                                </div>
-                                                            </div>
-                                                        </Col>
-                                                        <Col lg={2}>
-                                                            <input
-                                                                className="form-check-input"
-                                                                type="checkbox"
-                                                                value={value}
-                                                                onClick={() => handleCheck(value)}
-                                                            />
-                                                        </Col>
-                                                    </Row>
-                                                </CardBody>
-                                            </Card> */}
+                                                            </Col>
+                                                        </Row>
+                                                    </CardBody>
+                                                </Card>
+                                            </a>
+                                            <UncontrolledTooltip placement="top" target={"cardId_" + value.id}>
+                                                {value.diskName}
+                                            </UncontrolledTooltip>
+
                                         </Col>
                                     )
-                                })}
+                                })) : null}
                             </Row>
                         </div>
 
@@ -197,7 +250,7 @@ const AddDiskModel = (props) => {
                                     type="button"
                                     className="btn btn-primary"
                                     style={{ float: "right" }}
-                                // onClick={handleVmPassSubmit}
+                                    onClick={saveDisks}
                                 >
                                     Add
                                 </button>
