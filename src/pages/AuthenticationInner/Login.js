@@ -33,11 +33,11 @@ const Login = () => {
 
 
   if (loading) {
-    // console.log("loading...")
+    console.log("loading...")
   }
 
   if (error) {
-    // console.log(error.message)
+    console.log(error.message)
   }
 
   const validation = useFormik({

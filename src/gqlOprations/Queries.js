@@ -151,3 +151,14 @@ query Disk($input: getStorageDetailsDisInput) {
 }
 `
 
+export const GET_STORAGE_DATA_FOR_VM = gql`
+query Disk($input: getStorageDetailsDisInput) {
+  getStorageDetailsDisk(input: $input) {
+    storage {
+      storageName
+      id
+    }
+  }
+}
+`
+

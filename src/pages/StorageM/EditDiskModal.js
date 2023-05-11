@@ -27,7 +27,7 @@ import "./card.scss"
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 
-const AddDiskModel = (props) => {
+const EditDiskModel = (props) => {
 
     const [selectedItems, setSelectedItems] = useState([]);
     const [selectedSize, setSelectedSize] = useState([])
@@ -38,29 +38,30 @@ const AddDiskModel = (props) => {
     const [minimumSel, setMinimumSel] = useState("2")
     const [diskLi, setDiskLi] = useState()
     const [selectedObj, setSelectedObj] = useState()
-
-    const [getUnUsedDisks, { loading: loadingB, data: dataB, error: errorB }] = useLazyQuery(GET_UNUSED_DISKS)
+    const [selectedIds, setSelectedIds] = useState()
 
 
     function tog_standard() {
         setmodal_standard(!modal_standard);
         removeBodyCss();
-        console.log("from child", props.numOfSelect)
+        checkOnSelected()
         setMinimumSel(props.numOfSelect)
+    }
+
+    const checkOnSelected = () => {
+        if (modal_standard === false) {
+            setTimeout(() => {
+                selectedIds.forEach((item) => {
+                    const getId = "cardId_" + item;
+                    const getLi = document.getElementById(getId)
+                    getLi.classList.add("bg-primary")
+                });
+            }, 400);
+        }
     }
 
     function removeBodyCss() {
         document.body.classList.add("no_padding");
-    }
-
-
-    const mixed = () => {
-        const N = 6;
-        const Smin = 1;
-        const Nminus1 = N - 1;
-        const result = Nminus1 * Smin;
-        console.log("The adjusted value is: " + result);
-        return result
     }
 
     const saveDisks = () => {
@@ -75,7 +76,7 @@ const AddDiskModel = (props) => {
             setTimeout(() => {
                 elem.classList.remove("shake")
             }, 500);
-        }else{
+        } else {
             props.finalDisks(Obj)
             setSelectedItems([])
             tog_standard()
@@ -87,17 +88,12 @@ const AddDiskModel = (props) => {
         const getId = "cardId_" + itemId;
         const getLi = document.getElementById(getId)
         const isSelected = selectedItems.includes(itemId);
-        // console.log("hhhh")
         if (isSelected) {
             setSelectedItems(selectedItems.filter(id => id !== itemId));
             const getLi = document.getElementById(getId)
-            // getLi.classList.add("border-primary")
-            // getLi.classList.remove("border-success")
             getLi.classList.remove("bg-primary")
         } else {
             setSelectedItems([...selectedItems, itemId]);
-            // getLi.classList.remove("border-primary")
-            // getLi.classList.add("border-success")
             getLi.classList.add("bg-primary")
         }
     };
@@ -133,21 +129,16 @@ const AddDiskModel = (props) => {
 
     }
 
+
     useEffect(() => {
-        if (dataB) {
-            setDiskLi(dataB.getUnAssignedDisk)
+        if (props.allDisks) {
+            if (props.selectedIds) {
+                setDiskLi(props.allDisks)
+                setSelectedIds(props.selectedIds);
+                setSelectedItems(props.selectedIds)
+            }
         }
-    }, [dataB])
-    useEffect(() => { getUnUsedDisks() }, [])
-
-    // useEffect(() => {
-    //     if (LiDisk1) {
-    //         setDiskLi(LiDisk1)
-    //     }
-    // }, [])
-
-
-
+    }, [props.allDisks, props.selectedIds])
 
     return (
         <React.Fragment>
@@ -159,11 +150,11 @@ const AddDiskModel = (props) => {
                             tog_standard();
                         }}
                         className="btn btn-primary btn-label"
-                        style={{marginLeft:"-20px", fontSize:"12px", marginTop:"15px"}}
+                        style={{ marginLeft: "-20px", fontSize: "12px", marginTop: "15px" }}
                         data-toggle="modal"
                         data-target="#myModal"
                     >
-                        <i className="bx bxs-disc label-icon"></i> Add Disks
+                        <i className="bx bxs-disc label-icon"></i> Edit Disks
                     </button>
                     <Modal
                         size="xl"
@@ -260,4 +251,4 @@ const AddDiskModel = (props) => {
     )
 }
 
-export default AddDiskModel
+export default EditDiskModel

@@ -10,6 +10,7 @@ import { ApolloClient, InMemoryCache, ApolloProvider, gql,  } from '@apollo/clie
 const client = new ApolloClient({
   // uri: 'https://6882-167-99-36-48.eu.ngrok.io/',
   uri: "http://167.99.36.48:9090/",
+  // uri: "http://168.119.24.70:9090/",
   cache: new InMemoryCache(),
   defaultOptions:{
     watchQuery:{

@@ -156,3 +156,14 @@ mutation Mutation($input: updateDiskStorageInput) {
   }
 }
 `
+
+export const UPDATE_STORAGE = gql`
+mutation Mutation($input: updateStorageInput) {
+  updateStorage(input: $input) {
+    storageType
+    storageSize
+    storageName
+    id
+  }
+}
+`

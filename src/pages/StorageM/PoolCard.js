@@ -93,10 +93,10 @@ const PoolCard = () => {
                                                                 <p className="mb-2">Type: </p>
                                                             </div>
                                                             <div>
-                                                                <p className="text-muted mb-2">{value.storageName}</p>
+                                                                <p className="text-muted mb-2 ">{value.storageName}</p>
                                                                 <p className="text-muted mb-2">{value.storageType}</p>
                                                             </div>
-                                                            <Link className="ms-auto" to="/update-storage">
+                                                            <Link className="ms-auto" to={`/update-storage/${value.id}`}>
                                                                 <div className="avatar-sm ms-auto">
                                                                     <div className="avatar-title bg-light rounded-circle text-primary font-size-20">
                                                                         <i className="bx bx-edit"></i>

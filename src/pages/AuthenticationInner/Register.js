@@ -32,6 +32,10 @@ const Register = () => {
     history.push("/login");
   }
 
+  if(error){
+    console.log(error.message)
+  }
+
 
   const validation = useFormik({
     enableReinitialize: true,

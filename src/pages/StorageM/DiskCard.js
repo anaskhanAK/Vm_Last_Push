@@ -39,7 +39,7 @@ const DiskCard = (props) => {
                                                     <div>
                                                         <p className="text-muted mb-1 text-truncate" style={{maxWidth:"80px"}}>{value.diskName}</p>
                                                         {/* <p className="text-muted mb-2">{value.type}</p> */}
-                                                        <p className="text-muted mb-1">{value.diskSize}</p>
+                                                        <p className="text-muted mb-1">{value.diskSize}{" GB"}</p>
                                                         <p className="text-muted mb-0 text-truncate" style={{maxWidth:"80px"}}>{value.storageId.storageName}</p>
                                                     </div>
                                                 </div>
