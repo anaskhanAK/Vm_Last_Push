@@ -1,20 +1,22 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Card, CardBody, CardHeader, Col, Container, Form, FormGroup, Input, InputGroup, Label, FormFeedback, NavItem, NavLink, Row, TabContent, TabPane, Progress, CardTitle, Table, Button,UncontrolledTooltip } from "reactstrap";
+import { Card, CardBody, CardHeader, Col, Container, Form, FormGroup, Input, InputGroup, Label, FormFeedback, NavItem, NavLink, Row, TabContent, TabPane, Progress, CardTitle, Table, Button, UncontrolledTooltip } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from 'react-router-dom';
 import Select from "react-select";
-import AddDiskModel from "./AddDiskModal";
-import { Create_Storage, UPDATE_DISK } from "gqlOprations/Mutations";
+import EditDiskModel from "./EditDiskModal";
+import { Create_Storage, UPDATE_DISK, UPDATE_STORAGE } from "gqlOprations/Mutations";
+import { GET_STORAGE_DATA, GET_UNUSED_DISKS } from "gqlOprations/Queries";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import SimpleBar from "simplebar-react"
+import { useParams } from "react-router-dom/cjs/react-router-dom.min";
 
 
-const CreateStorage = () => {
+const UpdateStorage = () => {
 
     const [storageData, setStorageData] = useState({
-        StorageType: "Fast Storage"
+        storageType: "Fast Storage"
     });
     const [diskData, setDiskData] = useState()
     const [data_attr, setdata_attr] = useState(2);
@@ -23,10 +25,12 @@ const CreateStorage = () => {
     const [totalStorageSize, setTotalStorageSize] = useState()
     const [totalDiskIds, setTotalDiskIds] = useState()
     const [tLi, setTLi] = useState()
-    const [selectionCount, setSelectionCount] = useState("2")
 
-    const [createStorage, { loading: loadingA, data: dataA, error: errorC }] = useMutation(Create_Storage);
-    const [createDisk, { loading: loadingB, data: dataB, error: errorB }] = useMutation(UPDATE_DISK);
+    const [selectionCount, setSelectionCount] = useState("2")
+    const [disksForModal, setDisksForModal] = useState()
+    const [unUsedDisks, setUnUsedDisks] = useState()
+    const [selectedDisksIds, setSelectedDisksIds] = useState()
+    const { storageId } = useParams()
 
     const getCookies = (cname) => {
         const cArray = document.cookie.split("; ")
@@ -46,6 +50,50 @@ const CreateStorage = () => {
 
     const mvToken = getCookies("MvUserToken");
 
+    const [getUnUsedDisks, { loading: loadingA, data: dataA, error: errorA }] = useLazyQuery(GET_UNUSED_DISKS);
+    const [createDisk, { loading: loadingB, data: dataB, error: errorB }] = useMutation(UPDATE_DISK);
+    const [updateStorageCall, { loading: loadingD, data: dataD, error: errorD }] = useMutation(UPDATE_STORAGE);
+    const [getSpecificStorage, { loading: loadingC, data: dataC, error: errorC }] = useLazyQuery(GET_STORAGE_DATA, {
+        variables: {
+            input: {
+                token: mvToken,
+                id: storageId
+            },
+        },
+        onCompleted: (DataC) => {
+            // console.log(DataC, "dataC")
+            setSelectedDisks(DataC.getStorageDetailsDisk.disk)
+            const sName = DataC.getStorageDetailsDisk.storage[0].storageName;
+            const sType = DataC.getStorageDetailsDisk.storage[0].storageType;
+            const sSize = DataC.getStorageDetailsDisk.storage[0].storageSize;
+            setStorageData({
+                ...storageData,
+                storageName: sName,
+                storageType: sType,
+                storageSize: sSize
+            })
+
+            const ppp = DataC.getStorageDetailsDisk.disk
+            const totalIds = []
+            const array = []
+            for (let i = 0; i < ppp.length; i++) {
+                const getId = ppp[i].id;
+                const getVal = ppp[i].diskSize;
+                totalIds.push(getId)
+                array.push(getVal)
+            }
+
+            const totalValue = array.reduce((a, b) => a + b, 0)
+            setSelectedDisksIds(totalIds)
+            setTLi(array)
+            setTotalDiskSize(totalValue)
+            setTotalDiskIds(totalIds)
+        },
+
+        fetchPolicy: "cache-and-network"
+    })
+
+
     const getDiskList = (diskList) => {
         console.log("from perent", diskList)
         setSelectedDisks(diskList)
@@ -58,12 +106,55 @@ const CreateStorage = () => {
             totalIds.push(getId)
         }
         const totalValue = array.reduce((a, b) => a + b, 0)
-        console.log(totalValue, "totalValue")
-        console.log(array, "array")
-        console.log(totalIds, "totalIds")
+        console.log(totalValue)
         setTLi(array)
         setTotalDiskSize(totalValue)
         setTotalDiskIds(totalIds)
+    }
+
+    let totalSS;
+    if (storageData.storageType) {
+        let st = storageData.storageType;
+
+        if (st == "Fast Storage") {
+            // console.log("its fast")
+            if (totalDiskSize) {
+                // console.log("ssss")
+                totalSS = totalDiskSize
+                // console.log(totalDiskSize)
+            }
+        }
+        if (st == "Safe Storage") {
+            // console.log("its Safe")
+            if (totalDiskSize) {
+                let ddd = (totalDiskSize / 100) * 50;
+                totalSS = ddd
+            }
+        }
+        if (st == "Mixed Storage") {
+            // console.log("its Mixed")
+            if (tLi) {
+                // console.log(tLi)
+                // console.log(totalDiskSize)
+                let sMin = Math.min.apply(null, tLi);
+                let N = totalDiskSize
+                const result = (N - 1) * sMin;
+                totalSS = result
+                // console.log(result);
+            }
+        }
+        if (st == "Redundant Mixed Storage") {
+            // console.log("its Redundant Mixed")
+            if (tLi) {
+                // console.log(tLi)
+                // console.log(totalDiskSize)
+                let sMin = Math.min.apply(null, tLi);
+                let N = totalDiskSize;
+                const result = (N - 2) * sMin;
+                totalSS = result
+                // console.log(result);
+            }
+        }
     }
 
     const handleStorageChange = (e) => {
@@ -86,60 +177,6 @@ const CreateStorage = () => {
         }
     }
 
-    const handleDiskChange = (e) => {
-        // console.log(e.target.value)
-        setDiskData({
-            ...diskData,
-            [e.target.name]: e.target.value
-        })
-    }
-
-    let totalSS;
-    if (storageData.StorageType) {
-        let st = storageData.StorageType;
-
-        if (st == "Fast Storage") {
-            // console.log("its fast")
-            if (totalDiskSize) {
-                totalSS = totalDiskSize
-                console.log(totalDiskSize)
-            }
-        }
-        if (st == "Safe Storage") {
-            // console.log("its Safe")
-            if (totalDiskSize) {
-                let ddd = (totalDiskSize / 100) * 50;
-                totalSS = ddd
-            }
-        }
-        if (st == "Mixed Storage") {
-            // console.log("its Mixed")
-            if (tLi) {
-                console.log(tLi)
-                console.log(totalDiskSize)
-                let sMin = Math.min.apply(null, tLi);
-                let N = totalDiskSize
-                const result = (N - 1) * sMin;
-                totalSS = result
-                // console.log(result);
-            }
-        }
-        if (st == "Redundant Mixed Storage") {
-            // console.log("its Redundant Mixed")
-            if (tLi) {
-                console.log(tLi)
-                console.log(totalDiskSize)
-                let sMin = Math.min.apply(null, tLi);
-                let N = totalDiskSize;
-                const result = (N - 2) * sMin;
-                totalSS = result
-                // console.log(result);
-            }
-        }
-    }
-    if (totalSS) {
-        console.log(totalSS)
-    }
 
     const handleDiskSubmit = (idd) => {
         console.log(mvToken)
@@ -158,39 +195,54 @@ const CreateStorage = () => {
                 console.log(dataB)
             }
         })
-
-        // toastr.success("Storage Created Successfully")
     }
 
-
     const handleStorageSubmit = () => {
-        console.log(storageData)
-        console.log(diskData)
+        console.log("handleSubmit")
+        console.log(storageData.storageName)
+        console.log(storageData.storageType)
         console.log(totalSS)
-        createStorage({
+        updateStorageCall({
             variables: {
                 input: {
                     "token": mvToken,
                     "storageType": storageData.StorageType,
                     "storageSize": totalSS,
-                    "storageName": storageData.storageName
+                    "storageName": storageData.storageName,
+                    "id": storageId
                 }
             },
-            onCompleted: (dataA) => {
-                console.log(dataA)
-                let idd = dataA.createStorage.id
+            onCompleted: (dataD) => {
+                console.log(dataD)
+                let idd = dataD.updateStorage.id
                 handleDiskSubmit(idd)
             }
         })
 
-        // handleDiskSubmit("12")
     }
+
+    useEffect(() => { getSpecificStorage() }, [])
+    useEffect(() => {
+        if (dataA) {
+            setUnUsedDisks(dataA.getUnAssignedDisk)
+        }
+    }, [dataA])
+    useEffect(() => { getUnUsedDisks() }, [])
+    useEffect(() => {
+        if (selectedDisks) {
+            if (unUsedDisks) {
+                // console.log(selectedDisks.concat(unUsedDisks))
+                const ddd = selectedDisks.concat(unUsedDisks)
+                setDisksForModal(ddd)
+            }
+        }
+    }, [selectedDisks, unUsedDisks])
 
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid={true}>
-                    <Breadcrumbs title="Storage" breadcrumbItem="Create Storage" />
+                    <Breadcrumbs title="Storage" breadcrumbItem="Update Storage" />
                     <Card>
                         <CardBody>
                             <Row>
@@ -198,7 +250,7 @@ const CreateStorage = () => {
                                     <Card>
                                         <CardBody>
                                             <Row className="mb-3">
-                                                <h5 className="card-header bg-transparent border-bottom">Create Storage</h5>
+                                                <h5 className="card-header bg-transparent border-bottom">Update Storage</h5>
                                             </Row>
                                             <Row>
                                                 <div className="mb-3" >
@@ -211,6 +263,7 @@ const CreateStorage = () => {
                                                         id="storage-name"
                                                         placeholder="Enter Storage Name"
                                                         name="storageName"
+                                                        defaultValue={storageData.storageName}
                                                         onChange={handleStorageChange}
                                                     />
                                                 </div>
@@ -222,8 +275,9 @@ const CreateStorage = () => {
                                                     </Label>
                                                     <select
                                                         className="form-select"
-                                                        name="StorageType"
+                                                        name="storageType"
                                                         onChange={handleStorageChange}
+                                                        defaultValue={storageData.storageType}
                                                     >
                                                         <option> Fast Storage </option>
                                                         <option> Safe Storage </option>
@@ -239,22 +293,7 @@ const CreateStorage = () => {
                                     <Card>
                                         <CardBody>
                                             <Row className="mb-3">
-                                                <h5 className="card-header bg-transparent border-bottom">Add Disk</h5>
-                                            </Row>
-                                            <Row>
-                                                <div className="mb-3" >
-                                                    <Label for="basicpill-phoneno-input3">
-                                                        Disk Name :
-                                                    </Label>
-                                                    <Input
-                                                        type="text"
-                                                        className="form-control"
-                                                        id="disk-name"
-                                                        placeholder="Enter Disk Name"
-                                                        name="diskName"
-                                                        onChange={handleDiskChange}
-                                                    />
-                                                </div>
+                                                <h5 className="card-header bg-transparent border-bottom">Update Disk</h5>
                                             </Row>
                                             <Row>
                                                 <Col lg={10} className="p-3">
@@ -303,7 +342,10 @@ const CreateStorage = () => {
                                                     </Card>
                                                 </Col>
                                                 <Col lg={2}>
-                                                    <AddDiskModel
+                                                    <EditDiskModel
+                                                        selectedIds={selectedDisksIds}
+                                                        preSelectDisks={selectedDisks}
+                                                        allDisks={disksForModal}
                                                         finalDisks={getDiskList}
                                                         numOfSelect={selectionCount}
                                                     />
@@ -316,7 +358,7 @@ const CreateStorage = () => {
                                                         className="btn btn-primary mt-4 float-end"
                                                         onClick={(e) => handleStorageSubmit()}
                                                     >
-                                                        Create Now
+                                                        Update Now
                                                     </button>
                                                 </Col>
                                             </Row>
@@ -333,4 +375,4 @@ const CreateStorage = () => {
     )
 }
 
-export default CreateStorage
+export default UpdateStorage

@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom"
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import { GET_USER_BY_ID } from "gqlOprations/Queries"
 import alt from "assets/images/userAlt.jpg"
+import { IMAGE_URL } from "helpers/imageUrl"
 
 
 const UserProfile = () => {
@@ -59,7 +60,7 @@ const UserProfile = () => {
                                                     // src={data && data ? ("http://167.99.36.48:3003/" + data.getUserByID.User_Image.split("app/")[1]) : null}
                                                     src={data && data ? (
                                                         data.getUserByID.userImage.length < 2 && data.getUserByID.userImage.length < 2 ? (
-                                                            alt) : ("http://167.99.36.48:3003/" + data.getUserByID.userImage.split("app/")[1]
+                                                            alt) : (IMAGE_URL + data.getUserByID.userImage.split("app/")[1]
                                                         )
                                                     ) :
                                                         alt || alt}

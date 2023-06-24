@@ -14,6 +14,7 @@ import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import alt from "assets/images/Azure.png"
 import IsoModel from 'pages/CreateVm/IsoModel'
+import { IMAGE_URL } from "helpers/imageUrl";
 
 
 const UpdateVm = () => {
@@ -183,7 +184,7 @@ const UpdateVm = () => {
                                                         updateImg
                                                     ) : (
                                                         dataC && dataC ? (
-                                                            "http://167.99.36.48:3003/" + dataC.getSpecificVM.vmImage.split("app/")[1]
+                                                            IMAGE_URL + dataC.getSpecificVM.vmImage.split("app/")[1]
                                                         ) : alt
                                                     )}
                                                     height="300px"

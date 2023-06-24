@@ -9,7 +9,7 @@ import StoregeSlider from "pages/CreateVm/StoregeSlider";
 import { io } from "socket.io-client";
 import SocketIOFileUploadServer from "socketio-file-upload";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client";
-import { GET_CONFIG, GET_IOS_BY_ID, CHECK_VM_NAME } from "gqlOprations/Queries";
+import { GET_CONFIG, GET_IOS_BY_ID, CHECK_VM_NAME, GET_STORAGE_DATA_FOR_VM } from "gqlOprations/Queries";
 import { CREATE_ISO, CREATE_VM } from "gqlOprations/Mutations";
 import alt from "assets/images/Azure.png"
 import vin from "assets/images/widows.jpg"
@@ -36,6 +36,7 @@ const DcVm = () => {
     const [tpmSwitch, setTpmSwitch] = useState(false);
     const [nameV, setNameV] = useState();
     const [dropImage, setDropImage] = useState(alt);
+    const [storageList, setStorageList] = useState([]);
     const history = useHistory()
 
     toastr.options = {
@@ -45,15 +46,20 @@ const DcVm = () => {
 
     const handleTpmSwitch = () => {
         setTpmSwitch(!tpmSwitch);
-        // console.log(tpmSwitch)
         setConfigData({
             ...configData,
             getConfigFile: {
                 ...configData.getConfigFile,
-                TPM: tpmSwitch,
+                TPM: !tpmSwitch,
             }
         })
     }
+
+    // const handleStorage = (e) => {
+    //     e.preventDefault(),
+    //         console.log(e.target.value, " , ", e.target.Key)
+    //         console.log(e)
+    // }
 
     const handleIsoDrop = (e) => {
         e.preventDefault(),
@@ -65,19 +71,18 @@ const DcVm = () => {
                     IsoFile: e.target.value,
                 }
             })
-        // console.log(configData)
     }
 
     const handleOpDrop = (e) => {
         e.preventDefault(),
             // console.log(e)
-        setConfigData({
-            ...configData,
-            getConfigFile: {
-                ...configData.getConfigFile,
-                Operating_System: e.target.value,
-            }
-        })
+            setConfigData({
+                ...configData,
+                getConfigFile: {
+                    ...configData.getConfigFile,
+                    Operating_System: e.target.value,
+                }
+            })
 
         // console.log(configData.getConfigFile.Operating_System)
 
@@ -124,16 +129,16 @@ const DcVm = () => {
     const handleCpuDrop = (e) => {
         e.preventDefault(),
             // console.log(e)
-        setConfigData({
-            ...configData,
-            getConfigFile: {
-                ...configData.getConfigFile,
-                processor: {
-                    ...configData.getConfigFile.processor,
-                    Processors: e.target.value
+            setConfigData({
+                ...configData,
+                getConfigFile: {
+                    ...configData.getConfigFile,
+                    processor: {
+                        ...configData.getConfigFile.processor,
+                        Processors: e.target.value
+                    }
                 }
-            }
-        })
+            })
 
         // console.log(configData)
     }
@@ -182,11 +187,23 @@ const DcVm = () => {
     };
 
 
-
     const [checkVmName, { loading: loadingE, data: dataE, error: errorE }] = useLazyQuery(CHECK_VM_NAME)
     const [getConfig, { loading: loadingD, data: dataD, error: errorD }] = useLazyQuery(GET_CONFIG);
     const [createIso, { loading: loadingB, data: dataB, error: errorB }] = useMutation(CREATE_ISO);
     const [createVm, { loading: loadingC, data: dataC, error: errorC }] = useMutation(CREATE_VM);
+    const [getStorageDataForVM, { loading: loadingF, data: dataF, error: errorF }] = useLazyQuery(GET_STORAGE_DATA_FOR_VM, {
+        variables: {
+            input: {
+                token: mvToken
+            },
+        },
+        onCompleted: (DataF) => {
+            // console.log(DataF.getStorageDetailsDisk.storage, "dataF")
+            setStorageList(DataF.getStorageDetailsDisk.storage)
+        },
+
+        fetchPolicy: "cache-and-network"
+    })
     const [getIsoList, { loading: loadingA, data: dataA, error: errorA }] = useLazyQuery(GET_IOS_BY_ID, {
         variables: {
             input: {
@@ -218,20 +235,12 @@ const DcVm = () => {
         })
     }
 
-    if(dataC){
-        // console.log(dataC)
-    }
-
-    if (errorC){
-        // console.log(errorC)
-    }
-
     const handleVmSubmit = (e) => {
         e.preventDefault(),
             // console.log(vmData)
-        console.log("in");
+            console.log("in");
         const config = JSON.stringify(configData);
-        // console.log(JSON.stringify(config));
+        console.log(config)
         createVm({
             variables: {
                 input: {
@@ -241,7 +250,8 @@ const DcVm = () => {
                     "title": vmData.virtualMachineName,
                     "virtualMachineName": vmData.virtualMachineName,
                     "description": vmData.Description || "",
-                    "vmImage": vmData.vmImage
+                    "vmImage": vmData.vmImage,
+                    "storageId": vmData.storageId
                 }
             },
             onCompleted: (dataC) => {
@@ -296,20 +306,20 @@ const DcVm = () => {
             console.log(event.file, "111this is file ");
             console.log(event.file.size)
             // console.log(configData.getConfigFile.Operating_System || "")
-            createIso({
-                variables: {
-                    input: {
-                        name: event.file.name,
-                        size: event.file.size,
-                        type: "iso",
-                        token: mvToken,
-                    }
-                },
-                onCompleted: (dataB) => {
-                    console.log(dataB)
-                    getIsoList()
-                }
-            })
+            // createIso({
+            //     variables: {
+            //         input: {
+            //             name: event.file.name,
+            //             size: event.file.size,
+            //             type: "iso",
+            //             token: mvToken,
+            //         }
+            //     },
+            //     onCompleted: (dataB) => {
+            //         console.log(dataB)
+            //         getIsoList()
+            //     }
+            // })
 
             toastr.success("Create Iso Successful");
             setUploadPercentage(p => 0)
@@ -319,6 +329,7 @@ const DcVm = () => {
         })
         uploader.addEventListener("start", function (event) {
             console.log(event.file.name, "Start");
+            console.log(event.file.size)
             setFilename(p => (event.file.name))
             const videoFile = event.file;
             // const filename=event.file.name.split(".");
@@ -356,18 +367,6 @@ const DcVm = () => {
 
     }, [])
 
-    // if (dataA){
-    //     console.log(dataA)
-    // }
-    // if (errorA) {
-    //     console.log(errorA)
-    // }
-
-    // if (isoList) {
-    //     console.log("iso List",isoList)
-    // }
-
-
     useEffect(() => {
         // if (loadingD) console.log("loadingD...")
         if (dataD) {
@@ -391,6 +390,7 @@ const DcVm = () => {
 
     useEffect(() => { getConfig() }, [])
     useEffect(() => { getIsoList() }, [])
+    useEffect(() => { getStorageDataForVM() }, [])
 
     useEffect(() => {
         setDropImage(vin)
@@ -517,10 +517,7 @@ const DcVm = () => {
                                                                         <select defaultValue="0"
                                                                             className="form-select"
                                                                             style={{ marginRight: "5px" }}
-                                                                            // onClick={handleDropDownClick}
                                                                             onChange={handleIsoDrop}
-                                                                        // value={dropdownVal.IsoFile}
-                                                                        // onClick={()=>console.log('dd')}
                                                                         >
                                                                             <option value="0">Choose...</option>
                                                                             {isoList.map(e => {
@@ -579,19 +576,45 @@ const DcVm = () => {
                                                 </Col>
                                             </Row>
                                             <Row>
-                                                <div className="mb-3">
-                                                    <Label htmlFor="formmessage">Description :</Label>
-                                                    <Input
-                                                        type="textarea"
-                                                        id="formmessage"
-                                                        className="form-control"
-                                                        rows="1"
-                                                        placeholder="Enter your Message"
-                                                        name="Description"
-                                                        onChange={handleDataChange}
-                                                        value={vmData.Description || ""}
-                                                    />
-                                                </div>
+                                                <Col>
+                                                    <div className="mb-3">
+                                                        <Label for="basicpill-phoneno-input3">
+                                                            Storage :
+                                                        </Label>
+                                                        <select defaultValue="0"
+                                                            className="form-select"
+                                                            style={{ marginRight: "5px" }}
+                                                            name="storageId"
+                                                            onChange={handleDataChange}
+                                                        >
+                                                            <option value="0">Choose...</option>
+                                                            {storageList.map(e => {
+                                                                return <option
+                                                                    key={e.id}
+                                                                    value={e.id}
+                                                                >
+                                                                    {e.storageName}
+                                                                </option>
+                                                            })}
+
+                                                        </select>
+                                                    </div>
+                                                </Col>
+                                                <Col>
+                                                    <div className="mb-3">
+                                                        <Label htmlFor="formmessage">Description :</Label>
+                                                        <Input
+                                                            type="textarea"
+                                                            id="formmessage"
+                                                            className="form-control"
+                                                            rows="1"
+                                                            placeholder="Enter your Message"
+                                                            name="Description"
+                                                            onChange={handleDataChange}
+                                                            value={vmData.Description || ""}
+                                                        />
+                                                    </div>
+                                                </Col>
                                             </Row>
                                         </TabPane>
                                         <TabPane tabId={2}>

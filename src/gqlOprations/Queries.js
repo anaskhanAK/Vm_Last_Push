@@ -107,3 +107,58 @@ query Query($input: findVMNameInput) {
 }
   `
 
+export const GET_UNUSED_DISKS = gql`
+query Query {
+  getUnAssignedDisk {
+    id
+    diskName
+    diskSize
+  }
+}
+`
+
+export const GET_USER_POOLS = gql`
+query GetStorageList($input: getStorageListInput) {
+  getStorageList(input: $input) {
+    id
+    storageName
+    storageType
+    storageSize
+  }
+}
+`
+export const GET_STORAGE_DATA = gql`
+query Disk($input: getStorageDetailsDisInput) {
+  getStorageDetailsDisk(input: $input) {
+    disk {
+      id
+      diskSize
+      diskName
+      storageId {
+        storageName
+        id
+        storageSize
+        storageType
+      }
+    }
+    storage {
+      storageType
+      storageSize
+      storageName
+      id
+    }
+  }
+}
+`
+
+export const GET_STORAGE_DATA_FOR_VM = gql`
+query Disk($input: getStorageDetailsDisInput) {
+  getStorageDetailsDisk(input: $input) {
+    storage {
+      storageName
+      id
+    }
+  }
+}
+`
+

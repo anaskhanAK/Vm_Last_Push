@@ -8,12 +8,15 @@ import { useMutation } from "@apollo/client";
 import { USER_LOGIN } from "gqlOprations/Mutations";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import { IMAGE_URL } from "helpers/imageUrl";
 
 const Login = () => {
 
   document.title = "Login";
 
   const history = useHistory();
+
+  console.log(IMAGE_URL)
 
   toastr.options = {
     positionClass: "toast-top-center",

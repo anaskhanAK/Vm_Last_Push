@@ -13,6 +13,7 @@ import { withRouter, Link, useHistory } from "react-router-dom";
 import { GET_USER_BY_ID } from "gqlOprations/Queries";
 import { useLazyQuery, useMutation, useQuery } from "@apollo/client"
 import alt from "assets/images/userAlt.jpg"
+import { IMAGE_URL } from "helpers/imageUrl";
 
 const ProfileMenu = props => {
 
@@ -72,7 +73,7 @@ const ProfileMenu = props => {
             className="rounded-circle header-profile-user"
             src={data && data ? (
               data.getUserByID.userImage.length < 2 && data.getUserByID.userImage.length < 2 ? (
-                alt) : ("http://167.99.36.48:3003/" + data.getUserByID.userImage.split("app/")[1]
+                alt) : (IMAGE_URL + data.getUserByID.userImage.split("app/")[1]
               )
             ) :
               alt || alt}

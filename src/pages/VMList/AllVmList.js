@@ -11,6 +11,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import alt from "assets/images/Azure.png"
 import { Card, CardBody, Container, Col, Row, Spinner, Button, Label } from 'reactstrap';
+import { IMAGE_URL } from "helpers/imageUrl";
 
 
 const AllVmsList = () => {
@@ -71,7 +72,7 @@ const AllVmsList = () => {
                         <span className="avatar-title rounded bg-light text-danger font-size-16">
                             <img src={
                                 allVmsList && allVmsList ? (
-                                    "http://167.99.36.48:3003/" + row.cell.row.original.vmImage.split("app/")[1] || alt
+                                    IMAGE_URL + row.cell.row.original.vmImage.split("app/")[1] || alt
                                 ) : alt
                             }
                                 height="45"

@@ -8,6 +8,7 @@ import { GET_SPECIFIC_VM } from 'gqlOprations/Queries'
 import Vm from "../../assets/images/1..jpg";
 import { DELETE_VM, VM_ACTION } from 'gqlOprations/Mutations'
 import alt from "assets/images/Azure.png"
+import { IMAGE_URL } from "helpers/imageUrl";
 
 
 const VmDetails = () => {
@@ -132,7 +133,7 @@ const VmDetails = () => {
                                         <Card >
                                             <CardBody>
                                                 <h4 className="card-title mb-4">VM Image</h4>
-                                                <CardImg className="img-fluid" src={svmData && svmData ? ("http://167.99.36.48:3003/" + svmData.getSpecificVM.vmImage.split("app/")[1]) : alt} alt='Vm Image' style={{ height: "300px" }} />
+                                                <CardImg className="img-fluid" src={svmData && svmData ? (IMAGE_URL + svmData.getSpecificVM.vmImage.split("app/")[1]) : alt} alt='Vm Image' style={{ height: "300px" }} />
                                             </CardBody>
                                             <CardBody>
                                                 <Row>

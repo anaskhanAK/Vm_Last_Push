@@ -9,6 +9,7 @@ import { set } from "lodash";
 import { useParams } from "react-router-dom";
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
+import { IMAGE_URL } from "helpers/imageUrl";
 
 const UpdateDetails = () => {
 
@@ -46,7 +47,7 @@ const UpdateDetails = () => {
     const [getUserById, { data: dataB, loading: loadingB, error: errorB }] = useLazyQuery(GET_USER_BY_ID, {
         variables: {
             input: {
-                token: mvToken
+                token: usertoken
             }
         },
         onCompleted: dataB => {
@@ -55,8 +56,6 @@ const UpdateDetails = () => {
         },
         fetchPolicy: "cache-and-network"
     });
-
-
 
     const [userProfileUpdate, { data: dataA, loading: loadingA, error: errorA }] = useMutation(USER_PROFILE_UPDATE);
 
@@ -154,7 +153,7 @@ const UpdateDetails = () => {
                                                         ) : (
                                                             dataB && dataB ? ( dataB.getUserByID.userImage.length < 2 && dataB.getUserByID.userImage.length < 2 ? (
                                                                 alt
-                                                            ):("http://167.99.36.48:3003/" + dataB.getUserByID.userImage.split("app/")[1])
+                                                            ):(IMAGE_URL + dataB.getUserByID.userImage.split("app/")[1])
                                                                 
                                                             ) : alt
                                                         )}

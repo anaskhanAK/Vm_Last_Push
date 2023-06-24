@@ -9,6 +9,7 @@ import { GET_USER_VMS } from 'gqlOprations/Queries';
 import toastr from "toastr";
 import "toastr/build/toastr.min.css";
 import alt from "assets/images/Azure.png"
+import { IMAGE_URL } from "helpers/imageUrl";
 
 
 const VmList = () => {
@@ -181,7 +182,7 @@ const VmList = () => {
                                             <Col lg="3">
                                                 <div className="avatar-md me-4">
                                                     <span className="avatar-title rounded bg-light text-danger font-size-16">
-                                                        <img src={"http://167.99.36.48:3003/" + e.vmImage.split("app/")[1] || alt} height="69" width="69" style={{ borderRadius: "4px" }} />
+                                                        <img src={IMAGE_URL + e.vmImage.split("app/")[1] || alt} height="69" width="69" style={{ borderRadius: "4px" }} />
                                                     </span>
                                                 </div>
                                             </Col>

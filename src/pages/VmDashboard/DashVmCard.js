@@ -8,6 +8,7 @@ import { Card, CardBody, Container, Col, UncontrolledTooltip, Row, Badge, Button
 import Vm from "../../assets/images/1..jpg";
 import alt from "assets/images/Azure.png"
 import { VM_ACTION } from 'gqlOprations/Mutations';
+import { IMAGE_URL } from "helpers/imageUrl";
 
 const DashVmCard = () => {
 
@@ -71,7 +72,7 @@ const DashVmCard = () => {
                                     <Col lg="3">
                                         <div className="avatar-sm me-4">
                                             <span className="avatar-title rounded bg-light text-danger font-size-16">
-                                                <img src={"http://167.99.36.48:3003/" + e.vmImage.split("app/")[1] || alt} height="45" width="45" style={{ borderRadius: "4px" }} />
+                                                <img src={IMAGE_URL + e.vmImage.split("app/")[1] || alt} height="45" width="45" style={{ borderRadius: "4px" }} />
                                             </span>
                                         </div>
                                     </Col>

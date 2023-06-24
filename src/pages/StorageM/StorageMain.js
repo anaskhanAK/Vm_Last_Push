@@ -13,14 +13,7 @@ const StorageMain = () => {
             <div className="page-content">
                 <Container fluid={true}>
                     <Breadcrumbs title="Dashboard" breadcrumbItem="Storage" />
-                    <Row>
-                        <Col lg="7">
-                            <PoolCard />
-                        </Col>
-                        <Col lg="5">
-                            <DiskCard />
-                        </Col>
-                    </Row>
+                    <PoolCard />
                 </Container>
             </div>
         </React.Fragment>

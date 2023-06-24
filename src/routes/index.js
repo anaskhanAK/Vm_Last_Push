@@ -21,7 +21,7 @@ import AllVmList from "pages/VMList/AllVmList";
 import StorageMain from "pages/StorageM/StorageMain";
 import CreateStorage from "pages/StorageM/CreateStorage";
 import UpdatePool from "pages/StorageM/UpdatePool";
-
+import UpdateStorage from "pages/StorageM/UpdateStorage";
 
 const authProtectedRoutes = [
 
@@ -38,7 +38,8 @@ const authProtectedRoutes = [
   {path: "/allvms", component: AllVmList},
   {path: "/storage", component: StorageMain},
   {path: "/create-storage", component: CreateStorage},
-  {path: "/update-storage", component: UpdatePool},
+  {path: "/update-storage/:storageId", component: UpdateStorage},
+  
 
 
 

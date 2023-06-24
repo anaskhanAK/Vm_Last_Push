@@ -1,0 +1,1 @@
+export const IMAGE_URL = 'http://168.119.24.70:3003/';
